@@ -420,7 +420,7 @@ if ($_POST) {
 					$(".overlay").hide();
 					$('#modalEditOT [name=ot_id]').val(json.ot.id);
 
-					$('#modalEditOT [name=cliente]').html(`<option value="${json.ot.cliente_id}" selected>${json.cliente.nombres} ${json.cliente.apellidoPaterno} ${json.cliente.apellidoMaterno}</option>`)
+					$('#modalEditOT [name=cliente]').html(`<option value="${json.ot.cliente_id}" selected>${json.cliente.nombres} ${json.cliente.apellidoPaterno}</option>`)
 
 					$('[name=vehiculo]').empty();
 					$('[name=vehiculo]').append(new Option('Seleccione Vehiculo', ''));

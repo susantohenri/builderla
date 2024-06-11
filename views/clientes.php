@@ -29,7 +29,7 @@ else:
 				<?php foreach ($clientes as $cliente): ?>
 				<tr data-regid="<?php echo $cliente->id; ?>">
 					<td data-regid="<?php echo $cliente->id; ?>"> <?php echo $cliente->id; ?> </td>
-					<td data-nombres="<?php echo $cliente->nombres; ?>" data-apellidopaterno="<?php echo $cliente->apellidoPaterno; ?>" data-apellidomaterno="<?php echo $cliente->apellidoMaterno; ?>"> <?php echo Mopar::getNombreCliente($cliente->id, false) ?> </td>
+					<td data-nombres="<?php echo $cliente->nombres; ?>" data-apellidopaterno="<?php echo $cliente->apellidoPaterno; ?>"> <?php echo Mopar::getNombreCliente($cliente->id, false) ?> </td>
 					<td data-email="<?php echo $cliente->email; ?>"> <?php echo $cliente->email; ?> </td>
 					<td data-telefono="<?php echo $cliente->telefono; ?>"> <?php echo $cliente->telefono; ?> </td>
 					<td class="text-center">
@@ -80,14 +80,6 @@ else:
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Apellido Materno</span>
-						        </div>
-						        <input type="text" name="apellidoMaterno" class="form-control">
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Email</span>
 						        </div>
 						        <input type="email" name="email" class="form-control" required>
@@ -97,9 +89,6 @@ else:
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Telefono</span>
-						        </div>
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">(+56)</span>
 						        </div>
 						        <input type="text" name="telefono" class="form-control" required>
 					      	</div>
@@ -153,14 +142,6 @@ else:
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Apellido Materno</span>
-						        </div>
-						        <input type="text" name="apellidoMaterno" class="form-control">
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Email</span>
 						        </div>
 						        <input type="email" name="email" class="form-control" required>
@@ -170,9 +151,6 @@ else:
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Telefono</span>
-						        </div>
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">(+56)</span>
 						        </div>
 						        <input type="text" name="telefono" class="form-control" required>
 					      	</div>
@@ -207,7 +185,7 @@ else:
 
 $(document).ready(function(){
 
-	$(`[name="nombres"],[name="apellidoPaterno"],[name="apellidoMaterno"]`).keyup(function () {
+	$(`[name="nombres"],[name="apellidoPaterno"]`).keyup(function () {
 		var str = $(this).val()
 		str = str.toLowerCase()
 		str = str.charAt(0).toUpperCase() + str.slice(1)
@@ -320,7 +298,6 @@ $(document).ready(function(){
 	$(".btnEdit").click(function(){
 		nombres = $(this).closest('tr').find('[data-nombres]').data('nombres');
 		apellidopaterno = $(this).closest('tr').find('[data-apellidopaterno]').data('apellidopaterno');
-		apellidomaterno = $(this).closest('tr').find('[data-apellidomaterno]').data('apellidomaterno');
 		email = $(this).closest('tr').find('[data-email]').data('email');
 		telefono = $(this).closest('tr').find('[data-telefono]').data('telefono');
 		tr = $(this).closest('tr');
@@ -329,7 +306,6 @@ $(document).ready(function(){
 		$("#formEditCliente [name=regid]").val(regid);
 		$("#formEditCliente [name=nombres]").val(nombres);
 		$("#formEditCliente [name=apellidoPaterno]").val(apellidopaterno);
-		$("#formEditCliente [name=apellidoMaterno]").val(apellidomaterno);
 		$("#formEditCliente [name=email]").val(email);
 		$("#formEditCliente [name=telefono]").val(telefono);
 

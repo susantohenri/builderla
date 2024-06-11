@@ -390,7 +390,7 @@ if ($_POST) {
 					$(".overlay").hide();
 					$('#modalEditSolicitud [name=solicitud_id]').val(json.solicitud.id);
 
-					$('#modalEditSolicitud [name=cliente]').html(`<option value="${json.solicitud.cliente_id}" selected>${json.cliente.nombres} ${json.cliente.apellidoPaterno} ${json.cliente.apellidoMaterno}</option>`)
+					$('#modalEditSolicitud [name=cliente]').html(`<option value="${json.solicitud.cliente_id}" selected>${json.cliente.nombres} ${json.cliente.apellidoPaterno}</option>`)
 
 					$('[name=vehiculo]').empty();
 					$.each(json.vehiculos, function(k, v) {

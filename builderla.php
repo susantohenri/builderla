@@ -165,7 +165,6 @@ function insertar_cliente_callback(){
 	$array_insert = [
 		'nombres' => $_POST['nombres'],
 		'apellidoPaterno' => $_POST['apellidoPaterno'],
-		'apellidoMaterno' => $_POST['apellidoMaterno'],
 		'email' => $_POST['email'],
 		'telefono' => $_POST['telefono'],
 		'secret' => md5($pass),
@@ -193,7 +192,6 @@ function actualizar_cliente_callback(){
 	$array_edit = [
 		'nombres' => $_POST['nombres'],
 		'apellidoPaterno' => $_POST['apellidoPaterno'],
-		'apellidoMaterno' => $_POST['apellidoMaterno'],
 		'email' => $_POST['email'],
 		'telefono' => $_POST['telefono']
 	];
@@ -754,9 +752,9 @@ class Mopar{
 	public static function getSelect2Clientes(){
 		global $wpdb;
 		$clientes = $wpdb->get_results("
-			SELECT id, CONCAT(nombres, ' ', apellidoPaterno, ' ', apellidoMaterno) text
+			SELECT id, CONCAT(nombres, ' ', apellidoPaterno) text
 			FROM clientes
-			WHERE CONCAT(apellidoPaterno, ' ', apellidoMaterno, ' ', nombres) LIKE '%{$_GET['q']}%'
+			WHERE CONCAT(apellidoPaterno, ' ', nombres) LIKE '%{$_GET['q']}%'
 			ORDER BY id DESC
 			LIMIT 10
 		");
@@ -1081,9 +1079,9 @@ class Mopar{
 			if (!$cliente) return '';
 
 			if( $apellido_primero )
-				$nombre_cliente = $cliente->apellidoPaterno . " " . $cliente->apellidoMaterno . " " . $cliente->nombres;
+				$nombre_cliente = $cliente->apellidoPaterno . " " . $cliente->nombres;
 			else
-				$nombre_cliente = $cliente->nombres . " " . $cliente->apellidoPaterno . " " . $cliente->apellidoMaterno;
+				$nombre_cliente = $cliente->nombres . " " . $cliente->apellidoPaterno;
 
 			return $nombre_cliente;
 		else:
