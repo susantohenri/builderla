@@ -44,7 +44,7 @@ $ots = Mopar::getOtByCliente($_GET['cid']);
                             <td data-km="<?php echo $ot->km; ?>"> <?php echo $ot->km; ?> </td>
                             <td data-estado="<?php echo $ot->estado; ?>"> <?php echo Mopar::getEstado($ot->estado); ?> </td>
                             <td class="text-center">
-                                <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/mopar_taller/pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info btnEdit" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>
+                                <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info btnEdit" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>
                                 <button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar"><i class="fa fa-trash-o"></i></button>
                             </td>
                         </tr>

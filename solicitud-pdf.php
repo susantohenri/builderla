@@ -115,7 +115,7 @@ if (user_can( $current_user, 'administrator' )) {
 
     $blueprint = null;
     if(is_null($blueprint)) $blueprint = 'https://www.doctormopar.com/wp-content/uploads/2023/10/jeep-compass-4.png';
-    else $blueprint = site_url('wp-content/plugins/mopar_taller/uploads/' . rawurlencode($blueprint));
+    else $blueprint = site_url('wp-content/plugins/builderla/uploads/' . rawurlencode($blueprint));
 
 	$page_2 = '
 	<page backtop="7mm" backbottom="7mm" backleft="10mm" backright="10mm">

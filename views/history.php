@@ -1,7 +1,7 @@
 <?php 
 global $wpdb;
 
-$folder = $_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/mopar_taller/uploads/';
+$folder = $_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/builderla/uploads/';
 $inserted = false;
 
 if( $_POST ){
@@ -102,7 +102,7 @@ $nombreVehiculo = Mopar::getNombreVehiculo($_GET['vid']);
                                 foreach ($uploads as $upload) {
                                 ?>
                                 <div>
-                                    <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/mopar_taller/uploads/<?php echo $upload; ?>" target="_blank"><?php echo $upload; ?></a>
+                                    <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/uploads/<?php echo $upload; ?>" target="_blank"><?php echo $upload; ?></a>
                                 </div>
                                 <?php
                                 }

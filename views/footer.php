@@ -11,4 +11,4 @@
 
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 
-<script type="text/javascript" src="<?php bloginfo('wpurl') ?>/wp-content/plugins/mopar_taller/assets/custom.js"></script>
+<script type="text/javascript" src="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/assets/custom.js"></script>

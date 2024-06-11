@@ -110,7 +110,7 @@ if(isset($_GET['vid'])){
 						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Address Line 2</span>
 						        </div>
-						        <input type="text" name="address_line_2" class="form-control" required>
+						        <input type="text" name="address_line_2" class="form-control">
 					      	</div>
 				    	</div>
 				    	<div class="form-group col-md-6">
@@ -225,7 +225,7 @@ if(isset($_GET['vid'])){
 						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Address Line 2</span>
 						        </div>
-						        <input type="text" name="address_line_2" class="form-control" required>
+						        <input type="text" name="address_line_2" class="form-control">
 					      	</div>
 				    	</div>
 				    	<div class="form-group col-md-6">
