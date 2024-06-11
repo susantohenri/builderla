@@ -81,12 +81,3 @@ section#history .badge.badge-pill em.dia{
 .custom-file-label::after{
 	content: 'Buscar' !important;
 }
-
-
-section#modelos table img{
-	width: 100px; 
-	height: auto;
-}
-
-
-

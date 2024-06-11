@@ -7,7 +7,7 @@ if (user_can( $current_user, 'administrator' )) {
 
 	$solicitud = Mopar::getOneSolicitud($_GET['id']);
 	$cliente = Mopar::getOneCliente($solicitud->cliente_id);
-	$vehiculo = 0 != $solicitud->vehiculo_id ? Mopar::getOneVehiculo($solicitud->vehiculo_id) : json_decode('{"marca":"","modelo":"","ano":"","color":"","patente":"","nro_motor":""}');
+	$vehiculo = 0 != $solicitud->vehiculo_id ? Mopar::getOneVehiculo($solicitud->vehiculo_id) : json_decode('{"marca":"","ano":"","color":"","patente":"","nro_motor":""}');
 	$title = 1 == $solicitud->estado ? 'Solicitud de servicio' : 'Orden de Ingreso';
 
 	$html = '
@@ -61,8 +61,8 @@ if (user_can( $current_user, 'administrator' )) {
 			<td style="width: 295px; border: 1px solid #000;">
 				<table class="no_padding">
 					<tr>
-						<td><strong>Marca/Modelo: </strong></td>
-						<td>' . $vehiculo->marca . ' / ' . $vehiculo->modelo . '</td>
+						<td><strong>Marca: </strong></td>
+						<td>' . $vehiculo->marca . '</td>
 					</tr>
 					<tr>
 						<td><strong>A&ntilde;o: </strong></td>
@@ -113,7 +113,7 @@ if (user_can( $current_user, 'administrator' )) {
 	</table>
 	</page>';
 
-    $blueprint = Mopar::getBlueprintBySolicitudId($_GET['id']);
+    $blueprint = null;
     if(is_null($blueprint)) $blueprint = 'https://www.doctormopar.com/wp-content/uploads/2023/10/jeep-compass-4.png';
     else $blueprint = site_url('wp-content/plugins/mopar_taller/uploads/' . rawurlencode($blueprint));
 

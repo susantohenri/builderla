@@ -423,7 +423,7 @@ $(document).ready(function(){
     			$('[name=vehiculo]').empty();
 				$('[name=vehiculo]').append(new Option('Seleccione Vehiculo', ''));
 				$.each(json.vehiculos, function(k,v){
-					$('[name=vehiculo]').append(new Option(v.marca+" - "+v.modelo+" - "+v.ano, v.id));
+					$('[name=vehiculo]').append(new Option(v.marca+" - " + v.ano, v.id));
 				})
 				$("[name=vehiculo]").removeAttr('disabled');
 				$("[name=vehiculo]").val(json.ot.vehiculo_id);
@@ -537,7 +537,7 @@ $(document).ready(function(){
 				$('[name=vehiculo]').empty();
 				$('[name=vehiculo]').append(new Option('Seleccione Vehiculo', ''));
 				$.each(json.vehiculos, function(k,v){
-					$('[name=vehiculo]').append(new Option(v.marca+" - "+v.modelo+" - "+v.ano, v.id));
+					$('[name=vehiculo]').append(new Option(v.marca+" - " + v.ano, v.id));
 				})
 				$("[name=vehiculo]").removeAttr('disabled');
 			}

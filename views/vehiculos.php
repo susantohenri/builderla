@@ -21,7 +21,6 @@ if( $_GET['vid'] ){
 				<th> # </th>
 				<th> Patente </th>
 				<th> Marca </th>
-				<th> Modelo </th>
 				<th> Año </th>
 				<th> Color </th>
 				<th> VIN </th>
@@ -31,11 +30,10 @@ if( $_GET['vid'] ){
 		</thead>
 		<tbody>
 			<?php foreach ($vehiculos as $key => $vehiculo): ?>
-			<tr data-regid="<?php echo $vehiculo->id ?>" data-modelo_id="<?php echo $vehiculo->modelo_id ?>">
+			<tr data-regid="<?php echo $vehiculo->id ?>">
 				<td data-regid="<?php echo $vehiculo->id ?>"> <?php echo $vehiculo->id ?> </td>
 				<td data-patente="<?php echo $vehiculo->patente ?>"> <?php echo $vehiculo->patente ?> </td>
 				<td data-marca="<?php echo $vehiculo->marca ?>"> <?php echo $vehiculo->marca ?> </td>
-				<td data-modelo="<?php echo $vehiculo->modelo ?>"> <?php echo $vehiculo->modelo ?> </td>
 				<td data-ano="<?php echo $vehiculo->ano ?>"> <?php echo $vehiculo->ano ?> </td>
 				<td data-color="<?php echo $vehiculo->color ?>"> <?php echo $vehiculo->color ?> </td>
 				<td data-nro_motor="<?php echo $vehiculo->nro_motor ?>"> <?php echo $vehiculo->nro_motor ?> </td>
@@ -94,14 +92,6 @@ if( $_GET['vid'] ){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Modelo</span>
-						        </div>
-						        <input type="text" name="modelo" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Color</span>
 						        </div>
 						        <input type="text" name="color" class="form-control" required>
@@ -124,19 +114,6 @@ if( $_GET['vid'] ){
 						        	<option value="">Seleccione</option>
 						        	<?php foreach ($clientes as $cliente) { ?>
 						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->apellidoMaterno ?> <?php echo $cliente->nombres ?></option>
-						        	<?php } ?>
-						        </select>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Modelo</span>
-						        </div>
-						        <select name="modelo_id" class="form-control">
-									<!--<option value="0">Seleccione</option>-->
-						        	<?php foreach ($modelos as $modelo) { ?>
-						        	<option value="<?php echo $modelo->id ?>"><?php echo $modelo->marca ?> / <?php echo $modelo->modelo ?> / <?php echo $modelo->version ?> / <?php echo $modelo->ano ?> </option>
 						        	<?php } ?>
 						        </select>
 					      	</div>
@@ -198,14 +175,6 @@ if( $_GET['vid'] ){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Modelo</span>
-						        </div>
-						        <input type="text" name="modelo" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Color</span>
 						        </div>
 						        <input type="text" name="color" class="form-control" required>
@@ -228,19 +197,6 @@ if( $_GET['vid'] ){
 						        	<option value="">Seleccione</option>
 						        	<?php foreach ($clientes as $cliente) { ?>
 						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->apellidoMaterno ?> <?php echo $cliente->nombres ?></option>
-						        	<?php } ?>
-						        </select>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Modelo</span>
-						        </div>
-						        <select name="modelo_id" class="form-control">
-									<option value="0">Otro</option>
-						        	<?php foreach ($modelos as $modelo) { ?>
-						        	<option value="<?php echo $modelo->id ?>"><?php echo $modelo->marca ?> / <?php echo $modelo->modelo ?> / <?php echo $modelo->version ?> / <?php echo $modelo->ano ?> </option>
 						        	<?php } ?>
 						        </select>
 					      	</div>
@@ -353,11 +309,9 @@ $(document).ready(function(){
 		patente = $(this).closest('tr').find('[data-patente]').data('patente');
 		ano = $(this).closest('tr').find('[data-ano]').data('ano');
 		marca = $(this).closest('tr').find('[data-marca]').data('marca');
-		modelo = $(this).closest('tr').find('[data-modelo]').data('modelo');
 		color = $(this).closest('tr').find('[data-color]').data('color');
 		nro_motor = $(this).closest('tr').find('[data-nro_motor]').data('nro_motor');
 		cliente_id = $(this).closest('tr').find('[data-cliente_id]').data('cliente_id');
-		modelo_id = $(this).closest('tr').data('modelo_id');
 
 		tr = $(this).closest('tr');
 		regid = tr.data('regid');
@@ -366,11 +320,9 @@ $(document).ready(function(){
 		$("#formEditVehiculo [name=patente]").val(patente);
 		$("#formEditVehiculo [name=ano]").val(ano);
 		$("#formEditVehiculo [name=marca]").val(marca);
-		$("#formEditVehiculo [name=modelo]").val(modelo);
 		$("#formEditVehiculo [name=color]").val(color);
 		$("#formEditVehiculo [name=nro_motor]").val(nro_motor);
 		$("#formEditVehiculo [name=cliente]").val(cliente_id);
-		$("#formEditVehiculo [name=modelo_id]").val(modelo_id);
 
 		$("#modalEditVehiculo").modal('show');
 	})

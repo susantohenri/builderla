@@ -10,7 +10,6 @@
 
 function theme_options_panel(){
 	add_menu_page('Doctor Mopar Taller', 'Doctor Mopar Taller', 'manage_options', 'mopar-taller', 'taller_home_func','dashicons-admin-tools',2);
-	add_submenu_page( 'mopar-taller', 'Modelos', 'Modelos', 'manage_options', 'mopar-modelos', 'taller_modelos_func');
 	add_submenu_page( 'mopar-taller', 'Clientes', 'Clientes', 'manage_options', 'mopar-clientes', 'taller_clientes_func');
 	add_submenu_page( 'mopar-taller', 'Vehiculos', 'Vehiculos', 'manage_options', 'mopar-vehiculos', 'taller_vehiculos_func');
 	// add_submenu_page( 'mopar-taller', 'OT', 'OT', 'manage_options', 'mopar-ot', 'taller_ot_func');
@@ -30,18 +29,9 @@ function taller_home_func(){
 	include('views/home.php');	
 }
 
-function taller_modelos_func(){
-    $vehiculos = Mopar::getVehiculos();
-	$clientes = Mopar::getClientes();
-	
-	include('views/modelos.php');	
-}
-
-
 function taller_vehiculos_func(){
     $vehiculos = Mopar::getVehiculos();
 	$clientes = Mopar::getClientes(['field' => 'id', 'type' => 'DESC']);
-	$modelos = Mopar::getModelos();
 	
 	include('views/vehiculos.php');	
 }
@@ -260,12 +250,10 @@ function insertar_vehiculo_callback(){
 		$array_insert = [
 			'patente' => $_POST['patente'],
 			'marca' => $_POST['marca'],
-			'modelo' => $_POST['modelo'],
 			'color' => $_POST['color'],
 			'ano' => $_POST['ano'],
 			'nro_motor' => $_POST['nro_motor'],
-			'cliente_id' => $_POST['cliente'],
-			'modelo_id' => $_POST['modelo_id']
+			'cliente_id' => $_POST['cliente']
 		];
 		$wpdb->insert('vehiculos',$array_insert);
 		$last_query = $wpdb->last_query;
@@ -297,12 +285,10 @@ function actualizar_vehiculo_callback(){
 		$array_edit = [
 			'patente' => $_POST['patente'],
 			'marca' => $_POST['marca'],
-			'modelo' => $_POST['modelo'],
 			'color' => $_POST['color'],
 			'ano' => $_POST['ano'],
 			'nro_motor' => $_POST['nro_motor'],
-			'cliente_id' => $_POST['cliente'],
-			'modelo_id' => $_POST['modelo_id']
+			'cliente_id' => $_POST['cliente']
 		];
 		$wpdb->update('vehiculos',$array_edit,['id' => $_POST['regid']]);
 
@@ -713,35 +699,6 @@ function get_solicitud_callback(){
 	exit();  
 }
 
-
-/************** MODELOS *****************/
-function eliminar_modelo_callback(){
-	global $wpdb;
-	$wpdb->delete( 'modelos', ['id' => $_POST['regid']]);
-	$json = [
-		'status' => 'OK'
-	];
-
-	echo json_encode($json);
-	exit();  
-}
-
-
-
-function get_modelo_callback(){
-	global $wpdb;
-
-	$modelo_id = $_POST['modelo_id'];
-	$modelo = $wpdb->get_row('SELECT * FROM modelos WHERE id = ' . $modelo_id);
-
-	$json = [
-		'modelo' => $modelo
-	];
-
-	echo json_encode($json);
-	exit();  
-}
-
 function mopar_taller_select2_clientes () {
 	register_rest_route('mopar-taller/v1', '/clientes', [
         'methods' => 'GET',
@@ -766,10 +723,6 @@ add_action('wp_ajax_eliminar_vehiculo','eliminar_vehiculo_callback');
 //Historial
 add_action('wp_ajax_eliminar_historial','eliminar_historial_callback');
 
-//Modelos
-add_action('wp_ajax_eliminar_modelo','eliminar_modelo_callback');
-add_action('wp_ajax_get_modelo','get_modelo_callback');
-
 //OT
 add_action('wp_ajax_insertar_ot','insertar_ot_callback');
 add_action( 'wp_ajax_md_support_save','editar_ot' );
@@ -791,13 +744,6 @@ add_action('wp_ajax_get_solicitud','get_solicitud_callback');
 add_action('rest_api_init', 'mopar_taller_select2_clientes');
 
 class Mopar{
-
-	public static function getModelos(){
-		global $wpdb;
-    	$modelos = $wpdb->get_results('SELECT * FROM modelos');
-
-    	return $modelos;
-	}
 
 	public static function getClientes($sorting = ['field' => 'apellidoPaterno', 'type' => 'ASC']){
 		global $wpdb;
@@ -848,9 +794,8 @@ class Mopar{
 	public static function getVehiculosByCliente($cliente_id){
 		global $wpdb;
 		$cliente = $wpdb->get_results($wpdb->prepare("
-			SELECT vehiculos.*, modelos.imagen
+			SELECT vehiculos.*
 			FROM vehiculos
-			LEFT JOIN modelos ON vehiculos.modelo_id = modelos.id
 			WHERE cliente_id = %d
 		", $cliente_id));
 
@@ -970,18 +915,6 @@ class Mopar{
 				LEFT JOIN vehiculos ON solicitud.vehiculo_id = vehiculos.id
 			WHERE solicitud.fecha IS NOT NULL
 		"));
-	}
-
-	public static function getBlueprintBySolicitudId ($id) {
-		global $wpdb;
-		return $wpdb->get_var($wpdb->prepare("
-			SELECT
-				modelos.blueprint
-			FROM solicitud
-			LEFT JOIN vehiculos ON solicitud.vehiculo_id = vehiculos.id
-			LEFT JOIN modelos ON vehiculos.modelo_id = modelos.id
-			WHERE solicitud.id = %d
-		", $id));
 	}
 
 	public static function solicitudAddExpense ($params) {
@@ -1160,9 +1093,9 @@ class Mopar{
 
 	public static function getNombreVehiculo($vehiculo_id){
 		global $wpdb;
-		$sql = 'SELECT marca,modelo,patente FROM vehiculos where id = ' . $vehiculo_id;
+		$sql = 'SELECT marca,patente FROM vehiculos where id = ' . $vehiculo_id;
 		$vehiculo = $wpdb->get_row($sql);
-		$nombre_vehiculo = $vehiculo->marca . " - " . $vehiculo->modelo . " - " . $vehiculo->patente;
+		$nombre_vehiculo = $vehiculo->marca . " - " . $vehiculo->patente;
 
 		return $nombre_vehiculo;
 	}
@@ -1272,7 +1205,7 @@ Servicio al cliente
 				$subject = 'Estamos reparando su vehículo!';
 				$message = "{$cliente->nombres}:
 	
-Nos complace informarte que tu {$vehicle->marca} {$vehicle->modelo} está siendo atendido por nuestro equipo de profesionales.
+Nos complace informarte que tu {$vehicle->marca} está siendo atendido por nuestro equipo de profesionales.
 
 Durante el proceso de servicio, si tienes alguna pregunta o necesitas alguna información adicional, no dudes en ponerte en contacto con nosotros. Estamos aquí para ayudarte en todo momento y asegurarnos de que tengas la mejor experiencia.
 

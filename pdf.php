@@ -70,8 +70,8 @@ if (user_can( $current_user, 'administrator' )) {
 			<td style="width: 295px; border: 1px solid #000;">
 				<table class="no_padding">
 					<tr>
-						<td><strong>Marca/Modelo: </strong></td>
-						<td>' . $vehiculo->marca . '/' . $vehiculo->modelo . '</td>
+						<td><strong>Marca: </strong></td>
+						<td>' . $vehiculo->marca . '</td>
 					</tr>
 					<tr>
 						<td><strong>A&ntilde;o: </strong></td>
