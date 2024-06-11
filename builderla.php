@@ -251,6 +251,10 @@ function insertar_vehiculo_callback(){
 			'color' => $_POST['color'],
 			'ano' => $_POST['ano'],
 			'nro_motor' => $_POST['nro_motor'],
+			'street_address' => $_POST['street_address'],
+			'address_line_2' => $_POST['address_line_2'],
+			'city' => $_POST['city'],
+			'zip_code' => $_POST['zip_code'],
 			'cliente_id' => $_POST['cliente']
 		];
 		$wpdb->insert('vehiculos',$array_insert);
@@ -286,6 +290,10 @@ function actualizar_vehiculo_callback(){
 			'color' => $_POST['color'],
 			'ano' => $_POST['ano'],
 			'nro_motor' => $_POST['nro_motor'],
+			'street_address' => $_POST['street_address'],
+			'address_line_2' => $_POST['address_line_2'],
+			'city' => $_POST['city'],
+			'zip_code' => $_POST['zip_code'],
 			'cliente_id' => $_POST['cliente']
 		];
 		$wpdb->update('vehiculos',$array_edit,['id' => $_POST['regid']]);

@@ -4,7 +4,7 @@
 -- https://tableplus.com/
 --
 -- Database: local
--- Generation Time: 2024-06-11 14:53:42.0200
+-- Generation Time: 2024-06-12 05:33:49.3120
 -- -------------------------------------------------------------
 
 
@@ -105,11 +105,14 @@ CREATE TABLE `vehiculos` (
   `color` varchar(255) NOT NULL,
   `ano` int(11) NOT NULL,
   `nro_motor` varchar(50) NOT NULL,
+  `street_address` varchar(255) NOT NULL,
+  `address_line_2` varchar(255),
+  `city` varchar(255) NOT NULL,
+  `zip_code` varchar(10) NOT NULL,
   `cliente_id` int(11) DEFAULT NULL,
-  `modelo_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `cliente_id` (`cliente_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
 

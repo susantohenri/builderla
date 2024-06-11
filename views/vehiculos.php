@@ -1,7 +1,7 @@
 <?php include 'header.php'; ?>
 
 <?php 
-if( $_GET['vid'] ){
+if(isset($_GET['vid'])){
 	include 'ots_by_vehiculo.php';
 } else {
 ?>
@@ -30,7 +30,7 @@ if( $_GET['vid'] ){
 		</thead>
 		<tbody>
 			<?php foreach ($vehiculos as $key => $vehiculo): ?>
-			<tr data-regid="<?php echo $vehiculo->id ?>">
+			<tr data-regid="<?php echo $vehiculo->id ?>" <?php foreach (['street_address', 'address_line_2', 'city', 'zip_code'] as $field) { echo "data-{$field}=\"{$vehiculo->$field}\"";} ?>>
 				<td data-regid="<?php echo $vehiculo->id ?>"> <?php echo $vehiculo->id ?> </td>
 				<td data-patente="<?php echo $vehiculo->patente ?>"> <?php echo $vehiculo->patente ?> </td>
 				<td data-marca="<?php echo $vehiculo->marca ?>"> <?php echo $vehiculo->marca ?> </td>
@@ -97,7 +97,39 @@ if( $_GET['vid'] ){
 						        <input type="text" name="color" class="form-control" required>
 					      	</div>
 				    	</div>
+						<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">Street Address*</span>
+						        </div>
+						        <input type="text" name="street_address" class="form-control" required>
+					      	</div>
+				    	</div>
 				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">Address Line 2</span>
+						        </div>
+						        <input type="text" name="address_line_2" class="form-control" required>
+					      	</div>
+				    	</div>
+				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">City*</span>
+						        </div>
+						        <input type="text" name="city" class="form-control" required>
+					      	</div>
+				    	</div>
+				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">Zip code</span>
+						        </div>
+						        <input type="text" name="zip_code" class="form-control" required>
+					      	</div>
+				    	</div>
+						<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
 					          		<span class="input-group-text">VIN</span>
@@ -180,7 +212,39 @@ if( $_GET['vid'] ){
 						        <input type="text" name="color" class="form-control" required>
 					      	</div>
 				    	</div>
+						<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">Street Address*</span>
+						        </div>
+						        <input type="text" name="street_address" class="form-control" required>
+					      	</div>
+				    	</div>
 				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">Address Line 2</span>
+						        </div>
+						        <input type="text" name="address_line_2" class="form-control" required>
+					      	</div>
+				    	</div>
+				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">City*</span>
+						        </div>
+						        <input type="text" name="city" class="form-control" required>
+					      	</div>
+				    	</div>
+				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">Zip code</span>
+						        </div>
+						        <input type="text" name="zip_code" class="form-control" required>
+					      	</div>
+				    	</div>
+						<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
 					          		<span class="input-group-text">VIN</span>
@@ -310,6 +374,10 @@ $(document).ready(function(){
 		ano = $(this).closest('tr').find('[data-ano]').data('ano');
 		marca = $(this).closest('tr').find('[data-marca]').data('marca');
 		color = $(this).closest('tr').find('[data-color]').data('color');
+		street_address = $(this).closest('tr').data('street_address');
+		address_line_2 = $(this).closest('tr').data('address_line_2');
+		city = $(this).closest('tr').data('city');
+		zip_code = $(this).closest('tr').data('zip_code');
 		nro_motor = $(this).closest('tr').find('[data-nro_motor]').data('nro_motor');
 		cliente_id = $(this).closest('tr').find('[data-cliente_id]').data('cliente_id');
 
@@ -321,6 +389,10 @@ $(document).ready(function(){
 		$("#formEditVehiculo [name=ano]").val(ano);
 		$("#formEditVehiculo [name=marca]").val(marca);
 		$("#formEditVehiculo [name=color]").val(color);
+		$("#formEditVehiculo [name=street_address]").val(street_address);
+		$("#formEditVehiculo [name=address_line_2]").val(address_line_2);
+		$("#formEditVehiculo [name=city]").val(city);
+		$("#formEditVehiculo [name=zip_code]").val(zip_code);
 		$("#formEditVehiculo [name=nro_motor]").val(nro_motor);
 		$("#formEditVehiculo [name=cliente]").val(cliente_id);
 
