@@ -1,9 +1,9 @@
 <?php
 /**
- *  Plugin Name: Taller Doctor Mopar
- * 	Plugin URI: http://www.doctormopar.com
- * 	Description: Sencillo plugin para administrar el Taller
- * 	Version: 0.1
+ *  Plugin Name: BuilderLA
+ * 	Plugin URI: http://builderla.com/
+ * 	Description: Sencillo plugin para administrar
+ * 	Version: 1.0
  * 	Author: Javier Basso
  * 	Author URI: http://www.doctormopar.com
  */
