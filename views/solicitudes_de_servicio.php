@@ -394,7 +394,7 @@ if ($_POST) {
 
 					$('[name=vehiculo]').empty();
 					$.each(json.vehiculos, function(k, v) {
-						$('[name=vehiculo]').append(new Option(v.marca + " - " + v.ano, v.id));
+						$('[name=vehiculo]').append(new Option(v.street_address + " - " + v.address_line_2, v.id));
 					})
 					$("[name=vehiculo]").removeAttr('disabled');
 					$("[name=vehiculo]").val(json.solicitud.vehiculo_id);
@@ -426,7 +426,7 @@ if ($_POST) {
 				success: function(json) {
 					$('[name=vehiculo]').empty();
 					$.each(json.vehiculos, function(k, v) {
-						$('[name=vehiculo]').append(new Option(v.marca + " - " + v.ano, v.id));
+						$('[name=vehiculo]').append(new Option(v.street_address + " - " + v.address_line_2, v.id));
 					})
 					$("[name=vehiculo]").removeAttr('disabled');
 				}

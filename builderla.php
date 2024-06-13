@@ -234,37 +234,21 @@ function eliminar_vehiculo_callback(){
 
 function insertar_vehiculo_callback(){
 	global $wpdb;
-	//Check Vehiculo Exist
-	$sql = "SELECT * FROM vehiculos WHERE patente = '" . $_POST['patente'] . "'";
-	$vehiculo = $wpdb->get_row($sql);
 
-	if( $vehiculo ){
-		$json = [
-			'status' => 'ERROR',
-			'msg' => 'La Patente del Vehiculo ya existe en la base de datos'
-		];
-	} else {
-
-		$array_insert = [
-			'patente' => $_POST['patente'],
-			'marca' => $_POST['marca'],
-			'color' => $_POST['color'],
-			'ano' => $_POST['ano'],
-			'nro_motor' => $_POST['nro_motor'],
-			'street_address' => $_POST['street_address'],
-			'address_line_2' => $_POST['address_line_2'],
-			'city' => $_POST['city'],
-			'zip_code' => $_POST['zip_code'],
-			'cliente_id' => $_POST['cliente']
-		];
-		$wpdb->insert('vehiculos',$array_insert);
-		$last_query = $wpdb->last_query;
-		$json = [
-			'status' => 'OK',
-			'sql' => $last_query,
-			'error' => $wpdb->last_error
-		];
-	}
+	$array_insert = [
+		'street_address' => $_POST['street_address'],
+		'address_line_2' => $_POST['address_line_2'],
+		'city' => $_POST['city'],
+		'zip_code' => $_POST['zip_code'],
+		'cliente_id' => $_POST['cliente']
+	];
+	$wpdb->insert('vehiculos',$array_insert);
+	$last_query = $wpdb->last_query;
+	$json = [
+		'status' => 'OK',
+		'sql' => $last_query,
+		'error' => $wpdb->last_error
+	];
 
 	echo json_encode($json);
 	exit();  
@@ -273,36 +257,20 @@ function insertar_vehiculo_callback(){
 
 function actualizar_vehiculo_callback(){
 	global $wpdb;
-	//Check Vehiculo Exist
-	$sql = "SELECT * FROM vehiculos WHERE patente = '" . $_POST['patente'] . "' AND id != " . $_POST['regid'];
-	$vehiculo = $wpdb->get_row($sql);
 
-	if( $vehiculo ){
-		$json = [
-			'status' => 'ERROR',
-			'msg' => 'La Patente del Vehiculo ya existe en la base de datos'
-		];
-	} else {
+	$array_edit = [
+		'street_address' => $_POST['street_address'],
+		'address_line_2' => $_POST['address_line_2'],
+		'city' => $_POST['city'],
+		'zip_code' => $_POST['zip_code'],
+		'cliente_id' => $_POST['cliente']
+	];
+	$wpdb->update('vehiculos',$array_edit,['id' => $_POST['regid']]);
 
-		$array_edit = [
-			'patente' => $_POST['patente'],
-			'marca' => $_POST['marca'],
-			'color' => $_POST['color'],
-			'ano' => $_POST['ano'],
-			'nro_motor' => $_POST['nro_motor'],
-			'street_address' => $_POST['street_address'],
-			'address_line_2' => $_POST['address_line_2'],
-			'city' => $_POST['city'],
-			'zip_code' => $_POST['zip_code'],
-			'cliente_id' => $_POST['cliente']
-		];
-		$wpdb->update('vehiculos',$array_edit,['id' => $_POST['regid']]);
-
-		$json = [
-			'status' => 'OK',
-			'sql' => $wpdb->last_query
-		];
-	}
+	$json = [
+		'status' => 'OK',
+		'sql' => $wpdb->last_query
+	];
 
 	echo json_encode($json);
 	exit(); 
@@ -1099,9 +1067,9 @@ class Mopar{
 
 	public static function getNombreVehiculo($vehiculo_id){
 		global $wpdb;
-		$sql = 'SELECT marca,patente FROM vehiculos where id = ' . $vehiculo_id;
+		$sql = 'SELECT street_address,address_line_2 FROM vehiculos where id = ' . $vehiculo_id;
 		$vehiculo = $wpdb->get_row($sql);
-		$nombre_vehiculo = $vehiculo->marca . " - " . $vehiculo->patente;
+		$nombre_vehiculo = $vehiculo->street_address . " - " . $vehiculo->address_line_2;
 
 		return $nombre_vehiculo;
 	}
@@ -1211,7 +1179,7 @@ Servicio al cliente
 				$subject = 'Estamos reparando su vehículo!';
 				$message = "{$cliente->nombres}:
 	
-Nos complace informarte que tu {$vehicle->marca} está siendo atendido por nuestro equipo de profesionales.
+Nos complace informarte que tu {$vehicle->city} está siendo atendido por nuestro equipo de profesionales.
 
 Durante el proceso de servicio, si tienes alguna pregunta o necesitas alguna información adicional, no dudes en ponerte en contacto con nosotros. Estamos aquí para ayudarte en todo momento y asegurarnos de que tengas la mejor experiencia.
 

@@ -1,7 +1,7 @@
 ﻿<?php include 'header.php'; ?>
 
 <?php 
-if( $_GET['cid'] ):
+if( isset($_GET['cid']) ):
 	include 'ots_by_cliente.php';
 else:
 ?>

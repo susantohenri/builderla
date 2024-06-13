@@ -4,7 +4,7 @@
 -- https://tableplus.com/
 --
 -- Database: local
--- Generation Time: 2024-06-12 05:33:49.3120
+-- Generation Time: 2024-06-13 14:58:25.9340
 -- -------------------------------------------------------------
 
 
@@ -51,7 +51,7 @@ CREATE TABLE `modelos` (
   `imagen` text NOT NULL,
   `blueprint` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `ot`;
 CREATE TABLE `ot` (
@@ -99,20 +99,15 @@ CREATE TABLE `solicitud` (
 DROP TABLE IF EXISTS `vehiculos`;
 CREATE TABLE `vehiculos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `patente` varchar(6) NOT NULL,
-  `marca` varchar(255) NOT NULL,
   `modelo` varchar(255) NOT NULL,
-  `color` varchar(255) NOT NULL,
-  `ano` int(11) NOT NULL,
-  `nro_motor` varchar(50) NOT NULL,
   `street_address` varchar(255) NOT NULL,
-  `address_line_2` varchar(255),
+  `address_line_2` varchar(255) DEFAULT NULL,
   `city` varchar(255) NOT NULL,
   `zip_code` varchar(10) NOT NULL,
   `cliente_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `cliente_id` (`cliente_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 

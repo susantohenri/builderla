@@ -71,24 +71,16 @@ if (user_can( $current_user, 'administrator' )) {
 			<td style="width: 295px; border: 1px solid #000;">
 				<table class="no_padding">
 					<tr>
-						<td><strong>Marca: </strong></td>
-						<td>' . $vehiculo->marca . '</td>
+						<td><strong>Address: </strong></td>
+						<td>' . $vehiculo->street_address . ' ' . $vehiculo->address_line_2 . '</td>
 					</tr>
 					<tr>
-						<td><strong>A&ntilde;o: </strong></td>
-						<td>' . $vehiculo->ano . '</td>
+						<td><strong>City: </strong></td>
+						<td>' . $vehiculo->city . '</td>
 					</tr>
 					<tr>
-						<td><strong>Color: </strong></td>
-						<td>' . $vehiculo->color . '</td>
-					</tr>
-					<tr>
-						<td><strong>Patente: </strong></td>
-						<td>' . $vehiculo->patente . '</td>
-					</tr>
-					<tr>
-						<td><strong>VIN: </strong></td>
-						<td>' . $vehiculo->nro_motor . '</td>
+						<td><strong>ZIP Code: </strong></td>
+						<td>' . $vehiculo->zip_code . '</td>
 					</tr>
 				</table>
 			</td>

@@ -19,11 +19,6 @@ if(isset($_GET['vid'])){
 		<thead>
 			<tr>
 				<th> # </th>
-				<th> Patente </th>
-				<th> Marca </th>
-				<th> Año </th>
-				<th> Color </th>
-				<th> VIN </th>
 				<th> Cliente </th>
 				<th class="text-center">Acciones</th>
 			</tr>
@@ -32,13 +27,7 @@ if(isset($_GET['vid'])){
 			<?php foreach ($vehiculos as $key => $vehiculo): ?>
 			<tr data-regid="<?php echo $vehiculo->id ?>" <?php foreach (['street_address', 'address_line_2', 'city', 'zip_code'] as $field) { echo "data-{$field}=\"{$vehiculo->$field}\"";} ?>>
 				<td data-regid="<?php echo $vehiculo->id ?>"> <?php echo $vehiculo->id ?> </td>
-				<td data-patente="<?php echo $vehiculo->patente ?>"> <?php echo $vehiculo->patente ?> </td>
-				<td data-marca="<?php echo $vehiculo->marca ?>"> <?php echo $vehiculo->marca ?> </td>
-				<td data-ano="<?php echo $vehiculo->ano ?>"> <?php echo $vehiculo->ano ?> </td>
-				<td data-color="<?php echo $vehiculo->color ?>"> <?php echo $vehiculo->color ?> </td>
-				<td data-nro_motor="<?php echo $vehiculo->nro_motor ?>"> <?php echo $vehiculo->nro_motor ?> </td>
 				<td data-cliente_id="<?php echo $vehiculo->cliente_id ?>"> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id) ?> </td>
-				
 				<td class="text-center">
 					<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Editar Vehiculo"><i class="fa fa-pencil"></i></button>
 					<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar Vehiculo"><i class="fa fa-trash-o"></i></button>
@@ -65,38 +54,6 @@ if(isset($_GET['vid'])){
 	      		</div>
 	      		<div class="modal-body">
         			<div class="form-row">
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Patente</span>
-						        </div>
-						        <input type="text" name="patente" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Año</span>
-						        </div>
-						        <input type="text" name="ano" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Marca</span>
-						        </div>
-						        <input type="text" name="marca" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Color</span>
-						        </div>
-						        <input type="text" name="color" class="form-control" required>
-					      	</div>
-				    	</div>
 						<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
@@ -127,14 +84,6 @@ if(isset($_GET['vid'])){
 					          		<span class="input-group-text">Zip code</span>
 						        </div>
 						        <input type="text" name="zip_code" class="form-control" required>
-					      	</div>
-				    	</div>
-						<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">VIN</span>
-						        </div>
-						        <input type="text" name="nro_motor" class="form-control" required>
 					      	</div>
 				    	</div>
 				    	<div class="form-group col-md-6">
@@ -180,38 +129,6 @@ if(isset($_GET['vid'])){
 	      		</div>
 	      		<div class="modal-body">
         			<div class="form-row">
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Patente</span>
-						        </div>
-						        <input type="text" name="patente" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Año</span>
-						        </div>
-						        <input type="text" name="ano" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Marca</span>
-						        </div>
-						        <input type="text" name="marca" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Color</span>
-						        </div>
-						        <input type="text" name="color" class="form-control" required>
-					      	</div>
-				    	</div>
 						<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
@@ -242,14 +159,6 @@ if(isset($_GET['vid'])){
 					          		<span class="input-group-text">Zip code</span>
 						        </div>
 						        <input type="text" name="zip_code" class="form-control" required>
-					      	</div>
-				    	</div>
-						<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">VIN</span>
-						        </div>
-						        <input type="text" name="nro_motor" class="form-control" required>
 					      	</div>
 				    	</div>
 				    	<div class="form-group col-md-6">
@@ -370,30 +279,20 @@ $(document).ready(function(){
 
 
 	$(".btnEdit").click(function(){
-		patente = $(this).closest('tr').find('[data-patente]').data('patente');
-		ano = $(this).closest('tr').find('[data-ano]').data('ano');
-		marca = $(this).closest('tr').find('[data-marca]').data('marca');
-		color = $(this).closest('tr').find('[data-color]').data('color');
 		street_address = $(this).closest('tr').data('street_address');
 		address_line_2 = $(this).closest('tr').data('address_line_2');
 		city = $(this).closest('tr').data('city');
 		zip_code = $(this).closest('tr').data('zip_code');
-		nro_motor = $(this).closest('tr').find('[data-nro_motor]').data('nro_motor');
 		cliente_id = $(this).closest('tr').find('[data-cliente_id]').data('cliente_id');
 
 		tr = $(this).closest('tr');
 		regid = tr.data('regid');
 
 		$("#formEditVehiculo [name=regid]").val(regid);
-		$("#formEditVehiculo [name=patente]").val(patente);
-		$("#formEditVehiculo [name=ano]").val(ano);
-		$("#formEditVehiculo [name=marca]").val(marca);
-		$("#formEditVehiculo [name=color]").val(color);
 		$("#formEditVehiculo [name=street_address]").val(street_address);
 		$("#formEditVehiculo [name=address_line_2]").val(address_line_2);
 		$("#formEditVehiculo [name=city]").val(city);
 		$("#formEditVehiculo [name=zip_code]").val(zip_code);
-		$("#formEditVehiculo [name=nro_motor]").val(nro_motor);
 		$("#formEditVehiculo [name=cliente]").val(cliente_id);
 
 		$("#modalEditVehiculo").modal('show');
