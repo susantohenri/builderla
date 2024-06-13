@@ -1,5 +1,7 @@
 <?php  
 
+require __DIR__.'/vendor/autoload.php';
+use Spipu\Html2Pdf\Html2Pdf;
 include '../../../wp-load.php';
 
 $current_user = wp_get_current_user();
@@ -28,7 +30,6 @@ if (user_can( $current_user, 'administrator' )) {
 	<table style="width: 590px;">
 		<tr>
 			<td style="width: 295px;">
-				<img style="width: 200px; height: auto;" src="https://www.doctormopar.com/wp-content/uploads/2019/02/mopar.png">
 			</td>
 			<td style="width: 295px; text-align: center">
 				<h3 style="margin-bottom: 10px">Taller Doctor Mopar</h3>
@@ -113,15 +114,10 @@ if (user_can( $current_user, 'administrator' )) {
 	</table>
 	</page>';
 
-    $blueprint = null;
-    if(is_null($blueprint)) $blueprint = 'https://www.doctormopar.com/wp-content/uploads/2023/10/jeep-compass-4.png';
-    else $blueprint = site_url('wp-content/plugins/builderla/uploads/' . rawurlencode($blueprint));
-
 	$page_2 = '
 	<page backtop="7mm" backbottom="7mm" backleft="10mm" backright="10mm">
 	    
 	    <div style="text-align:center">
-	        <img src="'.$blueprint.'">
 	    </div>
 	    <br><br>
 	    
@@ -145,11 +141,11 @@ if (user_can( $current_user, 'administrator' )) {
 	';
     if (2 == $solicitud->estado) $html .= $page_2;
 
-
-	require_once('html2pdf/html2pdf.class.php');
-    $html2pdf = new HTML2PDF($orientation,'LETTER','es');
-    $html2pdf->WriteHTML($html);
-    $html2pdf->Output( $titulo_pdf . '_000'. $solicitud->id .'.pdf');
+	$orientation = 'potrait';
+	$titulo_pdf = 'solicitud';
+	$html2pdf = new Html2Pdf($orientation,'LETTER','es');
+	$html2pdf->writeHTML($html);
+	$html2pdf->output( $titulo_pdf . '_000'. $solicitud->id .'.pdf');
 }
 
 ?>

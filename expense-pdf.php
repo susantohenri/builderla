@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__.'/vendor/autoload.php';
+use Spipu\Html2Pdf\Html2Pdf;
 include '../../../wp-load.php';
 $solicitud = Mopar::getOneSolicitud($_GET['id']);
 foreach (['total', 'iva_debito', 'iva_credito', 'gastos', 'utilidad'] as $currency) $solicitud->$currency = number_format($solicitud->$currency, 0);
@@ -32,12 +34,12 @@ $html = "
 			<tbody>
                 <tr>
                     <td style='width: 590px;font-size: 32px; text-align: center;'>
-                        <u>Conciliaci¨®n Contable</u>
+                        <u>Conciliaciï¿½ï¿½n Contable</u>
                     </td>
                 </tr>
 				<tr>
 					<td style='width: 590px;text-align: center;font-size: 20px;'>
-						<b>TRABAJO N¡ã 000{$solicitud->id}</b>
+						<b>TRABAJO Nï¿½ï¿½ 000{$solicitud->id}</b>
 					</td>
 				</tr>
 			</tbody>
@@ -151,7 +153,8 @@ $html = "
     </page>
 ";
 
-require_once('html2pdf/html2pdf.class.php');
-$html2pdf = new HTML2PDF($orientation, 'LETTER', 'es');
-$html2pdf->WriteHTML($html);
-$html2pdf->Output('Conciliaci¨®n_000' . $solicitud->id . '.pdf');
+$orientation = 'potrait';
+$titulo_pdf = 'Conciliaciï¿½ï¿½n';
+$html2pdf = new Html2Pdf($orientation,'LETTER','es');
+$html2pdf->writeHTML($html);
+$html2pdf->output( $titulo_pdf . '_000'. $solicitud->id .'.pdf');

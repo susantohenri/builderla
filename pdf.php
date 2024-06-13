@@ -1,5 +1,7 @@
 <?php  
 
+require __DIR__.'/vendor/autoload.php';
+use Spipu\Html2Pdf\Html2Pdf;
 include '../../../wp-load.php';
 
 $current_user = wp_get_current_user();
@@ -37,7 +39,6 @@ if (user_can( $current_user, 'administrator' )) {
 	<table style="width: 590px;">
 		<tr>
 			<td style="width: 295px;">
-				<img style="width: 200px; height: auto;" src="https://www.doctormopar.com/wp-content/uploads/2019/02/mopar.png">
 			</td>
 			<td style="width: 295px; text-align: center">
 				<h3 style="margin-bottom: 10px">Doctor Mopar Taller</h3>
@@ -141,11 +142,10 @@ if (user_can( $current_user, 'administrator' )) {
 	';
 
 
-	require_once('html2pdf/html2pdf.class.php');
-    $html2pdf = new HTML2PDF($orientation,'LETTER','es');
-    $html2pdf->WriteHTML($html);
-    $html2pdf->Output( $titulo_pdf . '_000'. $ot->id .'.pdf');
-
+	$orientation = 'potrait';
+	$html2pdf = new Html2Pdf($orientation,'LETTER','es');
+	$html2pdf->writeHTML($html);
+	$html2pdf->output( $titulo_pdf . '_000'. $ot->id .'.pdf');
 }
 
 ?>
