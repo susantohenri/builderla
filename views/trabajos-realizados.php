@@ -323,7 +323,7 @@ $(document).ready(function(){
 
 				$("#modalEditOT table tbody").empty();
 				$.each(detalle.item,function(k,v){
-					h = '<tr>';
+					h = '<tr data-row-num="'+k+'a">';
 					h += '	<td>';
 					h += '		<input type="text" value="'+detalle.item[k]+'" name="detalle[item][]" class="form-control" required>';
 					h += '	</td>';
@@ -336,6 +336,14 @@ $(document).ready(function(){
 								<a href="#" class="btn btn-info btn-sm btnDown"><i class="fa fa-arrow-down"></i></a>
 							</td>`;
 					h += '</tr>';
+					h += `
+							<tr data-row-num="${k}b">
+								<td colspan="2">
+									<textarea name="detalle[observaciones][]" class="form-control">${detalle.observaciones[k]}</textarea>'
+								</td>
+								<td></td>
+							</tr>
+						`
 					$("#modalEditOT table tbody").append(h);
 					$("[data-toggle=tooltip]").tooltip();
 					$('.tooltip').hide();
@@ -362,6 +370,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		tr = $(this).closest('tr');
 		tr.fadeOut(300, function(){
+			tr.next().remove()
 			tr.remove();
 			recalcular();
 		})
@@ -371,20 +380,44 @@ $(document).ready(function(){
 
 	$(document).on('click','.btnUp',function(e){
 		e.preventDefault();
-		tr = $(this).closest('tr');
-		tr.insertBefore(tr.prev())
+		const tr = $(this).closest('tr');
+		const prev = tr.prev()
+
+		if (1 > prev.length) return false
+
+		const target_row_num = prev.attr(`data-row-num`).replace(`b`, `a`)
+		const target = tr.siblings(`tr[data-row-num="${target_row_num}"]`)
+
+		const observaciones_num = tr.attr(`data-row-num`).replace(`a`, `b`)
+		const observaciones = tr.siblings(`tr[data-row-num="${observaciones_num}"]`)
+
+		tr.insertBefore(target)
+		observaciones.insertBefore(target)
 	})
 
 	$(document).on('click','.btnDown',function(e){
 		e.preventDefault();
-		tr = $(this).closest('tr');
-		tr.insertAfter(tr.next())
+		const tr = $(this).closest('tr');
+		const next = tr.next().next()
+
+		if (1 > next.length) return false
+
+		const target_row_num = next.attr(`data-row-num`).replace(`a`, `b`)
+		const target = tr.siblings(`tr[data-row-num="${target_row_num}"]`)
+
+		const observaciones_num = tr.attr(`data-row-num`).replace(`a`, `b`)
+		const observaciones = tr.siblings(`tr[data-row-num="${observaciones_num}"]`)
+
+		observaciones.insertAfter(target)
+		tr.insertAfter(target)
 	})
 
 	$(".btnPlus").click(function(e){
 		e.preventDefault();
+		const last_row_num = jQuery(this).parent().parent().parent().parent().find(`tbody`).find(`tr`).last().attr(`data-row-num`).replace(`b`, ``)
+		const new_row_num = parseInt(last_row_num) + 1
 		h = '';
-		h += '<tr>';
+		h += '<tr data-row-num="'+new_row_num+'a">';
 		h += '	<td>';
 		h += '		<input type="text" name="detalle[item][]" class="form-control" required>';
 		h += '	</td>';
@@ -397,6 +430,14 @@ $(document).ready(function(){
 					<a href="#" class="btn btn-info btn-sm btnDown"><i class="fa fa-arrow-down"></i></a>
 				</td>`;
 		h += '</tr>';
+		h+= `
+				<tr data-row-num="${new_row_num}b">
+					<td colspan="2">
+						<textarea name="detalle[observaciones][]" class="form-control"></textarea>
+					</td>
+					<td></td>
+				</tr>
+		`
 		$(this).closest('.modal').find('table tbody').append(h)
 		$("[data-toggle=tooltip]").tooltip();
 		$('.tooltip').hide();
