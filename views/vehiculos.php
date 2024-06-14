@@ -19,6 +19,10 @@ if(isset($_GET['vid'])){
 		<thead>
 			<tr>
 				<th> # </th>
+				<th> Address 1 </th>
+				<th> Address 2 </th>
+				<th> City </th>
+				<th> Zip Code </th>
 				<th> Cliente </th>
 				<th class="text-center">Acciones</th>
 			</tr>
@@ -27,6 +31,10 @@ if(isset($_GET['vid'])){
 			<?php foreach ($vehiculos as $key => $vehiculo): ?>
 			<tr data-regid="<?php echo $vehiculo->id ?>" <?php foreach (['street_address', 'address_line_2', 'city', 'zip_code'] as $field) { echo "data-{$field}=\"{$vehiculo->$field}\"";} ?>>
 				<td data-regid="<?php echo $vehiculo->id ?>"> <?php echo $vehiculo->id ?> </td>
+				<td data-regid="<?php echo $vehiculo->street_address ?>"> <?php echo $vehiculo->street_address ?> </td>
+				<td data-regid="<?php echo $vehiculo->address_line_2 ?>"> <?php echo $vehiculo->address_line_2 ?> </td>
+				<td data-regid="<?php echo $vehiculo->city ?>"> <?php echo $vehiculo->city ?> </td>
+				<td data-regid="<?php echo $vehiculo->zip_code ?>"> <?php echo $vehiculo->zip_code ?> </td>
 				<td data-cliente_id="<?php echo $vehiculo->cliente_id ?>"> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id) ?> </td>
 				<td class="text-center">
 					<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Editar Vehiculo"><i class="fa fa-pencil"></i></button>
