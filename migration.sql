@@ -4,7 +4,7 @@
 -- https://tableplus.com/
 --
 -- Database: local
--- Generation Time: 2024-06-13 14:58:25.9340
+-- Generation Time: 2024-06-14 13:08:41.8810
 -- -------------------------------------------------------------
 
 
@@ -28,7 +28,7 @@ CREATE TABLE `clientes` (
   `secret` text NOT NULL,
   `nuevo` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `historial`;
 CREATE TABLE `historial` (
@@ -61,17 +61,14 @@ CREATE TABLE `ot` (
   `titulo` varchar(255) NOT NULL,
   `detalle` text NOT NULL,
   `valor` int(11) NOT NULL,
-  `km` int(11) NOT NULL,
   `estado` int(1) NOT NULL,
-  `observaciones` text NOT NULL,
-  `archivo` text NOT NULL,
   `regdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `upddate` datetime DEFAULT NULL,
   `entregar` tinyint(1) NOT NULL DEFAULT '0',
   `entregardate` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `solicitud`;
 CREATE TABLE `solicitud` (
@@ -94,7 +91,7 @@ CREATE TABLE `solicitud` (
   `utilidad` double NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `vehiculos`;
 CREATE TABLE `vehiculos` (
@@ -107,7 +104,7 @@ CREATE TABLE `vehiculos` (
   `cliente_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `cliente_id` (`cliente_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
 

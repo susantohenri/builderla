@@ -434,9 +434,7 @@ function proceed_solicitud_callback(){
 			'titulo' => '',
 			'detalle' => '{"item":[""],"precio":["0"]}',
 			'valor' => '',
-			'km' => '',
 			'estado' => 1,
-			'observaciones' => ''
 		]);
 		$wpdb->update('solicitud', ['estado' => 4, 'ot_id' => $wpdb->insert_id], ['id' => $_POST['regid']]);
 
@@ -470,9 +468,7 @@ function proceed_solicitud_without_ingreso_callback(){
 			'titulo' => '',
 			'detalle' => '{"item":[""],"precio":["0"]}',
 			'valor' => '',
-			'km' => '',
 			'estado' => 1,
-			'observaciones' => ''
 		]);
 
 		$wpdb->update('solicitud', ['estado' => 3, 'ot_id' => $wpdb->insert_id], ['id' => $_POST['regid']]);
@@ -515,9 +511,7 @@ function insertar_ot_callback(){
 		'titulo' => $_POST['titulo'],
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
-		'km' => $_POST['km'],
 		'estado' => $_POST['estado'],
-		'observaciones' => $_POST['observaciones']
 	];
 	$wpdb->insert('ot',$array_insert);
 
@@ -557,9 +551,7 @@ function editar_ot(){
 		'titulo' => $_POST['titulo'],
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
-		'km' => $_POST['km'],
 		'estado' => $_POST['estado'],
-		'observaciones' => $_POST['observaciones']
 	];
 
 	$wpdb->update('ot',$array_update,['id' => $_POST['regid']]);
@@ -609,9 +601,7 @@ function editar_ot_callback(){
 		'titulo' => $_POST['titulo'],
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
-		'km' => $_POST['km'],
 		'estado' => $_POST['estado'],
-		'observaciones' => $_POST['observaciones']
 	];
 
 	$wpdb->update('ot',$array_update,['id' => $_POST['regid']]);

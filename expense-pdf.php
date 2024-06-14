@@ -7,7 +7,7 @@ $solicitud = Mopar::getOneSolicitud($_GET['id']);
 foreach (['total', 'iva_debito', 'iva_credito', 'gastos', 'utilidad'] as $currency) $solicitud->$currency = number_format($solicitud->$currency, 0);
 
 $expenses = '';
-foreach (json_decode($solicitud->expense) as $expense) {
+if (!is_null($solicitud->expense)) foreach (json_decode($solicitud->expense) as $expense) {
     $expense->monto = number_format($expense->monto, 0);
     $expenses .= "
         <tr>

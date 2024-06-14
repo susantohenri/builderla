@@ -6,41 +6,11 @@ $updated = false;
 if ($_POST) {
 	global $wpdb;
 
-	$tmpFilePath = $_FILES['uploadsHistory']['tmp_name'];
-	if ($tmpFilePath == "") {
-		if ($_POST['hdn_archivo'] == "") {
-			$archivo = '';
-		} else {
-			$archivo = $_POST['hdn_archivo'];
-		}
-	} else {
-		$name = $_FILES['uploadsHistory']['name'];
-		$pathinfo = pathinfo($name);
-		$array_extension_allowed = array('pdf', 'xls', 'xlsx', 'doc', 'docx', 'jpeg', 'jpg', 'png');
-
-		if (in_array($pathinfo['extension'], $array_extension_allowed)) {
-
-			$filename_body = uniqid($input_name);
-			$newName = $pathinfo['filename'] . '___' . $filename_body . '.' . $pathinfo['extension'];
-			$newFilePath = $folder . $newName;
-
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
-				$archivo = $newName;
-			} else {
-				$archivo = '';
-			}
-		}
-	}
-
-
 	$array_insert = [
 		'titulo' => $_POST['titulo'],
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
-		'km' => $_POST['km'],
 		'estado' => 1,
-		'observaciones' => $_POST['observaciones'],
-		'archivo' => $archivo
 	];
 	if (isset($_POST['cliente'])) $array_insert['cliente_id'] = $_POST['cliente'];
 	if (isset($_POST['vehiculo'])) $array_insert['vehiculo_id'] = $_POST['vehiculo'];
@@ -85,7 +55,6 @@ if ($_POST) {
 					<th> Cliente </th>
 					<th> Vehiculo </th>
 					<th> Valor Total </th>
-					<th> Km. </th>
 					<th> Estado </th>
 					<th class="text-center">Acciones</th>
 				</tr>
@@ -98,7 +67,6 @@ if ($_POST) {
 						<td data-cliente="<?php echo $ot->cliente_id; ?>"> <?php echo Mopar::getNombreCliente($ot->cliente_id) ?> </td>
 						<td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getNombreVehiculo($ot->vehiculo_id) ?> </td>
 						<td data-valor="<?php echo $ot->valor; ?>"> $ <?php echo number_format($ot->valor, 0, ',', '.') ?> </td>
-						<td data-km="<?php echo $ot->km; ?>"> <?php echo $ot->km; ?> </td>
 						<td data-estado="<?php echo $ot->estado; ?>" class="text-center align-middle">
 							<?php if (3 == $ot->solicitud_estado) : ?>
 								<a>
@@ -218,35 +186,10 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Km.</span>
-								</div>
-								<input type="text" class="form-control" name="km" required>
-							</div>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
 									<span class="input-group-text">Total</span>
 								</div>
 								<input type="text" class="form-control text-right" name="valor" required readonly>
 							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Observaciones</span>
-								</div>
-								<textarea class="form-control" name="observaciones"></textarea>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Archivo Adicional</span>
-								</div>
-								<input type="file" name="uploadsHistory" class="form-control">
-							</div>
-							<small class="text-muted w-100">(Dependiendo del peso del archivo, el proceso de guardar puede tomar mas tiempo de lo estimado. Evite que pese mas de 1MB)</small>
 						</div>
 					</div>
 
@@ -329,44 +272,9 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Km.</span>
-								</div>
-								<input type="text" class="form-control" name="km" required>
-							</div>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
 									<span class="input-group-text">Total</span>
 								</div>
 								<input type="text" class="form-control text-right" name="valor" required readonly>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Observaciones</span>
-								</div>
-								<textarea class="form-control" name="observaciones"></textarea>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Archivo Adicional</span>
-								</div>
-								<input type="file" name="uploadsHistory" class="form-control">
-							</div>
-							<small class="text-muted w-100">(Dependiendo del peso del archivo, el proceso de guardar puede tomar mas tiempo de lo estimado. Evite que pese mas de 1MB)</small>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Archivo:</span>
-								</div>
-								<a class="btn-link btn border archivo_link" target="_blank" href=""></a>
-								<input type="hidden" name="hdn_archivo">
-								<button type="button" class="btn btn-danger btnQuitarArchivo" data-toggle="tooltip" data-placement="right" title="Quitar archivo"><i class="fa fa-times"></i></button>
 							</div>
 						</div>
 					</div>
@@ -397,13 +305,6 @@ if ($_POST) {
 			}
 		})
 
-		$(document).on('click', '.btnQuitarArchivo', function(e) {
-			e.preventDefault();
-			$('#modalEditOT [name=hdn_archivo]').val("");
-			$('#modalEditOT a.archivo_link').attr('href', '');
-			$('#modalEditOT a.archivo_link').html('');
-		})
-
 		$(".btnEdit").click(function() {
 			ot_id = $(this).data('regid');
 			$.ajax({
@@ -431,15 +332,6 @@ if ($_POST) {
 
 					$('#modalEditOT [name=titulo]').val(json.ot.titulo);
 
-					icon = '';
-					if (json.ot.archivo) {
-						icon = ' &nbsp; <i class="fa fa-external-link"></i>';
-					}
-
-					$('#modalEditOT [name=hdn_archivo]').val(json.ot.archivo);
-					$('#modalEditOT a.archivo_link').attr('href', '<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/uploads/' + json.ot.archivo);
-					$('#modalEditOT a.archivo_link').html(json.ot.archivo + icon);
-
 					$("#modalEditOT table tbody").empty();
 					$.each(detalle.item, function(k, v) {
 						h = '<tr>';
@@ -461,9 +353,7 @@ if ($_POST) {
 						recalcular();
 					})
 
-					$('#modalEditOT [name=km]').val(json.ot.km);
 					$('#modalEditOT [name=valor]').val(json.ot.valor);
-					$('#modalEditOT [name=observaciones]').val(json.ot.observaciones);
 
 					$('#modalEditOT').modal('show');
 				}
