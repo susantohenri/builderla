@@ -432,7 +432,7 @@ function proceed_solicitud_callback(){
 			'cliente_id' => $solicitud->cliente_id,
 			'vehiculo_id' => $solicitud->vehiculo_id,
 			'titulo' => '',
-			'detalle' => '{"item":[""],"precio":["0"]}',
+			'detalle' => '{"item":[""],"precio":["0"], "observaciones":[""]}',
 			'valor' => '',
 			'estado' => 1,
 		]);
@@ -466,7 +466,7 @@ function proceed_solicitud_without_ingreso_callback(){
 			'cliente_id' => $solicitud->cliente_id,
 			'vehiculo_id' => $solicitud->vehiculo_id,
 			'titulo' => '',
-			'detalle' => '{"item":[""],"precio":["0"]}',
+			'detalle' => '{"item":[""],"precio":["0"], "observaciones": [""]}',
 			'valor' => '',
 			'estado' => 1,
 		]);
@@ -964,7 +964,7 @@ class Mopar{
 
 	protected static function solicitudUpdateTotalOldRecord() {
 		global $wpdb;
-		$empty_detalle = '{"item":[""],"precio":["0"]}';
+		$empty_detalle = '{"item":[""],"precio":["0"], "observaciones":[""]}';
 		$uncalculateds = $wpdb->get_results("
 			SELECT
 				solicitud.ot_id
