@@ -98,12 +98,11 @@ if (user_can( $current_user, 'administrator' )) {
 
 			$html .= '
 			<tr>
-				<td style="text-align: left">' . $detalles->item[$key] . '</td>
+				<td style="text-align: left">' . $detalles->item[$key] . '<br> ' . $detalles->observaciones[$key] . ' </td>
 				<td style="text-align: right;"> $ ' . number_format($detalles->precio[$key],0,',','.') . '</td>
 			</tr>';
 		}
 
-		$solicitud_inicial = !isset($solicitud->solicitud) && '' !== $solicitud->solicitud ? '' : '<tr><td style="width: 590px"><strong>Solicitud inicial: </strong><br>' . nl2br($solicitud->solicitud) . '</td></tr>';
 		$lastupdated = is_null($ot->upddate) ? '-' : date_format(date_create($ot->upddate), 'd/m/Y - H:i');
 
 		$html .= '
@@ -118,7 +117,6 @@ if (user_can( $current_user, 'administrator' )) {
 			<td style="width: 590px">
 			</td>
 		</tr>
-		'.$solicitud_inicial.'
 		<tr>
 			<td>
 				<strong>Creado:</strong> '.date_format(date_create($ot->regdate), 'd/m/Y - H:i').'
