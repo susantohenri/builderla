@@ -98,7 +98,7 @@ if (user_can( $current_user, 'administrator' )) {
 
 			$html .= '
 			<tr>
-				<td style="text-align: left">' . $detalles->item[$key] . '<br> ' . $detalles->observaciones[$key] . ' </td>
+				<td style="text-align: left">' . $detalles->item[$key] . '<br> ' . str_replace("\r\n", "<br>", $detalles->observaciones[$key]) . ' </td>
 				<td style="text-align: right;"> $ ' . number_format($detalles->precio[$key],0,',','.') . '</td>
 			</tr>';
 		}
@@ -127,7 +127,6 @@ if (user_can( $current_user, 'administrator' )) {
 	</table>
 	</page>
 	';
-
 
 	$orientation = 'potrait';
 	$html2pdf = new Html2Pdf($orientation,'LETTER','es');
