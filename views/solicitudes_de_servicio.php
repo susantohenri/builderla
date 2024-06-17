@@ -477,53 +477,6 @@ if ($_POST) {
 			});
 		});
 
-		$(".btnProceedWithoutIngreso").click(function() {
-			tr = $(this).closest('tr');
-			regid = tr.data('regid');
-
-			$.confirm({
-				title: 'Completar Solicitud',
-				content: '¿Desea hacer una Cotización para esta solicitud?',
-				type: 'red',
-				icon: 'fa fa-warning',
-				buttons: {
-					NO: {
-						text: 'No',
-						btnClass: 'btn-red',
-					},
-					SI: {
-						text: 'Si',
-						btnClass: 'btn-green',
-						action: function() {
-							$.ajax({
-								type: 'POST',
-								url: '<?php echo admin_url('admin-ajax.php'); ?>',
-								dataType: 'json',
-								data: 'action=proceed_solicitud_without_ingreso&regid=' + regid,
-								beforeSend: function() {},
-								success: function(json) {
-									if (`ERROR` === json.status) {
-										$.alert({
-											title: false,
-											type: 'red',
-											content: json.message
-										});
-									} else {
-										$.alert({
-											title: false,
-											type: 'green',
-											content: 'Solicitud borrado correctamente'
-										});
-										window.location.reload()
-									}
-								}
-							})
-						}
-					}
-				}
-			});
-		});
-
 		$(`.btnMotivo`).click(function() {
 			tr = $(this).closest('tr');
 			regid = tr.data('regid');

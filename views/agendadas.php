@@ -55,9 +55,7 @@ if ($_POST) {
 							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Ingresar a Taller"><i class="fa fa-wrench"></i></button>
 							-->
 							
-							<button class="btn btn-warning btnProceed" data-toggle="tooltip" title="Iniciar Cotización"><i class="fa fa-list"></i></button>
-							
-						
+							<button class="btn btn-warning btnProceedWithoutIngreso" data-toggle="tooltip" title="Iniciar Cotización"><i class="fa fa-list"></i></button>
 							
 							<button class="btn btn-danger btnCancelarCita" data-toggle="tooltip" title="Cancelar Cita"><i class="fa fa-reply"></i></button>
 						</td>
@@ -236,6 +234,53 @@ if ($_POST) {
 				"width": "20%",
 				"targets": 3
 			}]
+		});
+
+		$(".btnProceedWithoutIngreso").click(function() {
+			tr = $(this).closest('tr');
+			regid = tr.data('regid');
+
+			$.confirm({
+				title: 'Completar Solicitud',
+				content: '¿Desea hacer una Cotización para esta solicitud?',
+				type: 'red',
+				icon: 'fa fa-warning',
+				buttons: {
+					NO: {
+						text: 'No',
+						btnClass: 'btn-red',
+					},
+					SI: {
+						text: 'Si',
+						btnClass: 'btn-green',
+						action: function() {
+							$.ajax({
+								type: 'POST',
+								url: '<?php echo admin_url('admin-ajax.php'); ?>',
+								dataType: 'json',
+								data: 'action=proceed_solicitud_without_ingreso&regid=' + regid,
+								beforeSend: function() {},
+								success: function(json) {
+									if (`ERROR` === json.status) {
+										$.alert({
+											title: false,
+											type: 'red',
+											content: json.message
+										});
+									} else {
+										$.alert({
+											title: false,
+											type: 'green',
+											content: 'Solicitud borrado correctamente'
+										});
+										window.location.reload()
+									}
+								}
+							})
+						}
+					}
+				}
+			});
 		});
 
 		<?php if ($updated) { ?>
