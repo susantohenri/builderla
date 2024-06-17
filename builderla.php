@@ -765,7 +765,8 @@ class Mopar{
 			SELECT vehiculos.*
 			FROM vehiculos
 			WHERE cliente_id = %d
-		", $cliente_id));
+			OR cliente_id_2 = %d
+		", $cliente_id, $cliente_id));
 
     	return $cliente;
 	}
