@@ -28,7 +28,7 @@ if ($_POST) {
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left"> Solicitudes Agendadas </h2>
+		<h2 class="font-weight-light text-center text-muted float-left"> Converted Leads </h2>
 		<div class="clearfix"></div>
 	</div>
 	<div class="box-body">
@@ -36,9 +36,9 @@ if ($_POST) {
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Cliente </th>
-					<th> Vehiculo </th>
-					<th class="text-center">Acciones</th>
+					<th> Customer </th>
+					<th> Address </th>
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -50,7 +50,15 @@ if ($_POST) {
 						<td class="text-center" style="white-space: nowrap;">
 							<button type="button" class="btn btn-success btnFecha" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Editar"><i class="fa fa-pencil"></i></button>
 							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/solicitud-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>
+							
+							<!--
 							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Ingresar a Taller"><i class="fa fa-wrench"></i></button>
+							-->
+							
+							<button class="btn btn-warning btnProceed" data-toggle="tooltip" title="Iniciar Cotización"><i class="fa fa-list"></i></button>
+							
+						
+							
 							<button class="btn btn-danger btnCancelarCita" data-toggle="tooltip" title="Cancelar Cita"><i class="fa fa-reply"></i></button>
 						</td>
 					</tr>

@@ -6,7 +6,7 @@ $updated = false;
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left"> Solicitudes Perdidas </h2>
+		<h2 class="font-weight-light text-center text-muted float-left"> Lost Leads </h2>
 		<div class="clearfix"></div>
 	</div>
 	<div class="box-body">
@@ -14,9 +14,9 @@ $updated = false;
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Cliente </th>
-					<th> Vehiculo </th>
-					<th class="text-center">Acciones</th>
+					<th> Customer </th>
+					<th> Address </th>
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>

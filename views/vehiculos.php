@@ -9,8 +9,8 @@ if(isset($_GET['vid'])){
 <div class="box pr-4">
 
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left"> Lista de Vehiculos </h2>
-		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewVehiculo">Nuevo Vehiculo</button>
+		<h2 class="font-weight-light text-center text-muted float-left"> Properties</h2>
+		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewVehiculo">New Property</button>
 
 		<div class="clearfix"></div>
 	</div>
@@ -23,8 +23,8 @@ if(isset($_GET['vid'])){
 				<th> Address 2 </th>
 				<th> City </th>
 				<th> Zip Code </th>
-				<th> Cliente </th>
-				<th class="text-center">Acciones</th>
+				<th> Customer </th>
+				<th class="text-center">Options</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -37,9 +37,11 @@ if(isset($_GET['vid'])){
 				<td data-regid="<?php echo $vehiculo->zip_code ?>"> <?php echo $vehiculo->zip_code ?> </td>
 				<td data-cliente_id="<?php echo $vehiculo->cliente_id ?>"> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id) ?> </td>
 				<td class="text-center">
-					<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Editar Vehiculo"><i class="fa fa-pencil"></i></button>
-					<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar Vehiculo"><i class="fa fa-trash-o"></i></button>
+					<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
+					<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
+					<!--
 					<a href="admin.php?page=mopar-vehiculos&vid=<?php echo $vehiculo->id ?>" class="btn btn-info" data-toggle="tooltip" title="Ver OTs del Vehiculo"><i class="fa fa-search"></i></a>
+					-->
 				</td>
 			</tr>
 			<?php endforeach; ?>
@@ -55,7 +57,7 @@ if(isset($_GET['vid'])){
 		<div class="modal-dialog modal-lg">
 	    	<div class="modal-content">
 	      		<div class="modal-header">
-	        		<h5 class="modal-title">Datos del Vehiculo</h5>
+	        		<h5 class="modal-title">Property Information</h5>
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          			<span aria-hidden="true">&times;</span>
 	        		</button>
@@ -65,7 +67,7 @@ if(isset($_GET['vid'])){
 						<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Street Address*</span>
+					          		<span class="input-group-text">Street Address</span>
 						        </div>
 						        <input type="text" name="street_address" class="form-control" required>
 					      	</div>
@@ -73,7 +75,7 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Address Line 2</span>
+					          		<span class="input-group-text">Address 2</span>
 						        </div>
 						        <input type="text" name="address_line_2" class="form-control">
 					      	</div>
@@ -81,7 +83,7 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">City*</span>
+					          		<span class="input-group-text">City</span>
 						        </div>
 						        <input type="text" name="city" class="form-control" required>
 					      	</div>
@@ -97,7 +99,7 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Cliente</span>
+					          		<span class="input-group-text">Customer</span>
 						        </div>
 						        <select name="cliente" class="form-control">
 						        	<option value="">Seleccione</option>
@@ -130,7 +132,7 @@ if(isset($_GET['vid'])){
 		<div class="modal-dialog modal-lg">
 	    	<div class="modal-content">
 	      		<div class="modal-header">
-	        		<h5 class="modal-title">Datos del Vehiculo</h5>
+	        		<h5 class="modal-title">Customer Information</h5>
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          			<span aria-hidden="true">&times;</span>
 	        		</button>
@@ -140,7 +142,7 @@ if(isset($_GET['vid'])){
 						<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Street Address*</span>
+					          		<span class="input-group-text">Street Address</span>
 						        </div>
 						        <input type="text" name="street_address" class="form-control" required>
 					      	</div>
@@ -148,7 +150,7 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Address Line 2</span>
+					          		<span class="input-group-text">Address 2</span>
 						        </div>
 						        <input type="text" name="address_line_2" class="form-control">
 					      	</div>
@@ -156,7 +158,7 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">City*</span>
+					          		<span class="input-group-text">City</span>
 						        </div>
 						        <input type="text" name="city" class="form-control" required>
 					      	</div>

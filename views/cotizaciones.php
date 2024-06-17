@@ -41,7 +41,7 @@ if ($_POST) {
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left">Cotizaciones </h2>
+		<h2 class="font-weight-light text-center text-muted float-left">Estimates </h2>
 		<!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewOT">Nueva Cotización</button> -->
 
 		<div class="clearfix"></div>
@@ -51,12 +51,12 @@ if ($_POST) {
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Titulo </th>
-					<th> Cliente </th>
-					<th> Vehiculo </th>
-					<th> Valor Total </th>
-					<th> Estado </th>
-					<th class="text-center">Acciones</th>
+					<th> Title </th>
+					<th> Customer </th>
+					<th> Address </th>
+					<th> Total </th>
+					<th> Status </th>
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -99,13 +99,14 @@ if ($_POST) {
 		<br>
 		<ul>
 			<li>
-				<i class="fa fa-circle text-success"></i> El trabajo de esta cotización ha sido completado
+				<i class="fa fa-circle text-success"></i> This estimate was accepted and signed.
 			</li>
 			<li>
-				<i class="fa fa-circle text-warning"></i> Esta cotización no tiene una orden de ingreso
+			<!--	<i class="fa fa-circle text-warning"></i> Esta cotización no tiene una orden de ingreso
+			-->
 			</li>
 			<li>
-				<i class="fa fa-circle text-danger"></i> En esta cotización no se ha realizado un trabajo
+				<i class="fa fa-circle text-danger"></i> There are no actions for this estimate
 			</li>
 		</ul>
 	</div>

@@ -9,8 +9,8 @@ else:
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left"> Lista de Clientes </h2>
-		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewCliente">Nuevo Cliente</button>
+		<h2 class="font-weight-light text-center text-muted float-left"> Customer Database </h2>
+		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewCliente">New Customer</button>
 
 		<div class="clearfix"></div>
 	</div>
@@ -19,10 +19,10 @@ else:
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Nombre </th>
+					<th> Name </th>
 					<th> Email </th>
-					<th> Telefono </th>
-					<th class="text-center">Acciones</th>
+					<th> Phone </th>
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -54,7 +54,7 @@ else:
 		<div class="modal-dialog modal-lg">
 	    	<div class="modal-content">
 	      		<div class="modal-header">
-	        		<h5 class="modal-title">Datos del Cliente</h5>
+	        		<h5 class="modal-title">Customer Information</h5>
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          			<span aria-hidden="true">&times;</span>
 	        		</button>
@@ -64,7 +64,7 @@ else:
 				    	<div class="form-group col-md-12">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Nombres</span>
+					          		<span class="input-group-text">Name</span>
 						        </div>
 						        <input type="text" name="nombres" class="form-control" required>
 					      	</div>
@@ -72,7 +72,7 @@ else:
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Apellido Paterno</span>
+					          		<span class="input-group-text">Last name</span>
 						        </div>
 						        <input type="text" name="apellidoPaterno" class="form-control" required>
 					      	</div>
@@ -88,7 +88,7 @@ else:
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Telefono</span>
+					          		<span class="input-group-text">Phone</span>
 						        </div>
 						        <input type="text" name="telefono" class="form-control" required>
 					      	</div>

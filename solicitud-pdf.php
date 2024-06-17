@@ -9,7 +9,7 @@ if (user_can( $current_user, 'administrator' )) {
 
 	$solicitud = Mopar::getOneSolicitud($_GET['id']);
 	$cliente = Mopar::getOneCliente($solicitud->cliente_id);
-	$vehiculo = 0 != $solicitud->vehiculo_id ? Mopar::getOneVehiculo($solicitud->vehiculo_id) : json_decode('{"street_address":"","address_line_2":"","city":"","zip_code":""}');
+	$vehiculo = 0 != $solicitud->vehiculo_id ? Mopar::getOneVehiculo($solicitud->vehiculo_id) : json_decode('{"marca":"","ano":"","color":"","patente":"","nro_motor":""}');
 	$title = 1 == $solicitud->estado ? 'Solicitud de servicio' : 'Orden de Ingreso';
 
 	$html = '
@@ -62,16 +62,24 @@ if (user_can( $current_user, 'administrator' )) {
 			<td style="width: 295px; border: 1px solid #000;">
 				<table class="no_padding">
 					<tr>
-						<td><strong>Address: </strong></td>
-						<td>' . $vehiculo->street_address . ' ' . $vehiculo->address_line_2 . '</td>
+						<td><strong>Marca: </strong></td>
+						<td>' . $vehiculo->marca . '</td>
 					</tr>
 					<tr>
-						<td><strong>City: </strong></td>
-						<td>' . $vehiculo->city . '</td>
+						<td><strong>A&ntilde;o: </strong></td>
+						<td>' . $vehiculo->ano . '</td>
 					</tr>
 					<tr>
-						<td><strong>ZIP Code: </strong></td>
-						<td>' . $vehiculo->zip_code . '</td>
+						<td><strong>Color: </strong></td>
+						<td>' . $vehiculo->color . '</td>
+					</tr>
+					<tr>
+						<td><strong>Patente: </strong></td>
+						<td>' . $vehiculo->patente . '</td>
+					</tr>
+					<tr>
+						<td><strong>VIN: </strong></td>
+						<td>' . $vehiculo->nro_motor . '</td>
 					</tr>
 				</table>
 			</td>

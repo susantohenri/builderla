@@ -41,7 +41,7 @@ if( $_POST ){
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left">Trabajos Realizados </h2>
+		<h2 class="font-weight-light text-center text-muted float-left">Completed Projects </h2>
 
 		<div class="clearfix"></div>
 	</div>
@@ -50,12 +50,14 @@ if( $_POST ){
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Titulo </th>
-					<th> Cliente </th>
-					<th> Vehiculo </th>
-					<th> Valor Total </th>
+					<th> Title </th>
+					<th> Customer </th>
+					<th> Address </th>
+					<th> Total </th>
+					<!--
 					<th> Estado </th>
-					<th class="text-center">Acciones</th>
+					-->
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -89,12 +91,14 @@ if( $_POST ){
 		</table>
 		<br>
 		<ul>
+		    <!--
 			<li>
 				<i class="fa fa-circle text-success"></i> Vehículo entregado
 			</li>
 			<li>
 				<i class="fa fa-circle text-danger"></i> Vehiculo no entregado
 			</li>
+			-->
 		</ul>
 	</div>
 </div>

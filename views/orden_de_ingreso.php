@@ -29,7 +29,7 @@ if ($_POST) {
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left"> Orden de Ingreso </h2>
+		<h2 class="font-weight-light text-center text-muted float-left"> Active Projects </h2>
 		<div class="clearfix"></div>
 	</div>
 	<div class="box-body">
@@ -37,10 +37,12 @@ if ($_POST) {
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Cliente </th>
-					<th> Vehiculo </th>
-					<th> Estado </th>
-					<th class="text-center">Acciones</th>
+					<th> Customer </th>
+					<th> Address</th>
+					<!--
+					<th> Status</th>
+					-->
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -66,12 +68,15 @@ if ($_POST) {
 		</table>
 		<br>
 		<ul>
+		    
+		    <!--
 			<li>
 				<i class="fa fa-circle text-success"></i> Trabajo completado
 			</li>
 			<li>
 				<i class="fa fa-circle text-danger"></i> Trabajo en curso
 			</li>
+			-->
 		</ul>
 	</div>
 </div>
