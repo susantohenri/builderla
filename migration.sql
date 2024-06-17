@@ -100,8 +100,10 @@ CREATE TABLE `vehiculos` (
   `street_address` varchar(255) NOT NULL,
   `address_line_2` varchar(255) DEFAULT NULL,
   `city` varchar(255) NOT NULL,
+  `state` varchar(255) NOT NULL,
   `zip_code` varchar(10) NOT NULL,
   `cliente_id` int(11) DEFAULT NULL,
+  `cliente_id_2` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `cliente_id` (`cliente_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;

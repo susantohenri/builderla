@@ -29,13 +29,13 @@ if(isset($_GET['vid'])){
 		</thead>
 		<tbody>
 			<?php foreach ($vehiculos as $key => $vehiculo): ?>
-			<tr data-regid="<?php echo $vehiculo->id ?>" <?php foreach (['street_address', 'address_line_2', 'city', 'zip_code'] as $field) { echo "data-{$field}=\"{$vehiculo->$field}\"";} ?>>
-				<td data-regid="<?php echo $vehiculo->id ?>"> <?php echo $vehiculo->id ?> </td>
-				<td data-regid="<?php echo $vehiculo->street_address ?>"> <?php echo $vehiculo->street_address ?> </td>
-				<td data-regid="<?php echo $vehiculo->address_line_2 ?>"> <?php echo $vehiculo->address_line_2 ?> </td>
-				<td data-regid="<?php echo $vehiculo->city ?>"> <?php echo $vehiculo->city ?> </td>
-				<td data-regid="<?php echo $vehiculo->zip_code ?>"> <?php echo $vehiculo->zip_code ?> </td>
-				<td data-cliente_id="<?php echo $vehiculo->cliente_id ?>"> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id) ?> </td>
+			<tr data-regid="<?php echo $vehiculo->id ?>" <?php foreach (['street_address', 'address_line_2', 'city', 'state', 'zip_code', 'cliente_id', 'cliente_id_2'] as $field) { echo "data-{$field}=\"{$vehiculo->$field}\"";} ?>>
+				<td> <?php echo $vehiculo->id ?> </td>
+				<td> <?php echo $vehiculo->street_address ?> </td>
+				<td> <?php echo $vehiculo->address_line_2 ?> </td>
+				<td> <?php echo $vehiculo->city ?> </td>
+				<td> <?php echo $vehiculo->zip_code ?> </td>
+				<td> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id) ?> </td>
 				<td class="text-center">
 					<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
 					<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
@@ -91,6 +91,16 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
+					          		<span class="input-group-text">State</span>
+						        </div>
+								<select name="state" class="form-control" required>
+									<option value="California (CA)">California (CA)</option>
+								</select>
+					      	</div>
+				    	</div>
+				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Zip code</span>
 						        </div>
 						        <input type="text" name="zip_code" class="form-control" required>
@@ -102,6 +112,19 @@ if(isset($_GET['vid'])){
 					          		<span class="input-group-text">Customer</span>
 						        </div>
 						        <select name="cliente" class="form-control">
+						        	<option value="">Seleccione</option>
+						        	<?php foreach ($clientes as $cliente) { ?>
+						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
+						        	<?php } ?>
+						        </select>
+					      	</div>
+				    	</div>
+				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">Customer 2</span>
+						        </div>
+						        <select name="cliente_2" class="form-control">
 						        	<option value="">Seleccione</option>
 						        	<?php foreach ($clientes as $cliente) { ?>
 						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
@@ -166,6 +189,16 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
+					          		<span class="input-group-text">State</span>
+						        </div>
+								<select name="state" class="form-control" required>
+									<option value="California (CA)">California (CA)</option>
+								</select>
+					      	</div>
+				    	</div>
+				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Zip code</span>
 						        </div>
 						        <input type="text" name="zip_code" class="form-control" required>
@@ -177,6 +210,19 @@ if(isset($_GET['vid'])){
 					          		<span class="input-group-text">Cliente</span>
 						        </div>
 						        <select name="cliente" class="form-control">
+						        	<option value="">Seleccione</option>
+						        	<?php foreach ($clientes as $cliente) { ?>
+						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
+						        	<?php } ?>
+						        </select>
+					      	</div>
+				    	</div>
+				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">Cliente 2</span>
+						        </div>
+						        <select name="cliente_2" class="form-control">
 						        	<option value="">Seleccione</option>
 						        	<?php foreach ($clientes as $cliente) { ?>
 						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
@@ -289,21 +335,26 @@ $(document).ready(function(){
 
 
 	$(".btnEdit").click(function(){
-		street_address = $(this).closest('tr').data('street_address');
-		address_line_2 = $(this).closest('tr').data('address_line_2');
-		city = $(this).closest('tr').data('city');
-		zip_code = $(this).closest('tr').data('zip_code');
-		cliente_id = $(this).closest('tr').find('[data-cliente_id]').data('cliente_id');
-
 		tr = $(this).closest('tr');
+
+		street_address = tr.data('street_address');
+		address_line_2 = tr.data('address_line_2');
+		city = tr.data('city');
+		state = tr.data('state');
+		zip_code = tr.data('zip_code');
+		cliente_id =tr.data('cliente_id');
+		cliente_id_2 = tr.data('cliente_id_2');
+
 		regid = tr.data('regid');
 
 		$("#formEditVehiculo [name=regid]").val(regid);
 		$("#formEditVehiculo [name=street_address]").val(street_address);
 		$("#formEditVehiculo [name=address_line_2]").val(address_line_2);
 		$("#formEditVehiculo [name=city]").val(city);
+		$("#formEditVehiculo [name=state]").val(state);
 		$("#formEditVehiculo [name=zip_code]").val(zip_code);
 		$("#formEditVehiculo [name=cliente]").val(cliente_id);
+		$("#formEditVehiculo [name=cliente_2]").val(cliente_id_2);
 
 		$("#modalEditVehiculo").modal('show');
 	})
