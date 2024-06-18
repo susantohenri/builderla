@@ -1025,6 +1025,7 @@ class Mopar{
 			SELECT
 				ot.*
 				, solicitud.estado solicitud_estado
+				, solicitud.fecha
 			FROM ot
 			LEFT JOIN solicitud ON ot.id = solicitud.ot_id
 			WHERE ot.estado IN (1, 2)

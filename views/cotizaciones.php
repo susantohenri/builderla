@@ -51,7 +51,7 @@ if ($_POST) {
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Title </th>
+					<th> Date </th>
 					<th> Customer </th>
 					<th> Address </th>
 					<th> Total </th>
@@ -63,7 +63,7 @@ if ($_POST) {
 				<?php foreach ($ots as $ot) : ?>
 					<tr data-regid="<?php echo $ot->id; ?>">
 						<td data-regid="<?php echo $ot->id; ?>"> <?php echo $ot->id; ?> </td>
-						<td data-titulo="<?php echo $ot->titulo; ?>"> <?php echo $ot->titulo; ?> </td>
+						<td data-titulo="<?php echo $ot->titulo; ?>"> <?php echo $ot->fecha; ?> </td>
 						<td data-cliente="<?php echo $ot->cliente_id; ?>"> <?php echo Mopar::getNombreCliente($ot->cliente_id) ?> </td>
 						<td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getNombreVehiculo($ot->vehiculo_id) ?> </td>
 						<td data-valor="<?php echo $ot->valor; ?>"> $ <?php echo number_format($ot->valor, 0, ',', '.') ?> </td>
