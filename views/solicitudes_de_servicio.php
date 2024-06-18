@@ -75,7 +75,6 @@ if ($_POST) {
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Customer </th>
 					<th> Address </th>
 					<th> Status </th>
 					<th class="text-center">Acciones</th>
@@ -85,7 +84,6 @@ if ($_POST) {
 				<?php foreach ($solicituds as $solicitud) : ?>
 					<tr data-regid="<?php echo $solicitud->id; ?>">
 						<td data-regid="<?php echo $solicitud->id; ?>"> <?php echo $solicitud->id; ?> </td>
-						<td data-cliente="<?php echo $solicitud->cliente_id; ?>"> <?php echo Mopar::getNombreCliente($solicitud->cliente_id, false) ?> </td>
 						<td data-vehiculo="<?php echo $solicitud->vehiculo_id; ?>"> <?php if (0 != $solicitud->vehiculo_id) echo Mopar::getNombreVehiculo($solicitud->vehiculo_id) ?> </td>
 						<td data-estado="<?php echo $solicitud->estado; ?>" class="text-center align-middle">
 							<?php if (!is_null($solicitud->fecha)) : ?>

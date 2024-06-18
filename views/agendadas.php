@@ -36,7 +36,6 @@ if ($_POST) {
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Customer </th>
 					<th> Address </th>
 					<th class="text-center">Options</th>
 				</tr>
@@ -45,7 +44,6 @@ if ($_POST) {
 				<?php foreach ($solicituds as $solicitud) : ?>
 					<tr data-regid="<?php echo $solicitud->id; ?>">
 						<td data-regid="<?php echo $solicitud->id; ?>"> <?php echo $solicitud->id; ?> </td>
-						<td data-cliente="<?php echo $solicitud->cliente_id; ?>"> <?php echo Mopar::getNombreCliente($solicitud->cliente_id, false) ?> </td>
 						<td data-vehiculo="<?php echo $solicitud->vehiculo_id; ?>"> <?php if (0 != $solicitud->vehiculo_id) echo Mopar::getNombreVehiculo($solicitud->vehiculo_id) ?> </td>
 						<td class="text-center" style="white-space: nowrap;">
 							<button type="button" class="btn btn-success btnFecha" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Editar"><i class="fa fa-pencil"></i></button>
