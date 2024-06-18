@@ -6,7 +6,6 @@ if ($_POST) {
 	global $wpdb;
 
 	if (in_array($_POST['action'], ['insertar_solicitud', 'editar_solicitud'])) $array_insert = [
-		'cliente_id' => $_POST['cliente'],
 		'vehiculo_id' => $_POST['vehiculo'],
 		'solicitud' => $_POST['solicitud']
 	];
@@ -166,23 +165,13 @@ if ($_POST) {
 				</div>
 				<div class="modal-body">
 					<div class="form-row">
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Customer</span>
-								</div>
-								<select name="cliente" class="form-control">
-									<option value="">Select</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-md-6">
+						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
 									<span class="input-group-text">Address</span>
 								</div>
-								<select name="vehiculo" class="form-control" disabled>
-									<option value="">Select customer first</option>
+								<select name="vehiculo" class="form-control">
+									<option value="">Select property first</option>
 								</select>
 							</div>
 						</div>
@@ -229,19 +218,9 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Cliente</span>
-								</div>
-								<select name="cliente" class="form-control">
-									<option value="">Seleccione</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
 									<span class="input-group-text">Vehiculo</span>
 								</div>
-								<select name="vehiculo" class="form-control" disabled>
+								<select name="vehiculo" class="form-control">
 									<option value="">Seleccione Cliente primero</option>
 								</select>
 							</div>
@@ -356,11 +335,11 @@ if ($_POST) {
 		$(`#modalEditSolicitud`).on(`hidden.bs.modal`, () => {
 			if (null !== url_retrieve_id) location.href = '<?php bloginfo('wpurl') ?>/wp-admin/admin.php?page=mopar-solicitudes-de-servicio';
 		});
-		$(`[name="cliente"]`).css(`display`, `none`).select2({
+		$(`[name="vehiculo"]`).css(`display`, `none`).select2({
 			theme: `bootstrap4`,
 			minimumInputLength: 3,
 			ajax: {
-				url: `../wp-json/mopar-taller/v1/clientes`
+				url: `../wp-json/mopar-taller/v1/select2-property-for-leads`
 			}
 		})
 		$('[name="fecha"]').datetimepicker({
@@ -395,14 +374,12 @@ if ($_POST) {
 					$(".overlay").hide();
 					$('#modalEditSolicitud [name=solicitud_id]').val(json.solicitud.id);
 
-					$('#modalEditSolicitud [name=cliente]').html(`<option value="${json.solicitud.cliente_id}" selected>${json.cliente.nombres} ${json.cliente.apellidoPaterno}</option>`)
-
 					$('[name=vehiculo]').empty();
 					$.each(json.vehiculos, function(k, v) {
 						$('[name=vehiculo]').append(new Option(v.street_address + " - " + v.address_line_2, v.id));
 					})
-					$("[name=vehiculo]").removeAttr('disabled');
 					$("[name=vehiculo]").val(json.solicitud.vehiculo_id);
+					console.log(Math.random(), $("[name=vehiculo]").val(), json.solicitud.vehiculo_id)
 					$('#modalEditSolicitud [name=solicitud]').val(json.solicitud.solicitud);
 
 					$('#modalEditSolicitud').modal('show');
@@ -417,26 +394,6 @@ if ($_POST) {
 		if (location.hash == "#new") {
 			$('#modalNewOT').modal('show');
 		}
-
-		$("[name=cliente]").change(function() {
-			cliente_id = $(this).val();
-			$.ajax({
-				type: 'POST',
-				url: '<?php echo admin_url('admin-ajax.php'); ?>',
-				dataType: 'json',
-				data: 'action=get_vehiculos_by_cliente&cliente_id=' + cliente_id,
-				beforeSend: function() {
-					$("[name=vehiculo]").html('<option value="">Cargando Vehiculos...</option>');
-				},
-				success: function(json) {
-					$('[name=vehiculo]').empty();
-					$.each(json.vehiculos, function(k, v) {
-						$('[name=vehiculo]').append(new Option(v.street_address + " - " + v.address_line_2, v.id));
-					})
-					$("[name=vehiculo]").removeAttr('disabled');
-				}
-			})
-		})
 
 		$(".btnDelete").click(function() {
 			tr = $(this).closest('tr');

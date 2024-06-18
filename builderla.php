@@ -654,7 +654,7 @@ function get_solicitud_callback(){
 	$solicitud_id = $_POST['solicitud_id'];
 	$solicitud = Mopar::getOneSolicitud($solicitud_id);
 
-	$vehiculos = Mopar::getVehiculosByCliente($solicitud->cliente_id);
+	$vehiculos = [Mopar::getOneVehiculo($solicitud->vehiculo_id)];
 	$cliente = Mopar::getOneCliente($solicitud->cliente_id);
 
 	$json = [
@@ -673,6 +673,13 @@ function mopar_taller_select2_clientes () {
         'permission_callback' => '__return_true',
         'callback' => function () {
 			return Mopar::getSelect2Clientes();
+		}
+	]);
+	register_rest_route('mopar-taller/v1', '/select2-property-for-leads', [
+        'methods' => 'GET',
+        'permission_callback' => '__return_true',
+        'callback' => function () {
+			return Mopar::getSelect2Properties();
 		}
 	]);
 }
@@ -729,6 +736,19 @@ class Mopar{
 			LIMIT 10
 		");
 		return ['results' => $clientes];
+	}
+
+	public static function getSelect2Properties(){
+		global $wpdb;
+		$vehiculos = $wpdb->get_results("
+			SELECT id, CONCAT(street_address, ' ', address_line_2) text
+			FROM vehiculos
+			WHERE CONCAT(street_address, ' ', address_line_2) LIKE '%{$_GET['q']}%'
+			AND cliente_id <> 0
+			ORDER BY id DESC
+			LIMIT 10
+		");
+		return ['results' => $vehiculos];
 	}
 
 	public static function getOneCliente($cliente_id){
