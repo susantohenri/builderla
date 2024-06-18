@@ -52,7 +52,6 @@ if ($_POST) {
 				<tr>
 					<th>#</th>
 					<th> Date </th>
-					<th> Customer </th>
 					<th> Address </th>
 					<th> Total </th>
 					<th> Status </th>
@@ -64,7 +63,6 @@ if ($_POST) {
 					<tr data-regid="<?php echo $ot->id; ?>">
 						<td data-regid="<?php echo $ot->id; ?>"> <?php echo $ot->id; ?> </td>
 						<td data-titulo="<?php echo $ot->titulo; ?>"> <?php echo $ot->fecha; ?> </td>
-						<td data-cliente="<?php echo $ot->cliente_id; ?>"> <?php echo Mopar::getNombreCliente($ot->cliente_id) ?> </td>
 						<td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getNombreVehiculo($ot->vehiculo_id) ?> </td>
 						<td data-valor="<?php echo $ot->valor; ?>"> $ <?php echo number_format($ot->valor, 0, ',', '.') ?> </td>
 						<td data-estado="<?php echo $ot->estado; ?>" class="text-center align-middle">
@@ -122,7 +120,7 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Datos de la Cotización</h5>
+					<h5 class="modal-title">Estimate</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -132,17 +130,7 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Cliente</span>
-								</div>
-								<select name="cliente" class="form-control">
-									<option value="">Seleccione</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Vehiculo</span>
+									<span class="input-group-text">Address</span>
 								</div>
 								<select name="vehiculo" class="form-control" disabled required>
 									<option value="">Seleccione Cliente primero</option>
@@ -152,7 +140,7 @@ if ($_POST) {
 						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Titulo Descriptivo</span>
+									<span class="input-group-text">Project Description</span>
 								</div>
 								<input type="text" name="titulo" class="form-control" required>
 							</div>
@@ -161,8 +149,8 @@ if ($_POST) {
 							<table class="table">
 								<thead>
 									<tr>
-										<th> Detalle </th>
-										<th> Precio </th>
+										<th> Details </th>
+										<th> Price </th>
 										<th></th>
 									</tr>
 								</thead>
@@ -196,8 +184,8 @@ if ($_POST) {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
@@ -217,7 +205,7 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Datos de la Cotización</h5>
+					<h5 class="modal-title">Estimate</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -227,17 +215,7 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Cliente</span>
-								</div>
-								<select name="cliente" class="form-control" disabled>
-									<option value="">Seleccione</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Vehiculo</span>
+									<span class="input-group-text">Address</span>
 								</div>
 								<select name="vehiculo" class="form-control" disabled required>
 									<option value="">Seleccione Cliente primero</option>
@@ -247,7 +225,7 @@ if ($_POST) {
 						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Titulo Descriptivo</span>
+									<span class="input-group-text">Project Description</span>
 								</div>
 								<input type="text" name="titulo" class="form-control" required>
 							</div>
@@ -256,8 +234,8 @@ if ($_POST) {
 							<table class="table">
 								<thead>
 									<tr>
-										<th> Detalle </th>
-										<th> Precio </th>
+										<th> Details </th>
+										<th> Price </th>
 										<th></th>
 									</tr>
 								</thead>
@@ -282,8 +260,8 @@ if ($_POST) {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
@@ -298,11 +276,11 @@ if ($_POST) {
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 	$(document).ready(function() {
-		$(`[name="cliente"]`).css(`display`, `none`).select2({
+		$(`[name="vehiculo"]`).css(`display`, `none`).select2({
 			theme: `bootstrap4`,
 			minimumInputLength: 3,
 			ajax: {
-				url: `../wp-json/mopar-taller/v1/clientes`
+				url: `../wp-json/mopar-taller/v1/select2-property-for-leads`
 			}
 		})
 
@@ -321,8 +299,6 @@ if ($_POST) {
 
 					$(".overlay").hide();
 					$('#modalEditOT [name=ot_id]').val(json.ot.id);
-
-					$('#modalEditOT [name=cliente]').html(`<option value="${json.ot.cliente_id}" selected>${json.cliente.nombres} ${json.cliente.apellidoPaterno}</option>`)
 
 					$('[name=vehiculo]').empty();
 					$('[name=vehiculo]').append(new Option('Seleccione Vehiculo', ''));
@@ -454,27 +430,6 @@ if ($_POST) {
 			$("[data-toggle=tooltip]").tooltip();
 			$('.tooltip').hide();
 			recalcular();
-		})
-
-		$("[name=cliente]").change(function() {
-			cliente_id = $(this).val();
-			$.ajax({
-				type: 'POST',
-				url: '<?php echo admin_url('admin-ajax.php'); ?>',
-				dataType: 'json',
-				data: 'action=get_vehiculos_by_cliente&cliente_id=' + cliente_id,
-				beforeSend: function() {
-					$("[name=vehiculo]").html('<option value="">Cargando Vehiculos...</option>');
-				},
-				success: function(json) {
-					$('[name=vehiculo]').empty();
-					$('[name=vehiculo]').append(new Option('Seleccione Vehiculo', ''));
-					$.each(json.vehiculos, function(k, v) {
-						$('[name=vehiculo]').append(new Option(v.street_address + " - " + v.address_line_2, v.id));
-					})
-					$("#modalNewOT [name=vehiculo]").removeAttr('disabled');
-				}
-			})
 		})
 
 		$(".btnDelete").click(function() {

@@ -636,7 +636,7 @@ function get_ot_callback(){
 	$ot_id = $_POST['ot_id'];
 	$ot = Mopar::getOneOt($ot_id);
 
-	$vehiculos = Mopar::getVehiculosByCliente($ot->cliente_id);
+	$vehiculos = [Mopar::getOneVehiculo($ot->vehiculo_id)];
 	$cliente = Mopar::getOneCliente($ot->cliente_id);
 
 	$json = [
