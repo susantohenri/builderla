@@ -230,7 +230,7 @@ if ($_POST) {
 			"ordering": false,
 			"columnDefs": [{
 				"width": "20%",
-				"targets": 3
+				"targets": 2
 			}]
 		});
 
@@ -271,7 +271,7 @@ if ($_POST) {
 											type: 'green',
 											content: 'Solicitud borrado correctamente'
 										});
-										window.location.reload()
+										window.location = `<?= site_url('wp-admin/admin.php?page=mopar-cotizaciones') ?>`
 									}
 								}
 							})

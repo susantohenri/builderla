@@ -501,7 +501,7 @@ if ($_POST) {
 			"ordering": false,
 			"columnDefs": [{
 				"width": "20%",
-				"targets": 4
+				"targets": 3
 			}]
 		});
 	});
