@@ -24,6 +24,7 @@ if(isset($_GET['vid'])){
 				<th> City </th>
 				<th> Zip Code </th>
 				<th> Customer </th>
+				<th> Customer 2</th>
 				<th class="text-center">Options</th>
 			</tr>
 		</thead>
@@ -36,6 +37,7 @@ if(isset($_GET['vid'])){
 				<td> <?php echo $vehiculo->city ?> </td>
 				<td> <?php echo $vehiculo->zip_code ?> </td>
 				<td> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id) ?> </td>
+				<td> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id_2) ?> </td>
 				<td class="text-center">
 					<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
 					<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
