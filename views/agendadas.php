@@ -47,6 +47,7 @@ if ($_POST) {
 						<td data-regid="<?php echo $solicitud->id; ?>"> <?php echo $solicitud->fecha_format; ?> </td>
 						<td data-vehiculo="<?php echo $solicitud->vehiculo_id; ?>"> <?php if (0 != $solicitud->vehiculo_id) echo Mopar::getTitleVehiculo($solicitud->vehiculo_id) ?> </td>
 						<td class="text-center">
+							<?php $allow_init_estimate = false ?>
 							<?php if (0 != $solicitud->ot_id) : ?>
 								<a>
 									<i class="fa fa-circle text-success"></i>
@@ -55,7 +56,7 @@ if ($_POST) {
 								<a>
 									<i class="fa fa-circle text-danger"></i>
 								</a>
-							<?php else : ?>
+							<?php else : $allow_init_estimate = true; ?>
 								<a>
 									<i class="fa fa-circle text-warning"></i>
 								</a>
@@ -69,7 +70,7 @@ if ($_POST) {
 							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Add Details"><i class="fa fa-home"></i></button>
 							
 							
-							<button class="btn btn-warning btnProceedWithoutIngreso" data-toggle="tooltip" title="Start Estimate"><i class="fa fa-list"></i></button>
+							<button class="btn btn-warning <?= $allow_init_estimate ? 'btnProceedWithoutIngreso':'' ?>" data-toggle="tooltip" title="Start Estimate"><i class="fa fa-list"></i></button>
 							
 							<button class="btn btn-danger btnCancelarCita" data-toggle="tooltip" title="Cancel Appointment"><i class="fa fa-reply"></i></button>
 						</td>
