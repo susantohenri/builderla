@@ -46,16 +46,16 @@ if ($_POST) {
 						<td data-regid="<?php echo $solicitud->id; ?>"> <?php echo $solicitud->id; ?> </td>
 						<td data-vehiculo="<?php echo $solicitud->vehiculo_id; ?>"> <?php if (0 != $solicitud->vehiculo_id) echo Mopar::getNombreVehiculo($solicitud->vehiculo_id) ?> </td>
 						<td class="text-center" style="white-space: nowrap;">
-							<button type="button" class="btn btn-success btnFecha" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Editar"><i class="fa fa-pencil"></i></button>
-							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/solicitud-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>
+							<button type="button" class="btn btn-success btnFecha" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
+							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/solicitud-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
 							
-							<!--
-							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Ingresar a Taller"><i class="fa fa-wrench"></i></button>
-							-->
 							
-							<button class="btn btn-warning btnProceedWithoutIngreso" data-toggle="tooltip" title="Iniciar Cotización"><i class="fa fa-list"></i></button>
+							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Add Details"><i class="fa fa-home"></i></button>
 							
-							<button class="btn btn-danger btnCancelarCita" data-toggle="tooltip" title="Cancelar Cita"><i class="fa fa-reply"></i></button>
+							
+							<button class="btn btn-warning btnProceedWithoutIngreso" data-toggle="tooltip" title="Start Estimate"><i class="fa fa-list"></i></button>
+							
+							<button class="btn btn-danger btnCancelarCita" data-toggle="tooltip" title="Cancel Appointment"><i class="fa fa-reply"></i></button>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -72,7 +72,7 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Editar la fecha agendada</h5>
+					<h5 class="modal-title">Edit Appointment</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -82,7 +82,7 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Fecha</span>
+									<span class="input-group-text">Date</span>
 								</div>
 								<input type="text" class="form-control" name="fecha" required>
 							</div>
@@ -90,7 +90,7 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Hora</span>
+									<span class="input-group-text">Time</span>
 								</div>
 								<input type="text" class="form-control" name="hora" required>
 							</div>
@@ -99,8 +99,8 @@ if ($_POST) {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
@@ -239,17 +239,17 @@ if ($_POST) {
 			regid = tr.data('regid');
 
 			$.confirm({
-				title: 'Completar Solicitud',
-				content: '¿Desea hacer una Cotización para esta solicitud?',
+				title: 'Start Estimate',
+				content: 'Do you want to start this estimate?',
 				type: 'red',
 				icon: 'fa fa-warning',
 				buttons: {
 					NO: {
-						text: 'No',
+						text: 'Cancel',
 						btnClass: 'btn-red',
 					},
 					SI: {
-						text: 'Si',
+						text: 'Yes',
 						btnClass: 'btn-green',
 						action: function() {
 							$.ajax({

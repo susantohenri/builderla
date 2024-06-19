@@ -1,0 +1,143 @@
+<?php  
+
+require __DIR__.'/vendor/autoload.php';
+use Spipu\Html2Pdf\Html2Pdf;
+include '../../../wp-load.php';
+
+$current_user = wp_get_current_user();
+if (user_can( $current_user, 'administrator' )) {
+
+	$solicitud = Mopar::getOneSolicitud($_GET['id']);
+	$cliente = Mopar::getOneCliente($solicitud->cliente_id);
+	$vehiculo = 0 != $solicitud->vehiculo_id ? Mopar::getOneVehiculo($solicitud->vehiculo_id) : json_decode('{"street_address":"","address_line_2":"","city":"","zip_code":""}');
+	$title = 1 == $solicitud->estado ? 'Solicitud de servicio' : 'Orden de Ingreso';
+
+	$html = '
+	<!--
+	<style>
+	table{
+		border-collapse: collapse;
+	}
+	table td{
+		padding: 10px;
+	}
+	table.no_padding td{
+		padding: 0px 3px;
+	}
+	</style>
+	-->
+	<page backtop="7mm" backbottom="7mm" backleft="10mm" backright="10mm"> 
+	<table style="width: 590px;">
+		<tr>
+			<td style="width: 295px;">
+			</td>
+			<td style="width: 295px; text-align: center">
+				<h3 style="margin-bottom: 10px">Taller Doctor Mopar</h3>
+				<h4 style="margin: 0; font-weight: lighter">
+					Los Cerezos 375, Ñuñoa <br>
+					Región Metropolitana <br>
+					Fono: +569 8599 1053
+				</h4>
+			</td>
+		</tr>
+	</table>
+
+	<table style="width: 590px;">
+		<tr>
+			<td style="width: 590px;">
+				<h1 style="text-align: center">'.$title.' n&deg;000'.$solicitud->id.'</h1>
+			</td>
+		</tr>
+	</table>
+
+	<table style="width: 590px;">
+		<tr>
+			<td style="width: 295px; border: 1px solid #000;">
+				<table class="no_padding">
+					<tr><td><strong>Nombre: </strong></td><td>' . $cliente->nombres . ' ' . $cliente->apellidoPaterno . '</td></tr>
+					<tr><td><strong>Email: </strong></td><td>' . $cliente->email . '</td></tr>
+					<tr><td><strong>Teléfono: </strong></td><td>' . $cliente->telefono . '</td></tr>
+				</table>
+			</td>
+			<td style="width: 295px; border: 1px solid #000;">
+				<table class="no_padding">
+					<tr>
+						<td><strong>Address: </strong></td>
+						<td>' . $vehiculo->street_address . ' ' . $vehiculo->address_line_2 . '</td>
+					</tr>
+					<tr>
+						<td><strong>City: </strong></td>
+						<td>' . $vehiculo->city . '</td>
+					</tr>
+					<tr>
+						<td><strong>ZIP Code: </strong></td>
+						<td>' . $vehiculo->zip_code . '</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<br><br><br>
+	<table border="1">
+		<tr>
+			<td style="width: 635px; text-align: center;"> <strong>Solicitud</strong> </td>
+		</tr>';
+
+		$lastupdated = is_null($solicitud->upddate) ? '-' : date_format(date_create($solicitud->upddate), 'd/m/Y - H:i');
+		$motivo = '' === $solicitud->motivo ? '' : '<tr><td><strong>Motivo:</strong> '.$solicitud->motivo.'</td></tr>';
+		$fecha = is_null($solicitud->fecha) ? '' : '<tr><td><strong>Fecha Agendada:</strong> '.date_format(date_create("{$solicitud->fecha} {$solicitud->hora}"), 'd/m/Y H:i') .'</td></tr>';
+
+		$html .= '
+		<tr>
+			<td style="width: 635px; text-align: justify; white-space:pre-wrap"><strong>'. $solicitud->solicitud .'</strong></td>
+		</tr>
+	</table>
+	<br>
+	<table border="0" style="width: 590px">
+		<tr>
+			<td>
+				<strong>Creado:</strong> '.date_format(date_create($solicitud->regdate), 'd/m/Y - H:i').'
+				<br>
+				<strong>Modificado:</strong> '. $lastupdated .'
+			</td>
+		</tr>
+		'.$motivo.'
+		'.$fecha.'
+	</table>
+	</page>';
+
+	$page_2 = '
+	<page backtop="7mm" backbottom="7mm" backleft="10mm" backright="10mm">
+	    
+	    <div style="text-align:center">
+	    </div>
+	    <br><br>
+	    
+	    <br><br><br>
+	    <br><br>
+	    <table style="width: 590px;">
+	        <tr>
+	            <td style="width: 196px; text-align: center;">
+	                <hr>
+	                DOCTOR MOPAR
+	            </td>
+	            <td style="width: 196px; text-align: center;">&nbsp;</td>
+	            <td style="width: 196px; text-align: center;">
+	                <hr>
+	                '. $cliente->nombres . ' ' . $cliente->apellidoPaterno .'<br>
+	                (Cliente)
+	            </td>
+	        </tr>
+	    </table>
+	</page>
+	';
+    if (2 == $solicitud->estado) $html .= $page_2;
+
+	$orientation = 'potrait';
+	$titulo_pdf = 'solicitud';
+	$html2pdf = new Html2Pdf($orientation,'LETTER','es');
+	$html2pdf->writeHTML($html);
+	$html2pdf->output( $titulo_pdf . '_000'. $solicitud->id .'.pdf');
+}
+
+?>

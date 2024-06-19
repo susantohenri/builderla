@@ -137,8 +137,8 @@ if(isset($_GET['vid'])){
 				  	</div>
 	      		</div>
 	      		<div class="modal-footer">
-	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-	        		<button type="submit" class="btn btn-success">Guardar <i class="fa fa-save"></i> </button>
+	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+	        		<button type="submit" class="btn btn-success">Save <i class="fa fa-save"></i> </button>
 	      		</div>
 			</div>
 	  	</div>
@@ -209,7 +209,7 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Cliente</span>
+					          		<span class="input-group-text">Customer</span>
 						        </div>
 						        <select name="cliente" class="form-control">
 						        	<option value="">Seleccione</option>
@@ -222,7 +222,7 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Cliente 2</span>
+					          		<span class="input-group-text">Customer 2</span>
 						        </div>
 						        <select name="cliente_2" class="form-control">
 						        	<option value="">Seleccione</option>
@@ -235,8 +235,8 @@ if(isset($_GET['vid'])){
 				  	</div>
 	      		</div>
 	      		<div class="modal-footer">
-	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-	        		<button type="submit" class="btn btn-success">Guardar <i class="fa fa-save"></i> </button>
+	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+	        		<button type="submit" class="btn btn-success">Save <i class="fa fa-save"></i> </button>
 	      		</div>
 			</div>
 	  	</div>

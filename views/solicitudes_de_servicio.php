@@ -77,7 +77,7 @@ if ($_POST) {
 					<th>#</th>
 					<th> Address </th>
 					<th> Status </th>
-					<th class="text-center">Acciones</th>
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -156,7 +156,7 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Lead Information</h5>
+					<h5 class="modal-title">Request</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -206,7 +206,7 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Datos de la Solicitud</h5>
+					<h5 class="modal-title">Lead Details</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -216,7 +216,7 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Vehiculo</span>
+									<span class="input-group-text">Address</span>
 								</div>
 								<select name="vehiculo" class="form-control">
 									<option value="">Seleccione Cliente primero</option>
@@ -226,7 +226,7 @@ if ($_POST) {
 						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Solicitud</span>
+									<span class="input-group-text">Request</span>
 								</div>
 								<textarea class="form-control" name="solicitud"></textarea>
 							</div>
@@ -235,8 +235,8 @@ if ($_POST) {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
