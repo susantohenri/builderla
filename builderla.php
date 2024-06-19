@@ -897,7 +897,7 @@ class Mopar{
 
 	public static function getAgendadas(){
 		global $wpdb;
-		$solicituds = $wpdb->get_results('SELECT * FROM solicitud WHERE fecha IS NOT NULL ORDER BY id DESC');
+		$solicituds = $wpdb->get_results('SELECT *, DATE_FORMAT(fecha, "%m-%d-%Y") fecha_format FROM solicitud WHERE fecha IS NOT NULL ORDER BY id DESC');
 
 		return $solicituds;
 	}
