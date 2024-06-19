@@ -37,14 +37,30 @@ if ($_POST) {
 				<tr>
 					<th> Date </th>
 					<th> Customer </th>
+					<th> Status </th>
 					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php foreach ($solicituds as $solicitud) : ?>
 					<tr data-regid="<?php echo $solicitud->id; ?>">
-					<td data-regid="<?php echo $solicitud->id; ?>"> <?php echo $solicitud->fecha_format; ?> </td>
-					<td data-vehiculo="<?php echo $solicitud->vehiculo_id; ?>"> <?php if (0 != $solicitud->vehiculo_id) echo Mopar::getTitleVehiculo($solicitud->vehiculo_id) ?> </td>
+						<td data-regid="<?php echo $solicitud->id; ?>"> <?php echo $solicitud->fecha_format; ?> </td>
+						<td data-vehiculo="<?php echo $solicitud->vehiculo_id; ?>"> <?php if (0 != $solicitud->vehiculo_id) echo Mopar::getTitleVehiculo($solicitud->vehiculo_id) ?> </td>
+						<td class="text-center">
+							<?php if (0 != $solicitud->ot_id) : ?>
+								<a>
+									<i class="fa fa-circle text-success"></i>
+								</a>
+							<?php elseif ('' == $solicitud->solicitud) : ?>
+								<a>
+									<i class="fa fa-circle text-danger"></i>
+								</a>
+							<?php else : ?>
+								<a>
+									<i class="fa fa-circle text-warning"></i>
+								</a>
+							<?php endif; ?>
+						</td>
 						<td class="text-center" style="white-space: nowrap;">
 							<button type="button" class="btn btn-success btnFecha" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
 							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/solicitud-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
@@ -230,7 +246,7 @@ if ($_POST) {
 			"ordering": false,
 			"columnDefs": [{
 				"width": "20%",
-				"targets": 2
+				"targets": 3
 			}]
 		});
 
