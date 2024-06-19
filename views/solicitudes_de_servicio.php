@@ -130,17 +130,13 @@ if ($_POST) {
 		<br>
 		<ul>
 			<li>
-				<i class="fa fa-check text-success"></i> This lead has been scheduled for inspection.
+				<i class="fa fa-circle text-danger"></i> No details provided for this lead.
 			</li>
 			<li>
-				<i class="fa fa-times text-danger"></i> This lead has been marked as lost or rejected.
+				<i class="fa fa-circle text-warning"></i> Lead details provided.
 			</li>
 			<li>
-				<i class="fa fa-circle text-success"></i> This lead is an active project or has been completed
-			</li>
-
-			<li>
-				<i class="fa fa-circle text-danger"></i> There are no actions for this request
+				<i class="fa fa-circle text-success"></i> Estimate ready for this lead.
 			</li>
 		</ul>
 	</div>
