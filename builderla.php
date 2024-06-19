@@ -793,7 +793,7 @@ class Mopar{
 
 	public static function getSolicitudsDeServicioso(){
 		global $wpdb;
-		$solicituds = $wpdb->get_results('SELECT * FROM solicitud WHERE estado IN (1,2,3,4,5) ORDER BY id DESC');
+		$solicituds = $wpdb->get_results('SELECT *, DATE_FORMAT(fecha, "%m-%d-%Y") fecha_format FROM solicitud WHERE estado IN (1,2,3,4,5) ORDER BY id DESC');
 
     	return $solicituds;
 	}
@@ -1088,6 +1088,38 @@ class Mopar{
 		$nombre_vehiculo = $vehiculo->street_address . " - " . $vehiculo->address_line_2;
 
 		return $nombre_vehiculo;
+	}
+
+	public static function getTitleVehiculo($vehiculo_id){
+		global $wpdb;
+		$sql = "
+			SELECT
+				vehiculos.street_address
+				, clientes.nombres as c1_first
+				, clientes.apellidoPaterno as c1_last
+				, clientes_2.nombres as c2_first
+				, clientes_2.apellidoPaterno as c2_last
+			FROM vehiculos
+			LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
+			LEFT JOIN clientes clientes_2 ON vehiculos.cliente_id_2 = clientes_2.id
+			WHERE vehiculos.id = {$vehiculo_id}
+		";
+		$vehiculo = $wpdb->get_row($sql);
+
+		$title = $vehiculo->street_address;
+		if ($vehiculo->c1_first && $vehiculo->c1_last && $vehiculo->c2_first && $vehiculo->c2_last) {
+			if ($vehiculo->c1_last == $vehiculo->c2_last) {
+				$title .= " - {$vehiculo->c1_first} & {$vehiculo->c2_first} {$vehiculo->c1_last}";
+			} else {
+				$title .= " - {$vehiculo->c1_first} {$vehiculo->c1_last} & {$vehiculo->c2_first} {$vehiculo->c2_last}";
+			}
+		} else if ($vehiculo->c1_first) {
+			$title .= " - {$vehiculo->c1_first} {$vehiculo->c1_last}";
+		} else if ($vehiculo->c2_first) {
+			$title .= " - {$vehiculo->c2_first} {$vehiculo->c2_last}";
+		}
+
+		return $title;
 	}
 
 	public static function getEstado($estado_id){
