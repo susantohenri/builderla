@@ -741,11 +741,38 @@ class Mopar{
 	public static function getSelect2Properties(){
 		global $wpdb;
 		$vehiculos = $wpdb->get_results("
-			SELECT id, CONCAT(street_address, ' ', address_line_2) text
+			SELECT vehiculos.id,
+				CONCAT(
+					vehiculos.street_address
+					, ' '
+					, vehiculos.address_line_2
+					, ' - '
+					, clientes.nombres
+					, ' '
+					, IF(clientes_2.id IS NOT NULL AND clientes_2.apellidoPaterno = clientes.apellidoPaterno, '', clientes.apellidoPaterno)
+					, IF(clientes_2.id IS NOT NULL, ' & ', '')
+					, IFNULL(clientes_2.nombres, '')
+					, ' '
+					, IFNULL(clientes_2.apellidoPaterno, '')
+				) text
 			FROM vehiculos
-			WHERE CONCAT(street_address, ' ', address_line_2) LIKE '%{$_GET['q']}%'
-			AND cliente_id <> 0
-			ORDER BY id DESC
+			LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
+			LEFT JOIN clientes clientes_2 ON vehiculos.cliente_id_2 = clientes_2.id
+			WHERE CONCAT(
+				vehiculos.street_address
+				, ' '
+				, vehiculos.address_line_2
+				, ' '
+				, clientes.nombres
+				, ' '
+				, clientes.apellidoPaterno
+				, ' '
+				, IFNULL(clientes_2.nombres, '')
+				, ' '
+				, IFNULL(clientes_2.apellidoPaterno, '')
+			) LIKE '%{$_GET['q']}%'
+			AND vehiculos.cliente_id <> 0
+			ORDER BY vehiculos.id DESC
 			LIMIT 10
 		");
 		return ['results' => $vehiculos];
@@ -1095,6 +1122,7 @@ class Mopar{
 		$sql = "
 			SELECT
 				vehiculos.street_address
+				, vehiculos.address_line_2
 				, clientes.nombres as c1_first
 				, clientes.apellidoPaterno as c1_last
 				, clientes_2.nombres as c2_first
@@ -1106,7 +1134,7 @@ class Mopar{
 		";
 		$vehiculo = $wpdb->get_row($sql);
 
-		$title = $vehiculo->street_address;
+		$title = "{$vehiculo->street_address} {$vehiculo->address_line_2}";
 		if ($vehiculo->c1_first && $vehiculo->c1_last && $vehiculo->c2_first && $vehiculo->c2_last) {
 			if ($vehiculo->c1_last == $vehiculo->c2_last) {
 				$title .= " - {$vehiculo->c1_first} & {$vehiculo->c2_first} {$vehiculo->c1_last}";
