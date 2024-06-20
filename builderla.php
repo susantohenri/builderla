@@ -655,7 +655,7 @@ function get_solicitud_callback(){
 	$solicitud = Mopar::getOneSolicitud($solicitud_id);
 
 	$vehiculos = [Mopar::getOneVehiculo($solicitud->vehiculo_id)];
-	$cliente = Mopar::getOneCliente($solicitud->cliente_id);
+	$cliente = Mopar::getOneCliente($vehiculos->cliente_id);
 
 	$json = [
 		'solicitud' => $solicitud,
@@ -1228,7 +1228,8 @@ class Mopar{
 		switch ($event) {
 			case 'fecha_updated':
 				$solicitud = Mopar::getOneSolicitud($entity_id);
-				$cliente = Mopar::getOneCliente($solicitud->cliente_id);
+				$vehiculo = Mopar::getOneVehiculo($solicitud->vehiculo_id);
+				$cliente = Mopar::getOneCliente($vehiculo->cliente_id);
 				$recipient = $cliente->email;
 				$subject = 'Su hora al taller ha sido agendada!';
 				$fecha = date_create("{$solicitud->fecha} {$solicitud->hora}");
@@ -1249,7 +1250,8 @@ Servicio al cliente
 				break;
 			case 'ingreso_created':
 				$solicitud = Mopar::getOneSolicitud($entity_id);
-				$cliente = Mopar::getOneCliente($solicitud->cliente_id);
+				$vehiculo = Mopar::getOneVehiculo($solicitud->vehiculo_id);
+				$cliente = Mopar::getOneCliente($vehiculo->cliente_id);
 				$recipient = $cliente->email;
 				$vehicle = Mopar::getOneVehiculo($solicitud->vehiculo_id);
 
