@@ -85,3 +85,8 @@ section#history .badge.badge-pill em.dia{
 tr[data-row-num$="b"] td{
 	border-top: 0;
 }
+
+.preview-stored img,
+.preview-uploaded img {
+	width: 100px;
+}

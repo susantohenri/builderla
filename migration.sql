@@ -76,6 +76,7 @@ CREATE TABLE `solicitud` (
   `cliente_id` int(11) NOT NULL,
   `vehiculo_id` int(11) DEFAULT NULL,
   `solicitud` text NOT NULL,
+  `photos` text NOT NULL,
   `estado` int(1) NOT NULL,
   `regdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `upddate` datetime DEFAULT NULL,

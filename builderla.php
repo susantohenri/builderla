@@ -660,7 +660,8 @@ function get_solicitud_callback(){
 	$json = [
 		'solicitud' => $solicitud,
 		'vehiculos' => $vehiculos,
-		'cliente' => $cliente
+		'cliente' => $cliente,
+		'upload_url' => plugin_dir_url(__FILE__) . 'uploads/'
 	];
 
 	echo json_encode($json);
