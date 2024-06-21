@@ -64,7 +64,7 @@ if ($_POST) {
 						</td>
 						<td class="text-center" style="white-space: nowrap;">
 							<button type="button" class="btn btn-success btnFecha" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
-							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/solicitud-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
+							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/converted-lead-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
 							
 							
 							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Add Details"><i class="fa fa-home"></i></button>
