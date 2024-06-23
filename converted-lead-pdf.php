@@ -101,7 +101,7 @@ if (user_can( $current_user, 'administrator' )) {
 		</tr>';
 		$html .= '
 		<tr>
-			<td style="width: 635px; text-align: justify; white-space:pre-wrap"><strong>'. $solicitud->solicitud .'</strong></td>
+			<td style="width: 635px; text-align: justify; white-space:pre-wrap"><strong>'. $solicitud->details .'</strong></td>
 		</tr>
 	</table>';
 

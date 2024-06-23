@@ -5,12 +5,13 @@ $updated = false;
 if ($_POST) {
 	global $wpdb;
 
-	$array_insert = [
-		'fecha' => $_POST['fecha'],
-		'hora' => $_POST['hora'],
-	];
-
 	if ($_POST['action'] == 'editar_fecha') {
+
+		$array_insert = [
+			'fecha' => $_POST['fecha'],
+			'hora' => $_POST['hora'],
+		];
+
 		$before_update = (array) Mopar::getOneSolicitud($_POST['solicitud_id']);
 		$posted_attr = array_keys($array_insert);
 		$before_update = array_filter($before_update, function ($value, $attr) use ($posted_attr) {
@@ -21,6 +22,41 @@ if ($_POST) {
 		if ($wpdb->update('solicitud', $array_insert, ['id' => $_POST['solicitud_id']])) {
 			$updated = true;
 		}
+	}
+
+	if ($_POST['action'] == 'editar_solicitud') {
+		$upload_dir = $_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/builderla/uploads/';
+		$before_update = (array) Mopar::getOneSolicitud($_POST['solicitud_id']);
+
+		$photos = json_decode($before_update['photos']);
+		$remove_photos = explode('|', $_POST['delete_photos']);
+		$photos = array_values(array_filter($photos, function ($photo) use ($remove_photos, $upload_dir) {
+			if (in_array($photo, $remove_photos)) {
+				if (file_exists(($upload_dir . $photo))) unlink($upload_dir . $photo);
+				return false;
+			} else return true;
+		}));
+		for ($index = 0; $index < count($_FILES['photos']['name']); $index++) {
+			$tmp =  $_FILES['photos']['tmp_name'][$index];
+			$name =  $_FILES['photos']['name'][$index];
+			$name = rand() . $name;
+			$location = $upload_dir . $name;
+			if (move_uploaded_file($tmp, $location)) {
+				$photos[] = $name;
+			}
+		}
+
+		$array_update['photos'] = json_encode($photos);
+		$array_update['details'] = $_POST['details'];
+
+		$posted_attr = array_keys($array_update);
+		$before_update = array_filter($before_update, function ($value, $attr) use ($posted_attr) {
+			return in_array($attr, $posted_attr);
+		}, ARRAY_FILTER_USE_BOTH);
+		if ($before_update !== $array_update) $array_update['upddate'] = date('Y-m-d H:i:s');
+
+		$wpdb->update('solicitud', $array_update, ['id' => $_POST['solicitud_id']]);
+		$inserted = true;
 	}
 }
 ?>
@@ -52,7 +88,7 @@ if ($_POST) {
 								<a>
 									<i class="fa fa-circle text-success"></i>
 								</a>
-							<?php elseif ('' == $solicitud->solicitud) : ?>
+							<?php elseif ('' == $solicitud->details) : ?>
 								<a>
 									<i class="fa fa-circle text-danger"></i>
 								</a>
@@ -67,10 +103,11 @@ if ($_POST) {
 							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/converted-lead-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
 							
 							
-							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Add Details"><i class="fa fa-home"></i></button>
+							<button class="btn btn-warning btnAddDetails" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Add Details"><i class="fa fa-home"></i></button>
 							
-							
-							<button class="btn btn-warning <?= $allow_init_estimate ? 'btnProceedWithoutIngreso':'' ?>" data-toggle="tooltip" title="Start Estimate"><i class="fa fa-list"></i></button>
+							<?php if ($allow_init_estimate): ?>
+							<button class="btn btn-warning btnProceedWithoutIngreso" data-toggle="tooltip" title="Start Estimate"><i class="fa fa-list"></i></button>
+							<?php endif ?>
 							
 							<button class="btn btn-danger btnCancelarCita" data-toggle="tooltip" title="Cancel Appointment"><i class="fa fa-reply"></i></button>
 						</td>
@@ -124,7 +161,59 @@ if ($_POST) {
 	</form>
 </div>
 
+<!-- EDITAR Solicitud -->
+<div class="modal fade" id="modalEditSolicitud" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<form method="post" id="formEditSolicitud" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="editar_solicitud">
+		<input type="hidden" name="solicitud_id" value="">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Add Details</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Address</span>
+								</div>
+								<select name="vehiculo" class="form-control" disabled>
+									<option value="">Seleccione Cliente primero</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-md-12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Details</span>
+								</div>
+								<textarea class="form-control" name="details"></textarea>
+							</div>
+						</div>
+						<div class="form-group col-md-12">
+							<div class="preview-stored"></div>
+							<div class="preview-uploaded"></div>
+							<a href="javascript:;" class="btn addPhotos">
+								<i class="fa fa-lg fa-camera"></i> &nbsp; Add Photos
+							</a>
+							<input type="file" name="photos[]" class="d-none" multiple accept="image/*">
+							<input type="hidden" name="delete_photos">
+						</div>
+					</div>
 
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
 
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -195,6 +284,71 @@ if ($_POST) {
 				}
 			});
 		});
+
+		$(".btnAddDetails").click(function() {
+			solicitud_id = $(this).data('regid');
+			$.ajax({
+				type: 'POST',
+				url: '<?php echo admin_url('admin-ajax.php'); ?>',
+				dataType: 'json',
+				data: 'action=get_solicitud&solicitud_id=' + solicitud_id,
+				beforeSend: function() {
+					$(".overlay").show();
+				},
+				success: function(json) {
+
+					$(".overlay").hide();
+					$('#modalEditSolicitud [name=solicitud_id]').val(json.solicitud.id);
+
+					$('[name=vehiculo]').empty();
+					$.each(json.vehiculos, function(k, v) {
+						$('[name=vehiculo]').append(new Option(v.street_address + " - " + v.address_line_2, v.id));
+					})
+					$("[name=vehiculo]").val(json.solicitud.vehiculo_id);
+					$('#modalEditSolicitud [name=details]').val(json.solicitud.details);
+
+					$(`#modalEditSolicitud .preview-stored`).html(``)
+					for (let stored_photo of JSON.parse(json.solicitud.photos)) {
+						$(`#modalEditSolicitud .preview-stored`).append(`
+							<div class="m-2 d-inline-block text-center">
+								<img src="${json.upload_url}${stored_photo}" class="img-thumbnail">
+								<br>
+								<a href="javascript:;" class="delete-photo" data-name="${stored_photo}">
+									<i class="fa fa-trash text-danger"></i>
+								</a>
+							</div>
+						`)
+					}
+
+					$(`.delete-photo`).click(function () {
+						const btn = $(this)
+						const input_delete = $('#modalEditSolicitud [name="delete_photos"]')
+						let images_to_delete = input_delete.val().split(`,`)
+						images_to_delete.push(btn.data('name'))
+						input_delete.val(images_to_delete.join(`|`))
+						btn.parent().remove()
+					})
+
+					$('#modalEditSolicitud').modal('show');
+				}
+			})
+		})
+
+		$(`.addPhotos`).click(function () {
+			const btn = $(this)
+			const input_file = btn.siblings(`[type="file"]`)
+			input_file.click()
+		})
+
+		$(`[name="photos[]"]`).change(function (e) {
+			const input = $(this)
+			const preview_placeholder = input.siblings(`.preview-uploaded`)
+			preview_placeholder.html(``)
+			for (let img of event.target.files) {
+				const src = URL.createObjectURL(img)
+				preview_placeholder.append(`<img src="${src}" class="m-2 img-thumbnail">`)
+			}
+		})
 
 		$(".btnComplete").click(function() {
 			tr = $(this).closest('tr');
