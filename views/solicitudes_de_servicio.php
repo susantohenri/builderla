@@ -15,17 +15,6 @@ if ($_POST) {
 	if ($_POST['action'] == 'insertar_solicitud') {
 		$array_insert['estado'] = 1;
 
-		$photos = [];
-		for ($index = 0; $index < count($_FILES['photos']['name']); $index++) {
-			$tmp =  $_FILES['photos']['tmp_name'][$index];
-			$name =  $_FILES['photos']['name'][$index];
-			$name = rand() . $name;
-			$location = $upload_dir . $name;
-			if (move_uploaded_file($tmp, $location)) {
-				$photos[] = $name;
-			}
-		}
-		$array_insert['photos'] = json_encode($photos);
 		if ($wpdb->insert('solicitud', $array_insert)) {
 			$inserted = true;
 		}
@@ -39,25 +28,6 @@ if ($_POST) {
 		}, ARRAY_FILTER_USE_BOTH);
 		if ($before_update !== $array_insert) $array_insert['upddate'] = date('Y-m-d H:i:s');
 
-		$photos = json_decode($before_update['photos']);
-		$remove_photos = explode('|', $_POST['delete_photos']);
-		$photos = array_values(array_filter($photos, function ($photo) use ($remove_photos, $upload_dir) {
-			if (in_array($photo, $remove_photos)) {
-				if (file_exists(($upload_dir . $photo))) unlink($upload_dir . $photo);
-				return false;
-			} else return true;
-		}));
-		for ($index = 0; $index < count($_FILES['photos']['name']); $index++) {
-			$tmp =  $_FILES['photos']['tmp_name'][$index];
-			$name =  $_FILES['photos']['name'][$index];
-			$name = rand() . $name;
-			$location = $upload_dir . $name;
-			if (move_uploaded_file($tmp, $location)) {
-				$photos[] = $name;
-			}
-		}
-
-		$array_insert['photos'] = json_encode($photos);
 		if ($wpdb->update('solicitud', $array_insert, ['id' => $_POST['solicitud_id']])) {
 			$updated = true;
 		}
@@ -185,7 +155,7 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Add Details</h5>
+					<h5 class="modal-title">Request</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -205,17 +175,10 @@ if ($_POST) {
 						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Details</span>
+									<span class="input-group-text">Request</span>
 								</div>
 								<textarea class="form-control" name="solicitud"></textarea>
 							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="preview-uploaded"></div>
-							<a href="javascript:;" class="btn addPhotos">
-								<i class="fa fa-lg fa-camera"></i> &nbsp; Add Photos
-							</a>
-							<input type="file" name="photos[]" class="d-none" multiple accept="image/*">
 						</div>
 					</div>
 
@@ -242,7 +205,7 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Add Details</h5>
+					<h5 class="modal-title">Lead Details</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -262,19 +225,10 @@ if ($_POST) {
 						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Details</span>
+									<span class="input-group-text">Request</span>
 								</div>
 								<textarea class="form-control" name="solicitud"></textarea>
 							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="preview-stored"></div>
-							<div class="preview-uploaded"></div>
-							<a href="javascript:;" class="btn addPhotos">
-								<i class="fa fa-lg fa-camera"></i> &nbsp; Add Photos
-							</a>
-							<input type="file" name="photos[]" class="d-none" multiple accept="image/*">
-							<input type="hidden" name="delete_photos">
 						</div>
 					</div>
 
@@ -424,28 +378,6 @@ if ($_POST) {
 					$("[name=vehiculo]").val(json.solicitud.vehiculo_id);
 					$('#modalEditSolicitud [name=solicitud]').val(json.solicitud.solicitud);
 
-					$(`#modalEditSolicitud .preview-stored`).html(``)
-					for (let stored_photo of JSON.parse(json.solicitud.photos)) {
-						$(`#modalEditSolicitud .preview-stored`).append(`
-							<div class="m-2 d-inline-block text-center">
-								<img src="${json.upload_url}${stored_photo}" class="img-thumbnail">
-								<br>
-								<a href="javascript:;" class="delete-photo" data-name="${stored_photo}">
-									<i class="fa fa-trash text-danger"></i>
-								</a>
-							</div>
-						`)
-					}
-
-					$(`.delete-photo`).click(function () {
-						const btn = $(this)
-						const input_delete = $('#modalEditSolicitud [name="delete_photos"]')
-						let images_to_delete = input_delete.val().split(`,`)
-						images_to_delete.push(btn.data('name'))
-						input_delete.val(images_to_delete.join(`|`))
-						btn.parent().remove()
-					})
-
 					$('#modalEditSolicitud').modal('show');
 				}
 			})
@@ -570,22 +502,6 @@ if ($_POST) {
 				"targets": 3
 			}]
 		});
-
-		$(`.addPhotos`).click(function () {
-			const btn = $(this)
-			const input_file = btn.siblings(`[type="file"]`)
-			input_file.click()
-		})
-
-		$(`[name="photos[]"]`).change(function (e) {
-			const input = $(this)
-			const preview_placeholder = input.siblings(`.preview-uploaded`)
-			preview_placeholder.html(``)
-			for (let img of event.target.files) {
-				const src = URL.createObjectURL(img)
-				preview_placeholder.append(`<img src="${src}" class="m-2 img-thumbnail">`)
-			}
-		})
 
 	});
 </script>
