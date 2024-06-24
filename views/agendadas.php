@@ -115,6 +115,18 @@ if ($_POST) {
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+		<br>
+		<ul>
+			<li>
+				<i class="fa fa-circle text-danger"></i> No details provided for this lead.
+			</li>
+			<li>
+				<i class="fa fa-circle text-warning"></i> Lead details provided.
+			</li>
+			<li>
+				<i class="fa fa-circle text-success"></i> Estimate ready for this lead.
+			</li>
+		</ul>
 	</div>
 </div>
 
