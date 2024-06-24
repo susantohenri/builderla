@@ -4,7 +4,7 @@ $updated = false;
 
 if ($_POST) {
 	global $wpdb;
-	$upload_dir = $_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/builderla/uploads/';
+	$upload_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/builderla/uploads/';
 
 	if (in_array($_POST['action'], ['insertar_solicitud', 'editar_solicitud'])) $array_insert = [
 		'vehiculo_id' => $_POST['vehiculo'],
@@ -114,15 +114,15 @@ if ($_POST) {
 						<td class="text-center" style="white-space: nowrap;">
 							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
 							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/solicitud-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
-							
+
 							<!--
 							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar"><i class="fa fa-trash-o"></i></button>
 							-->
-							
+
 							<!--
 							<button class="btn btn-warning btnProceedWithoutIngreso" data-toggle="tooltip" title="Iniciar Cotización"><i class="fa fa-list"></i></button>
 							-->
-							
+
 							<button class="btn btn-success btnFecha" data-toggle="tooltip" title="Schedule"><i class="fa fa-check"></i></button>
 							<button class="btn btn-danger btnMotivo" data-toggle="tooltip" title="Discard"><i class="fa fa-times"></i></button>
 						</td>
@@ -130,6 +130,20 @@ if ($_POST) {
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+		<ul>
+			<li>
+				<i class="fa fa-check text-success"></i> This lead has been scheduled for inspection.
+			</li>
+			<li>
+				<i class="fa fa-times text-danger"></i> This lead has been marked as lost or rejected.
+			</li>
+			<li>
+				<i class="fa fa-circle text-success"></i> This lead is an active project or has been completed.
+			</li>
+			<li>
+				<i class="fa fa-circle text-danger"></i> There are no actions for this request.
+			</li>
+		</ul>
 	</div>
 </div>
 
