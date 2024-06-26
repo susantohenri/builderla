@@ -85,9 +85,9 @@ if (user_can( $current_user, 'administrator' )) {
 			<td style="width: 635px; text-align: center;"> <strong>Request</strong> </td>
 		</tr>';
 
-		$lastupdated = is_null($solicitud->upddate) ? '-' : date_format(date_create($solicitud->upddate), 'd/m/Y - H:i');
-		$motivo = '' === $solicitud->motivo ? '' : '<tr><td><strong>Motivo:</strong> '.$solicitud->motivo.'</td></tr>';
-		$fecha = is_null($solicitud->fecha) ? '' : '<tr><td><strong>Fecha Agendada:</strong> '.date_format(date_create("{$solicitud->fecha} {$solicitud->hora}"), 'd/m/Y H:i') .'</td></tr>';
+		$lastupdated = is_null($solicitud->upddate) ? '-' : date_format(date_create($solicitud->upddate), 'm/d/Y - H:i');
+		$motivo = '' === $solicitud->motivo ? '' : '<tr><td><strong>Reason:</strong> '.$solicitud->motivo.'</td></tr>';
+		$fecha = is_null($solicitud->fecha) ? '' : '<tr><td><strong>Scheduled Date:</strong> '.date_format(date_create("{$solicitud->fecha} {$solicitud->hora}"), 'm/d/Y H:i') .'</td></tr>';
 
 		$html .= '
 		<tr>
@@ -109,16 +109,16 @@ if (user_can( $current_user, 'administrator' )) {
 	foreach (json_decode($solicitud->photos) as $photo) {
 	    $photo = str_replace(' ', '%20', $photo);
 		$src = plugin_dir_url(__FILE__) . 'uploads/' . $photo;
-		$html .= '<img style="width: 100px" src="' . $src . '"> &nbsp;';
+		$html .= '<img style="width: 220px" src="' . $src . '"> &nbsp;';
 	}
 
 	$html .= '<br>
 	<table border="0" style="width: 590px">
 		<tr>
 			<td>
-				<strong>Creado:</strong> '.date_format(date_create($solicitud->regdate), 'd/m/Y - H:i').'
+				<strong>Created:</strong> '.date_format(date_create($solicitud->regdate), 'm/d/Y - H:i').'
 				<br>
-				<strong>Modificado:</strong> '. $lastupdated .'
+				<strong>Modified:</strong> '. $lastupdated .'
 			</td>
 		</tr>
 		'.$motivo.'

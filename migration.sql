@@ -66,6 +66,10 @@ CREATE TABLE `ot` (
   `upddate` datetime DEFAULT NULL,
   `entregar` tinyint(1) NOT NULL DEFAULT '0',
   `entregardate` date DEFAULT NULL,
+  `site_services` text NOT NULL,
+  `customer_to_provide` text NOT NULL,
+  `not_included` text NOT NULL,
+  `price_breakdown` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
