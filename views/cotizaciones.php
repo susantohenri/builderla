@@ -11,6 +11,10 @@ if ($_POST) {
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
 		'estado' => 1,
+		'site_services' => isset($_POST['cb']['site_services']) ? $_POST['site_services'] : '',
+		'customer_to_provide' => isset($_POST['cb']['customer_to_provide']) ? $_POST['customer_to_provide'] : '',
+		'not_included' => isset($_POST['cb']['not_included']) ? $_POST['not_included'] : '',
+		'price_breakdown' => isset($_POST['cb']['price_breakdown']) ? 1 : 0
 	];
 	if (isset($_POST['cliente'])) $array_insert['cliente_id'] = $_POST['cliente'];
 	if (isset($_POST['vehiculo'])) $array_insert['vehiculo_id'] = $_POST['vehiculo'];
@@ -42,7 +46,6 @@ if ($_POST) {
 <div class="box pr-4">
 	<div class="box-header mb-4">
 		<h2 class="font-weight-light text-center text-muted float-left">Estimates </h2>
-		<!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewOT">Nueva Cotización</button> -->
 
 		<div class="clearfix"></div>
 	</div>
@@ -100,7 +103,7 @@ if ($_POST) {
 				<i class="fa fa-circle text-success"></i> This estimate was accepted and signed.
 			</li>
 			<li>
-			<!--	<i class="fa fa-circle text-warning"></i> Esta cotización no tiene una orden de ingreso
+				<!--	<i class="fa fa-circle text-warning"></i> Esta cotización no tiene una orden de ingreso
 			-->
 			</li>
 			<li>
@@ -110,99 +113,12 @@ if ($_POST) {
 	</div>
 </div>
 
-
-
-
-<!-- Nuevo OT -->
-<div class="modal fade" id="modalNewOT" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	<form method="post" id="formNuevoOT" enctype="multipart/form-data">
-		<input type="hidden" name="action" value="insertar_ot">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Estimate</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Address</span>
-								</div>
-								<select name="vehiculo" class="form-control" disabled required>
-									<option value="">Seleccione Cliente primero</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Project Description</span>
-								</div>
-								<input type="text" name="titulo" class="form-control" required>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<table class="table">
-								<thead>
-									<tr>
-										<th> Details </th>
-										<th> Price </th>
-										<th></th>
-									</tr>
-								</thead>
-								<tbody class="bg-light">
-									<tr>
-										<td class="">
-											<input type="text" name="detalle[item][]" class="form-control" required>
-										</td>
-										<td class="">
-											<input type="text" name="detalle[precio][]" class="form-control precio text-right" required>
-										</td>
-										<td></td>
-									</tr>
-								</tbody>
-								<tfoot>
-									<tr>
-										<th colspan="3"><button type="button" class="btn btn-success float-right btn-sm btnPlus" data-toggle="tooltip" title="Agregar linea de detalle"><i class="fa fa-plus"></i></button></th>
-									</tr>
-								</tfoot>
-							</table>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Total</span>
-								</div>
-								<input type="text" class="form-control text-right" name="valor" required readonly>
-							</div>
-						</div>
-					</div>
-
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
-					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
-				</div>
-			</div>
-		</div>
-	</form>
-</div>
-
-
-
-
-
-
 <!-- EDITAR OT -->
 <div class="modal fade" id="modalEditOT" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 	<form method="post" id="formEditOT" enctype="multipart/form-data">
 		<input type="hidden" name="action" value="editar_ot">
 		<input type="hidden" name="ot_id" value="">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Estimate</h5>
@@ -231,6 +147,30 @@ if ($_POST) {
 							</div>
 						</div>
 						<div class="form-group col-md-12">
+							<div class="row">
+								<label class="col-md-3">
+									<input type="checkbox" name="cb[site_services]"> site services
+								</label>
+								<label class="col-md-3">
+									<input type="checkbox" name="cb[customer_to_provide]"> customer to provide
+								</label>
+								<label class="col-md-3">
+									<input type="checkbox" name="cb[not_included]"> not included
+								</label>
+								<label class="col-md-3">
+									<input type="checkbox" name="cb[price_breakdown]"> price breakdown
+								</label>
+							</div>
+						</div>
+						<div class="form-group col-md-12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Site Services</span>
+								</div>
+								<input type="text" name="site_services" class="form-control">
+							</div>
+						</div>
+						<div class="form-group col-md-12">
 							<table class="table">
 								<thead>
 									<tr>
@@ -247,6 +187,22 @@ if ($_POST) {
 									</tr>
 								</tfoot>
 							</table>
+						</div>
+						<div class="form-group col-md-12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Customer to Provide</span>
+								</div>
+								<input type="text" name="customer_to_provide" class="form-control">
+							</div>
+						</div>
+						<div class="form-group col-md-12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Not Included</span>
+								</div>
+								<input type="text" name="not_included" class="form-control">
+							</div>
 						</div>
 						<div class="form-group col-md-6">
 							<div class="input-group">
@@ -307,11 +263,22 @@ if ($_POST) {
 					})
 					$("[name=vehiculo]").val(json.ot.vehiculo_id);
 
+					$(`[name="site_services"]`).val(json.ot.site_services)
+					$(`[name="cb[site_services]"]`).attr(`checked`, `` != json.ot.site_services).trigger(`change`)
+
+					$(`[name="customer_to_provide"]`).val(json.ot.customer_to_provide)
+					$(`[name="cb[customer_to_provide]"]`).attr(`checked`, `` != json.ot.customer_to_provide).trigger(`change`)
+
+					$(`[name="not_included"]`).val(json.ot.not_included)
+					$(`[name="cb[not_included]"]`).attr(`checked`, `` != json.ot.not_included).trigger(`change`)
+
+					$(`[name="cb[price_breakdown]"]`).attr(`checked`, 1 == json.ot.price_breakdown)
+
 					$('#modalEditOT [name=titulo]').val(json.ot.titulo);
 
 					$("#modalEditOT table tbody").empty();
 					$.each(detalle.item, function(k, v) {
-						h = '<tr data-row-num="'+k+'a">';
+						h = '<tr data-row-num="' + k + 'a">';
 						h += '	<td>';
 						h += '		<input type="text" value="' + detalle.item[k] + '" name="detalle[item][]" class="form-control" required>';
 						h += '	</td>';
@@ -344,10 +311,6 @@ if ($_POST) {
 				}
 			})
 		})
-
-		if (location.hash == "#new") {
-			$('#modalNewOT').modal('show');
-		}
 
 		$(document).on('keyup', '.precio', function(e) {
 			recalcular();
@@ -405,7 +368,7 @@ if ($_POST) {
 			const new_row_num = parseInt(last_row_num) + 1
 
 			h = '';
-			h += '<tr data-row-num="'+new_row_num+'a">';
+			h += '<tr data-row-num="' + new_row_num + 'a">';
 			h += '	<td>';
 			h += '		<input type="text" name="detalle[item][]" class="form-control" required>';
 			h += '	</td>';
@@ -418,7 +381,7 @@ if ($_POST) {
 					<a href="#" class="btn btn-info btn-sm btnDown"><i class="fa fa-arrow-down"></i></a>
 				</td>`;
 			h += '</tr>';
-			h+= `
+			h += `
 				<tr data-row-num="${new_row_num}b">
 					<td colspan="2">
 						<textarea name="detalle[observaciones][]" class="form-control"></textarea>
@@ -575,6 +538,27 @@ if ($_POST) {
 		})
 		$("[name=valor]").val(tot);
 	}
+
+	$(`[name="cb[site_services]"]`).change(function() {
+		const checked = jQuery(this).is(`:checked`)
+		const input = $(`[name="site_services"]`).parent().parent()
+		if (checked) input.show()
+		else input.hide()
+	})
+
+	$(`[name="cb[customer_to_provide]"]`).change(function() {
+		const checked = jQuery(this).is(`:checked`)
+		const input = $(`[name="customer_to_provide"]`).parent().parent()
+		if (checked) input.show()
+		else input.hide()
+	})
+
+	$(`[name="cb[not_included]"]`).change(function() {
+		const checked = jQuery(this).is(`:checked`)
+		const input = $(`[name="not_included"]`).parent().parent()
+		if (checked) input.show()
+		else input.hide()
+	})
 </script>
 
 <?php include 'footer.php'; ?>
