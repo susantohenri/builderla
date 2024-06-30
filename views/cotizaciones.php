@@ -143,7 +143,8 @@ if ($_POST) {
 								<div class="input-group-prepend">
 									<span class="input-group-text">Project Description</span>
 								</div>
-								<input type="text" name="titulo" class="form-control" required>
+								<!-- <input type="text" name="titulo" class="form-control" required> -->
+								 <textarea name="titulo" class="form-control"></textarea>
 							</div>
 						</div>
 						<div class="form-group col-md-12">

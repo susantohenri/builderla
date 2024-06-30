@@ -50,16 +50,18 @@ if (user_can($current_user, 'administrator')) {
 				$html .= '<div style="position: absolute; top: 175; left: 0; padding: 0 75px; width: 475px; line-height: 150%;">';
 			
 				// content
-				$html .= '<div id="title" style="text-align: center; width: 100%;"><h3>FHS CONSTRUCTION INC PROPOSAL</h3></div>';
+				// $html .= '<style type="text/css">#title{ font-family: "Times New Roman", Times, serif; }</style>';
+				// font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif
+				$html .= '<div id="title" style="text-align: center; width: 100%; font-size: 18px; font-weight: bold;">FHS CONSTRUCTION INC PROPOSAL</div><br>';
 
-				$html .= '<div id="client">
+				$html .= '<div id="client" style="font-size: 11px;">
 					'.$client_name.'
 					<br> '.$vehiculo->street_address.' '.$vehiculo->address_line_2.'
 					<br> '.$vehiculo->city.', '.$vehiculo->zip_code.'
 				</div>';
 
 				$html .= '<br><div id="project_description">
-					<b>Project description</b> '.$ot->titulo.'
+					<b>Project description</b> '.str_replace("\n", '<br>', $ot->titulo).'
 				</div>';
 
 				if ('' != $ot->site_services) $html .= '<br><div id="site_services">
@@ -73,17 +75,19 @@ if (user_can($current_user, 'administrator')) {
 				$items = $detalles->item;
 				$prices = $detalles->precio;
 				$notes = $detalles->observaciones;
+				$total_price = (float) 0;
 				for ($row = 0; $row < count($items); $row++) {
-
+					$item_no = $row + 1;
+					$total_price += (float) $prices[$row];
 					$price = 0 == $ot->price_breakdown ? '' : '$' . number_format($prices[$row], 0);
 					$html .= '<table>
 						<tr>
-							<td style="width: 200px"><b>'. $items[$row] .'</b></td>
+							<td style="width: 200px"><b>'.$item_no.') '. $items[$row] .'</b></td>
 							<td style="width: 250px"></td>
 							<td><b>'. $price .'</b></td>
 						</tr>
 						<tr>
-							<td colspan="3">'.str_replace("\n", '<br>', $notes[$row]).'</td>
+							<td colspan="3" style="padding: 0 20px;">'.str_replace("\n", '<br>', $notes[$row]).'</td>
 						</tr>
 					</table>';
 
@@ -92,6 +96,8 @@ if (user_can($current_user, 'administrator')) {
 
 				// detalle close tag
 				$html .= '</div>';
+
+				$html .= '<b>Price including the items mentioned above: $'. number_format($total_price, 0) . '</b>';
 
 			// content frame close tag
 					$html .= '</div>';
