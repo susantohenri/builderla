@@ -10,7 +10,7 @@ $updated = false;
 		<div class="clearfix"></div>
 	</div>
 	<div class="box-body">
-		<table class="table table-striped table-bordered" id="tabla_solicituds">
+		<table class="table table-striped table-bordered" id="tabla_solicituds" width="100%">
 			<thead>
 				<tr>
 					<th>#</th>

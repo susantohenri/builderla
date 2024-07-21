@@ -15,7 +15,7 @@ else:
 		<div class="clearfix"></div>
 	</div>
 	<div class="box-body">
-		<table class="table table-striped table-bordered" id="tabla_clientes">
+		<table class="table table-striped table-bordered" id="tabla_clientes" width="100%">
 			<thead>
 				<tr>
 					<th>#</th>

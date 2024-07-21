@@ -46,7 +46,7 @@ if( $_POST ){
 		<div class="clearfix"></div>
 	</div>
 	<div class="box-body">
-		<table class="table table-striped table-bordered" id="tabla_ots">
+		<table class="table table-striped table-bordered" id="tabla_ots" width="100%">
 			<thead>
 				<tr>
 					<th>#</th>

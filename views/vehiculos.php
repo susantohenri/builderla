@@ -15,7 +15,7 @@ if(isset($_GET['vid'])){
 		<div class="clearfix"></div>
 	</div>
 
-	<table class="table table-striped table-bordered" id="tabla_vehiculos">
+	<table class="table table-striped table-bordered" id="tabla_vehiculos" width="100%">
 		<thead>
 			<tr>
 				<th> # </th>
