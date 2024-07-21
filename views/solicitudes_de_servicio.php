@@ -498,6 +498,7 @@ if ($_POST) {
 
 
 		$('#tabla_solicituds').DataTable({
+			"scrollX": true,
 			"ordering": false,
 			"columnDefs": [{
 				"width": "20%",

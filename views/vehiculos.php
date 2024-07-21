@@ -399,7 +399,7 @@ $(document).ready(function(){
     	})
 	});
 
-	$('#tabla_vehiculos').DataTable({order: [[0, 'desc']]});
+	$('#tabla_vehiculos').DataTable({scrollX: true, order: [[0, 'desc']]});
 
 })
 

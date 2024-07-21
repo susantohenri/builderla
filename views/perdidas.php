@@ -79,6 +79,7 @@ $updated = false;
 		});
 
 		$('#tabla_solicituds').DataTable({
+			"scrollX": true,
 			"ordering": false
 		});
 	});

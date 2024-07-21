@@ -523,6 +523,7 @@ if ($_POST) {
 
 
 		$('#tabla_ots').DataTable({
+			"scrollX": true,
 			"ordering": false
 		});
 	});

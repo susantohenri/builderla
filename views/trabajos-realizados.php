@@ -595,6 +595,7 @@ $(document).ready(function(){
 
 
     $('#tabla_ots').DataTable({
+		"scrollX": true,
     	"ordering": false 
     });
 });

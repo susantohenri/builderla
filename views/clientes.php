@@ -358,7 +358,7 @@ $(document).ready(function(){
 		$(this).val( formateaRut($(this).val() ) );
 	});
 
-    $('#tabla_clientes').DataTable({order: [[0, 'desc']]});
+    $('#tabla_clientes').DataTable({scrollX: true, order: [[0, 'desc']]});
 
 	function validateEmail(form, cb) {
 		const email = form.find(`[name=email]`).val()
