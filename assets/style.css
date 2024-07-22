@@ -90,3 +90,17 @@ tr[data-row-num$="b"] td{
 .preview-uploaded img {
 	width: 100px;
 }
+
+/* fixing mobile modal form covered with overlay */
+body.mobile.modal-open #wpwrap {
+	position: unset;
+}
+.modal.fade.show {
+	top: 7.5%;
+	height: 90%;
+}
+span.select2.select2-container.select2-container--bootstrap4.select2-container--below {
+	height: auto;
+	flex: 1 1 auto;
+	width: 1% !important;
+}

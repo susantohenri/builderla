@@ -204,7 +204,7 @@ if ($_POST) {
 	<form method="post" id="formEditSolicitud" enctype="multipart/form-data">
 		<input type="hidden" name="action" value="editar_solicitud">
 		<input type="hidden" name="solicitud_id" value="">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Lead Details</h5>

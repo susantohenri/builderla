@@ -9,10 +9,14 @@ else:
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left"> Customer Database </h2>
-		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewCliente">New Customer</button>
-
-		<div class="clearfix"></div>
+		<div class="row">
+			<div class="col-xs-12 col-md-10">
+				<h2 class="font-weight-light text-center text-muted float-left"> Customer Database </h2>
+			</div>
+			<div class="col-xs-12 text-center col-md-2">
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalNewCliente">New Customer</button>
+			</div>
+		</div>
 	</div>
 	<div class="box-body">
 		<table class="table table-striped table-bordered" id="tabla_clientes" width="100%">
