@@ -1,7 +1,7 @@
 ﻿<?php include 'header.php'; ?>
 
 <?php 
-if( $_GET['cid'] ):
+if( isset($_GET['cid']) ):
 	include 'ots_by_cliente.php';
 else:
 ?>
@@ -9,20 +9,24 @@ else:
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left"> Lista de Clientes </h2>
-		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewCliente">Nuevo Cliente</button>
-
-		<div class="clearfix"></div>
+		<div class="row">
+			<div class="col-xs-12 col-md-10">
+				<h2 class="font-weight-light text-center text-muted float-left"> Customers</h2>
+			</div>
+			<div class="col-xs-12 text-center col-md-2">
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalNewCliente">New Customer</button>
+			</div>
+		</div>
 	</div>
 	<div class="box-body">
-		<table class="table table-striped table-bordered" id="tabla_clientes">
+		<table class="table table-striped table-bordered" id="tabla_clientes" width="100%">
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Nombre </th>
+					<th> Name </th>
 					<th> Email </th>
-					<th> Telefono </th>
-					<th class="text-center">Acciones</th>
+					<th> Phone </th>
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -33,9 +37,11 @@ else:
 					<td data-email="<?php echo $cliente->email; ?>"> <?php echo $cliente->email; ?> </td>
 					<td data-telefono="<?php echo $cliente->telefono; ?>"> <?php echo $cliente->telefono; ?> </td>
 					<td class="text-center">
-						<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Editar Cliente"><i class="fa fa-pencil"></i></button>
-						<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar Cliente"><i class="fa fa-trash-o"></i></button>
+						<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
+						<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
+						<!--
 						<a href="admin.php?page=mopar-clientes&cid=<?php echo $cliente->id ?>" class="btn btn-info" data-toggle="tooltip" title="Ver OTs del Cliente"><i class="fa fa-search"></i></a>
+						-->
 					</td>
 				</tr>
 				<?php endforeach; ?>
@@ -54,7 +60,7 @@ else:
 		<div class="modal-dialog modal-lg">
 	    	<div class="modal-content">
 	      		<div class="modal-header">
-	        		<h5 class="modal-title">Datos del Cliente</h5>
+	        		<h5 class="modal-title">Customer Information</h5>
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          			<span aria-hidden="true">&times;</span>
 	        		</button>
@@ -64,7 +70,7 @@ else:
 				    	<div class="form-group col-md-12">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Nombres</span>
+					          		<span class="input-group-text">Name</span>
 						        </div>
 						        <input type="text" name="nombres" class="form-control" required>
 					      	</div>
@@ -72,7 +78,7 @@ else:
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Apellido Paterno</span>
+					          		<span class="input-group-text">Last name</span>
 						        </div>
 						        <input type="text" name="apellidoPaterno" class="form-control" required>
 					      	</div>
@@ -88,7 +94,7 @@ else:
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Telefono</span>
+					          		<span class="input-group-text">Phone</span>
 						        </div>
 						        <input type="text" name="telefono" class="form-control" required>
 					      	</div>
@@ -96,8 +102,8 @@ else:
 	      			</div>
       			</div>
 	      		<div class="modal-footer">
-	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-	        		<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+	        		<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 	      		</div>
 			</div>
 	  	</div>
@@ -116,7 +122,7 @@ else:
 		<div class="modal-dialog modal-lg">
 	    	<div class="modal-content">
 	      		<div class="modal-header">
-	        		<h5 class="modal-title">Datos del Cliente</h5>
+	        		<h5 class="modal-title">Customer Information</h5>
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          			<span aria-hidden="true">&times;</span>
 	        		</button>
@@ -126,7 +132,7 @@ else:
 				    	<div class="form-group col-md-12">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Nombres</span>
+					          		<span class="input-group-text">Name</span>
 						        </div>
 						        <input type="text" name="nombres" class="form-control" required>
 					      	</div>
@@ -134,7 +140,7 @@ else:
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Apellido Paterno</span>
+					          		<span class="input-group-text">Last name</span>
 						        </div>
 						        <input type="text" name="apellidoPaterno" class="form-control" required>
 					      	</div>
@@ -150,7 +156,7 @@ else:
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Telefono</span>
+					          		<span class="input-group-text">Phone</span>
 						        </div>
 						        <input type="text" name="telefono" class="form-control" required>
 					      	</div>
@@ -158,7 +164,7 @@ else:
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Cambiar Password</span>
+					          		<span class="input-group-text">Change Password</span>
 						        </div>
 						        <input type="text" name="secret" value="*********" autocomplete="off" class="form-control" required>
 					      	</div>
@@ -166,8 +172,8 @@ else:
 	      			</div>
       			</div>
 	      		<div class="modal-footer">
-	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-	        		<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Closer</button>
+	        		<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 	      		</div>
 			</div>
 	  	</div>
@@ -197,8 +203,8 @@ $(document).ready(function(){
 		regid = tr.data('regid');
 
 		$.confirm({
-		    title: 'Eliminar Cliente!',
-		    content: '¿Desea eliminar el cliente seleccionado?',
+		    title: 'Remove Customer!',
+		    content: 'Do you want to remove the chosen client?',
 			type: 'red',
 			icon: 'fa fa-warning',
 		    buttons: {
@@ -207,7 +213,7 @@ $(document).ready(function(){
 		            btnClass: 'btn-red',
 		        },
 		        SI:{
-		            text: 'Si',
+		            text: 'Yes',
 		            btnClass: 'btn-green',
 		            action: function(){
 		            	$.ajax({
@@ -221,7 +227,7 @@ $(document).ready(function(){
 		            			$.alert({
 		            				title: false,
 		            				type: 'green',
-		            				content: 'Cliente borrado correctamente'
+		            				content: 'Client deleted successfully'
 		            			});
 		            			tr.fadeOut(400);
 		            		}
@@ -331,7 +337,7 @@ $(document).ready(function(){
 						$.alert({
 							title: false,
 							type: 'green',
-							content: 'Cliente editado correctamente',
+							content: 'Customer successfully updated',
 							buttons: {
 								volver: {
 									action: function () {
@@ -356,7 +362,7 @@ $(document).ready(function(){
 		$(this).val( formateaRut($(this).val() ) );
 	});
 
-    $('#tabla_clientes').DataTable({order: [[0, 'desc']]});
+    $('#tabla_clientes').DataTable({scrollX: true, order: [[0, 'desc']]});
 
 	function validateEmail(form, cb) {
 		const email = form.find(`[name=email]`).val()

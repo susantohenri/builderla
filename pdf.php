@@ -71,24 +71,16 @@ if (user_can( $current_user, 'administrator' )) {
 			<td style="width: 295px; border: 1px solid #000;">
 				<table class="no_padding">
 					<tr>
-						<td><strong>Marca: </strong></td>
-						<td>' . $vehiculo->marca . '</td>
+						<td><strong>Address: </strong></td>
+						<td>' . $vehiculo->street_address . ' ' . $vehiculo->address_line_2 . '</td>
 					</tr>
 					<tr>
-						<td><strong>A&ntilde;o: </strong></td>
-						<td>' . $vehiculo->ano . '</td>
+						<td><strong>City: </strong></td>
+						<td>' . $vehiculo->city . '</td>
 					</tr>
 					<tr>
-						<td><strong>Color: </strong></td>
-						<td>' . $vehiculo->color . '</td>
-					</tr>
-					<tr>
-						<td><strong>Patente: </strong></td>
-						<td>' . $vehiculo->patente . '</td>
-					</tr>
-					<tr>
-						<td><strong>VIN: </strong></td>
-						<td>' . $vehiculo->nro_motor . '</td>
+						<td><strong>ZIP Code: </strong></td>
+						<td>' . $vehiculo->zip_code . '</td>
 					</tr>
 				</table>
 			</td>
@@ -106,13 +98,11 @@ if (user_can( $current_user, 'administrator' )) {
 
 			$html .= '
 			<tr>
-				<td style="text-align: left">' . $detalles->item[$key] . '</td>
+				<td style="text-align: left">' . $detalles->item[$key] . '<br> ' . str_replace("\r\n", "<br>", $detalles->observaciones[$key]) . ' </td>
 				<td style="text-align: right;"> $ ' . number_format($detalles->precio[$key],0,',','.') . '</td>
 			</tr>';
 		}
 
-		$observaciones = '' === $ot->observaciones ? '' : '<tr><td style="width: 590px"><strong>Observaciones adicionales: </strong><br>' . nl2br($ot->observaciones) . '</td></tr>';
-		$solicitud_inicial = !isset($solicitud->solicitud) && '' !== $solicitud->solicitud ? '' : '<tr><td style="width: 590px"><strong>Solicitud inicial: </strong><br>' . nl2br($solicitud->solicitud) . '</td></tr>';
 		$lastupdated = is_null($ot->upddate) ? '-' : date_format(date_create($ot->upddate), 'd/m/Y - H:i');
 
 		$html .= '
@@ -125,11 +115,8 @@ if (user_can( $current_user, 'administrator' )) {
 	<table border="0" style="width: 590px">
 		<tr>
 			<td style="width: 590px">
-			    <strong>Kilometraje: ' . $ot->km . '</strong>
 			</td>
 		</tr>
-		'.$observaciones.'
-		'.$solicitud_inicial.'
 		<tr>
 			<td>
 				<strong>Creado:</strong> '.date_format(date_create($ot->regdate), 'd/m/Y - H:i').'
@@ -140,7 +127,6 @@ if (user_can( $current_user, 'administrator' )) {
 	</table>
 	</page>
 	';
-
 
 	$orientation = 'potrait';
 	$html2pdf = new Html2Pdf($orientation,'LETTER','es');

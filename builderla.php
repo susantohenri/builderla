@@ -9,18 +9,21 @@
  */
 
 function theme_options_panel(){
-	add_menu_page('Doctor Mopar Taller', 'Doctor Mopar Taller', 'manage_options', 'mopar-taller', 'taller_home_func','dashicons-admin-tools',2);
-	add_submenu_page( 'mopar-taller', 'Clientes', 'Clientes', 'manage_options', 'mopar-clientes', 'taller_clientes_func');
-	add_submenu_page( 'mopar-taller', 'Vehiculos', 'Vehiculos', 'manage_options', 'mopar-vehiculos', 'taller_vehiculos_func');
+	add_menu_page('Project Management', 'Project Management', 'manage_options', 'mopar-taller', 'taller_home_func','dashicons-admin-tools',2);
+	add_submenu_page( 'mopar-taller', 'Customers', 'Customers', 'manage_options', 'mopar-clientes', 'taller_clientes_func');
+	add_submenu_page( 'mopar-taller', 'Properties', 'Properties', 'manage_options', 'mopar-vehiculos', 'taller_vehiculos_func');
 	// add_submenu_page( 'mopar-taller', 'OT', 'OT', 'manage_options', 'mopar-ot', 'taller_ot_func');
-	add_submenu_page( 'mopar-taller', 'Solicitudes de Servicio', 'Solicitudes de Servicio', 'manage_options', 'mopar-solicitudes-de-servicio', 'taller_solicitudes_de_servicio_func');
-	add_submenu_page( 'mopar-taller', 'Solicitudes Perdidas', 'Solicitudes Perdidas', 'manage_options', 'mopar-perdidas', 'taller_perdidas_func');
-	add_submenu_page( 'mopar-taller', 'Solicitudes Agendadas', 'Solicitudes Agendadas', 'manage_options', 'mopar-agendadas', 'taller_agendadas_func');
-	add_submenu_page( 'mopar-taller', 'Ordenes de Ingreso', 'Ordenes de Ingreso', 'manage_options', 'mopar-orden-de-ingreso', 'taller_orden_de_ingreso_func');
-	add_submenu_page( 'mopar-taller', 'Cotizaciones', 'Cotizaciones', 'manage_options', 'mopar-cotizaciones', 'taller_cotizaciones_func');
-	add_submenu_page( 'mopar-taller', 'Trabajos Realizados', 'Trabajos Realizados', 'manage_options', 'mopar-trabajos-realizado', 'taller_trabajos_realizado_func');
-	add_submenu_page( 'mopar-taller', 'Preparación Contable', 'Preparación Contable', 'manage_options', 'preparacion-contable', 'taller_preparacion_contable_func');
-	add_submenu_page( 'mopar-taller', 'Conciliación Contable', 'Conciliación Contable', 'manage_options', 'conciliacion-contable', 'taller_conciliacion_contable_func');
+	add_submenu_page( 'mopar-taller', 'Leads', 'Leads', 'manage_options', 'mopar-solicitudes-de-servicio', 'taller_solicitudes_de_servicio_func');
+	add_submenu_page( 'mopar-taller', 'Lost Leads', 'Lost Leads', 'manage_options', 'mopar-perdidas', 'taller_perdidas_func');
+	add_submenu_page( 'mopar-taller', 'Converted Leads', 'Converted Leads', 'manage_options', 'mopar-agendadas', 'taller_agendadas_func');
+
+	add_submenu_page( 'mopar-taller', 'Estimates', 'Estimates', 'manage_options', 'mopar-cotizaciones', 'taller_cotizaciones_func');
+	
+		add_submenu_page( 'mopar-taller', 'Active Projects', 'Active Projects', 'manage_options', 'mopar-orden-de-ingreso', 'taller_orden_de_ingreso_func');
+	
+	add_submenu_page( 'mopar-taller', 'Completed Projects', 'Completed Projects', 'manage_options', 'mopar-trabajos-realizado', 'taller_trabajos_realizado_func');
+//	add_submenu_page( 'mopar-taller', 'Preparación Contable', 'Preparación Contable', 'manage_options', 'preparacion-contable', 'taller_preparacion_contable_func');
+//	add_submenu_page( 'mopar-taller', 'Conciliación Contable', 'Conciliación Contable', 'manage_options', 'conciliacion-contable', 'taller_conciliacion_contable_func');
 }
 add_action('admin_menu', 'theme_options_panel');
  
@@ -159,6 +162,7 @@ function validate_cliente_callback(){
 	exit();
 }
 
+
 function insertar_cliente_callback(){
 	global $wpdb;
 	$pass = Mopar::randomPassword();
@@ -234,37 +238,23 @@ function eliminar_vehiculo_callback(){
 
 function insertar_vehiculo_callback(){
 	global $wpdb;
-	//Check Vehiculo Exist
-	$sql = "SELECT * FROM vehiculos WHERE patente = '" . $_POST['patente'] . "'";
-	$vehiculo = $wpdb->get_row($sql);
 
-	if( $vehiculo ){
-		$json = [
-			'status' => 'ERROR',
-			'msg' => 'La Patente del Vehiculo ya existe en la base de datos'
-		];
-	} else {
-
-		$array_insert = [
-			'patente' => $_POST['patente'],
-			'marca' => $_POST['marca'],
-			'color' => $_POST['color'],
-			'ano' => $_POST['ano'],
-			'nro_motor' => $_POST['nro_motor'],
-			'street_address' => $_POST['street_address'],
-			'address_line_2' => $_POST['address_line_2'],
-			'city' => $_POST['city'],
-			'zip_code' => $_POST['zip_code'],
-			'cliente_id' => $_POST['cliente']
-		];
-		$wpdb->insert('vehiculos',$array_insert);
-		$last_query = $wpdb->last_query;
-		$json = [
-			'status' => 'OK',
-			'sql' => $last_query,
-			'error' => $wpdb->last_error
-		];
-	}
+	$array_insert = [
+		'street_address' => $_POST['street_address'],
+		'address_line_2' => $_POST['address_line_2'],
+		'city' => $_POST['city'],
+		'state' => $_POST['state'],
+		'zip_code' => $_POST['zip_code'],
+		'cliente_id' => $_POST['cliente'],
+		'cliente_id_2' => $_POST['cliente_2']
+	];
+	$wpdb->insert('vehiculos',$array_insert);
+	$last_query = $wpdb->last_query;
+	$json = [
+		'status' => 'OK',
+		'sql' => $last_query,
+		'error' => $wpdb->last_error
+	];
 
 	echo json_encode($json);
 	exit();  
@@ -273,36 +263,22 @@ function insertar_vehiculo_callback(){
 
 function actualizar_vehiculo_callback(){
 	global $wpdb;
-	//Check Vehiculo Exist
-	$sql = "SELECT * FROM vehiculos WHERE patente = '" . $_POST['patente'] . "' AND id != " . $_POST['regid'];
-	$vehiculo = $wpdb->get_row($sql);
 
-	if( $vehiculo ){
-		$json = [
-			'status' => 'ERROR',
-			'msg' => 'La Patente del Vehiculo ya existe en la base de datos'
-		];
-	} else {
+	$array_edit = [
+		'street_address' => $_POST['street_address'],
+		'address_line_2' => $_POST['address_line_2'],
+		'city' => $_POST['city'],
+		'state' => $_POST['state'],
+		'zip_code' => $_POST['zip_code'],
+		'cliente_id' => $_POST['cliente'],
+		'cliente_id_2' => $_POST['cliente_2']
+	];
+	$wpdb->update('vehiculos',$array_edit,['id' => $_POST['regid']]);
 
-		$array_edit = [
-			'patente' => $_POST['patente'],
-			'marca' => $_POST['marca'],
-			'color' => $_POST['color'],
-			'ano' => $_POST['ano'],
-			'nro_motor' => $_POST['nro_motor'],
-			'street_address' => $_POST['street_address'],
-			'address_line_2' => $_POST['address_line_2'],
-			'city' => $_POST['city'],
-			'zip_code' => $_POST['zip_code'],
-			'cliente_id' => $_POST['cliente']
-		];
-		$wpdb->update('vehiculos',$array_edit,['id' => $_POST['regid']]);
-
-		$json = [
-			'status' => 'OK',
-			'sql' => $wpdb->last_query
-		];
-	}
+	$json = [
+		'status' => 'OK',
+		'sql' => $wpdb->last_query
+	];
 
 	echo json_encode($json);
 	exit(); 
@@ -464,11 +440,9 @@ function proceed_solicitud_callback(){
 			'cliente_id' => $solicitud->cliente_id,
 			'vehiculo_id' => $solicitud->vehiculo_id,
 			'titulo' => '',
-			'detalle' => '{"item":[""],"precio":["0"]}',
+			'detalle' => '{"item":[""],"precio":["0"], "observaciones":[""]}',
 			'valor' => '',
-			'km' => '',
 			'estado' => 1,
-			'observaciones' => ''
 		]);
 		$wpdb->update('solicitud', ['estado' => 4, 'ot_id' => $wpdb->insert_id], ['id' => $_POST['regid']]);
 
@@ -500,11 +474,9 @@ function proceed_solicitud_without_ingreso_callback(){
 			'cliente_id' => $solicitud->cliente_id,
 			'vehiculo_id' => $solicitud->vehiculo_id,
 			'titulo' => '',
-			'detalle' => '{"item":[""],"precio":["0"]}',
+			'detalle' => '{"item":[""],"precio":["0"], "observaciones": [""]}',
 			'valor' => '',
-			'km' => '',
 			'estado' => 1,
-			'observaciones' => ''
 		]);
 
 		$wpdb->update('solicitud', ['estado' => 3, 'ot_id' => $wpdb->insert_id], ['id' => $_POST['regid']]);
@@ -547,9 +519,7 @@ function insertar_ot_callback(){
 		'titulo' => $_POST['titulo'],
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
-		'km' => $_POST['km'],
 		'estado' => $_POST['estado'],
-		'observaciones' => $_POST['observaciones']
 	];
 	$wpdb->insert('ot',$array_insert);
 
@@ -589,9 +559,7 @@ function editar_ot(){
 		'titulo' => $_POST['titulo'],
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
-		'km' => $_POST['km'],
 		'estado' => $_POST['estado'],
-		'observaciones' => $_POST['observaciones']
 	];
 
 	$wpdb->update('ot',$array_update,['id' => $_POST['regid']]);
@@ -641,9 +609,7 @@ function editar_ot_callback(){
 		'titulo' => $_POST['titulo'],
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
-		'km' => $_POST['km'],
 		'estado' => $_POST['estado'],
-		'observaciones' => $_POST['observaciones']
 	];
 
 	$wpdb->update('ot',$array_update,['id' => $_POST['regid']]);
@@ -674,7 +640,7 @@ function get_ot_callback(){
 	$ot_id = $_POST['ot_id'];
 	$ot = Mopar::getOneOt($ot_id);
 
-	$vehiculos = Mopar::getVehiculosByCliente($ot->cliente_id);
+	$vehiculos = [Mopar::getOneVehiculo($ot->vehiculo_id)];
 	$cliente = Mopar::getOneCliente($ot->cliente_id);
 
 	$json = [
@@ -692,13 +658,14 @@ function get_solicitud_callback(){
 	$solicitud_id = $_POST['solicitud_id'];
 	$solicitud = Mopar::getOneSolicitud($solicitud_id);
 
-	$vehiculos = Mopar::getVehiculosByCliente($solicitud->cliente_id);
-	$cliente = Mopar::getOneCliente($solicitud->cliente_id);
+	$vehiculos = [Mopar::getOneVehiculo($solicitud->vehiculo_id)];
+	$cliente = Mopar::getOneCliente($vehiculos->cliente_id);
 
 	$json = [
 		'solicitud' => $solicitud,
 		'vehiculos' => $vehiculos,
-		'cliente' => $cliente
+		'cliente' => $cliente,
+		'upload_url' => plugin_dir_url(__FILE__) . 'uploads/'
 	];
 
 	echo json_encode($json);
@@ -711,6 +678,13 @@ function mopar_taller_select2_clientes () {
         'permission_callback' => '__return_true',
         'callback' => function () {
 			return Mopar::getSelect2Clientes();
+		}
+	]);
+	register_rest_route('mopar-taller/v1', '/select2-property-for-leads', [
+        'methods' => 'GET',
+        'permission_callback' => '__return_true',
+        'callback' => function () {
+			return Mopar::getSelect2Properties();
 		}
 	]);
 }
@@ -769,6 +743,46 @@ class Mopar{
 		return ['results' => $clientes];
 	}
 
+	public static function getSelect2Properties(){
+		global $wpdb;
+		$vehiculos = $wpdb->get_results("
+			SELECT vehiculos.id,
+				CONCAT(
+					vehiculos.street_address
+					, ' '
+					, vehiculos.address_line_2
+					, ' - '
+					, clientes.nombres
+					, ' '
+					, IF(clientes_2.id IS NOT NULL AND clientes_2.apellidoPaterno = clientes.apellidoPaterno, '', clientes.apellidoPaterno)
+					, IF(clientes_2.id IS NOT NULL, ' & ', '')
+					, IFNULL(clientes_2.nombres, '')
+					, ' '
+					, IFNULL(clientes_2.apellidoPaterno, '')
+				) text
+			FROM vehiculos
+			LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
+			LEFT JOIN clientes clientes_2 ON vehiculos.cliente_id_2 = clientes_2.id
+			WHERE CONCAT(
+				vehiculos.street_address
+				, ' '
+				, vehiculos.address_line_2
+				, ' '
+				, clientes.nombres
+				, ' '
+				, clientes.apellidoPaterno
+				, ' '
+				, IFNULL(clientes_2.nombres, '')
+				, ' '
+				, IFNULL(clientes_2.apellidoPaterno, '')
+			) LIKE '%{$_GET['q']}%'
+			AND vehiculos.cliente_id <> 0
+			ORDER BY vehiculos.id DESC
+			LIMIT 10
+		");
+		return ['results' => $vehiculos];
+	}
+
 	public static function getOneCliente($cliente_id){
 		global $wpdb;
     	$cliente = $wpdb->get_row('SELECT * FROM clientes where id = ' . $cliente_id);
@@ -803,14 +817,15 @@ class Mopar{
 			SELECT vehiculos.*
 			FROM vehiculos
 			WHERE cliente_id = %d
-		", $cliente_id));
+			OR cliente_id_2 = %d
+		", $cliente_id, $cliente_id));
 
     	return $cliente;
 	}
 
 	public static function getSolicitudsDeServicioso(){
 		global $wpdb;
-		$solicituds = $wpdb->get_results('SELECT * FROM solicitud WHERE estado IN (1,2,3,4,5) ORDER BY id DESC');
+		$solicituds = $wpdb->get_results('SELECT *, DATE_FORMAT(fecha, "%m-%d-%Y") fecha_format FROM solicitud WHERE estado IN (1,2,3,4,5) ORDER BY id DESC');
 
     	return $solicituds;
 	}
@@ -887,7 +902,7 @@ class Mopar{
 
 	public static function getAgendadas(){
 		global $wpdb;
-		$solicituds = $wpdb->get_results('SELECT * FROM solicitud WHERE fecha IS NOT NULL ORDER BY id DESC');
+		$solicituds = $wpdb->get_results('SELECT *, DATE_FORMAT(fecha, "%m-%d-%Y") fecha_format FROM solicitud WHERE fecha IS NOT NULL ORDER BY id DESC');
 
 		return $solicituds;
 	}
@@ -895,7 +910,7 @@ class Mopar{
 	public static function getOneSolicitud($id){
 		global $wpdb;
     	$solicitud = $wpdb->get_row('SELECT * FROM solicitud WHERE id = ' . $id);
-
+echo $wpdb->last_query;
     	return $solicitud;
 	}
 
@@ -1006,7 +1021,7 @@ class Mopar{
 
 	protected static function solicitudUpdateTotalOldRecord() {
 		global $wpdb;
-		$empty_detalle = '{"item":[""],"precio":["0"]}';
+		$empty_detalle = '{"item":[""],"precio":["0"], "observaciones":[""]}';
 		$uncalculateds = $wpdb->get_results("
 			SELECT
 				solicitud.ot_id
@@ -1042,6 +1057,7 @@ class Mopar{
 			SELECT
 				ot.*
 				, solicitud.estado solicitud_estado
+				, solicitud.fecha
 			FROM ot
 			LEFT JOIN solicitud ON ot.id = solicitud.ot_id
 			WHERE ot.estado IN (1, 2)
@@ -1099,11 +1115,44 @@ class Mopar{
 
 	public static function getNombreVehiculo($vehiculo_id){
 		global $wpdb;
-		$sql = 'SELECT marca,patente FROM vehiculos where id = ' . $vehiculo_id;
+		$sql = 'SELECT street_address,address_line_2 FROM vehiculos where id = ' . $vehiculo_id;
 		$vehiculo = $wpdb->get_row($sql);
-		$nombre_vehiculo = $vehiculo->marca . " - " . $vehiculo->patente;
+		$nombre_vehiculo = $vehiculo->street_address . " - " . $vehiculo->address_line_2;
 
 		return $nombre_vehiculo;
+	}
+
+	public static function getTitleVehiculo($vehiculo_id){
+		global $wpdb;
+		$sql = "
+			SELECT
+				vehiculos.street_address
+				, vehiculos.address_line_2
+				, clientes.nombres as c1_first
+				, clientes.apellidoPaterno as c1_last
+				, clientes_2.nombres as c2_first
+				, clientes_2.apellidoPaterno as c2_last
+			FROM vehiculos
+			LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
+			LEFT JOIN clientes clientes_2 ON vehiculos.cliente_id_2 = clientes_2.id
+			WHERE vehiculos.id = {$vehiculo_id}
+		";
+		$vehiculo = $wpdb->get_row($sql);
+
+		$title = "{$vehiculo->street_address} {$vehiculo->address_line_2}";
+		if ($vehiculo->c1_first && $vehiculo->c1_last && $vehiculo->c2_first && $vehiculo->c2_last) {
+			if ($vehiculo->c1_last == $vehiculo->c2_last) {
+				$title .= " - {$vehiculo->c1_first} & {$vehiculo->c2_first} {$vehiculo->c1_last}";
+			} else {
+				$title .= " - {$vehiculo->c1_first} {$vehiculo->c1_last} & {$vehiculo->c2_first} {$vehiculo->c2_last}";
+			}
+		} else if ($vehiculo->c1_first) {
+			$title .= " - {$vehiculo->c1_first} {$vehiculo->c1_last}";
+		} else if ($vehiculo->c2_first) {
+			$title .= " - {$vehiculo->c2_first} {$vehiculo->c2_last}";
+		}
+
+		return $title;
 	}
 
 	public static function getEstado($estado_id){
@@ -1183,7 +1232,8 @@ class Mopar{
 		switch ($event) {
 			case 'fecha_updated':
 				$solicitud = Mopar::getOneSolicitud($entity_id);
-				$cliente = Mopar::getOneCliente($solicitud->cliente_id);
+				$vehiculo = Mopar::getOneVehiculo($solicitud->vehiculo_id);
+				$cliente = Mopar::getOneCliente($vehiculo->cliente_id);
 				$recipient = $cliente->email;
 				$subject = 'Su hora al taller ha sido agendada!';
 				$fecha = date_create("{$solicitud->fecha} {$solicitud->hora}");
@@ -1204,14 +1254,15 @@ Servicio al cliente
 				break;
 			case 'ingreso_created':
 				$solicitud = Mopar::getOneSolicitud($entity_id);
-				$cliente = Mopar::getOneCliente($solicitud->cliente_id);
+				$vehiculo = Mopar::getOneVehiculo($solicitud->vehiculo_id);
+				$cliente = Mopar::getOneCliente($vehiculo->cliente_id);
 				$recipient = $cliente->email;
 				$vehicle = Mopar::getOneVehiculo($solicitud->vehiculo_id);
 
 				$subject = 'Estamos reparando su vehículo!';
 				$message = "{$cliente->nombres}:
 	
-Nos complace informarte que tu {$vehicle->marca} está siendo atendido por nuestro equipo de profesionales.
+Nos complace informarte que tu {$vehicle->city} está siendo atendido por nuestro equipo de profesionales.
 
 Durante el proceso de servicio, si tienes alguna pregunta o necesitas alguna información adicional, no dudes en ponerte en contacto con nosotros. Estamos aquí para ayudarte en todo momento y asegurarnos de que tengas la mejor experiencia.
 

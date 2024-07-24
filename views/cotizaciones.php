@@ -6,41 +6,15 @@ $updated = false;
 if ($_POST) {
 	global $wpdb;
 
-	$tmpFilePath = $_FILES['uploadsHistory']['tmp_name'];
-	if ($tmpFilePath == "") {
-		if ($_POST['hdn_archivo'] == "") {
-			$archivo = '';
-		} else {
-			$archivo = $_POST['hdn_archivo'];
-		}
-	} else {
-		$name = $_FILES['uploadsHistory']['name'];
-		$pathinfo = pathinfo($name);
-		$array_extension_allowed = array('pdf', 'xls', 'xlsx', 'doc', 'docx', 'jpeg', 'jpg', 'png');
-
-		if (in_array($pathinfo['extension'], $array_extension_allowed)) {
-
-			$filename_body = uniqid($input_name);
-			$newName = $pathinfo['filename'] . '___' . $filename_body . '.' . $pathinfo['extension'];
-			$newFilePath = $folder . $newName;
-
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
-				$archivo = $newName;
-			} else {
-				$archivo = '';
-			}
-		}
-	}
-
-
 	$array_insert = [
 		'titulo' => $_POST['titulo'],
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
-		'km' => $_POST['km'],
 		'estado' => 1,
-		'observaciones' => $_POST['observaciones'],
-		'archivo' => $archivo
+		'site_services' => isset($_POST['cb']['site_services']) ? $_POST['site_services'] : '',
+		'customer_to_provide' => isset($_POST['cb']['customer_to_provide']) ? $_POST['customer_to_provide'] : '',
+		'not_included' => isset($_POST['cb']['not_included']) ? $_POST['not_included'] : '',
+		'price_breakdown' => isset($_POST['cb']['price_breakdown']) ? 1 : 0
 	];
 	if (isset($_POST['cliente'])) $array_insert['cliente_id'] = $_POST['cliente'];
 	if (isset($_POST['vehiculo'])) $array_insert['vehiculo_id'] = $_POST['vehiculo'];
@@ -71,34 +45,29 @@ if ($_POST) {
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left">Cotizaciones </h2>
-		<!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewOT">Nueva Cotización</button> -->
+		<h2 class="font-weight-light text-center text-muted float-left">Estimates </h2>
 
 		<div class="clearfix"></div>
 	</div>
 	<div class="box-body">
-		<table class="table table-striped table-bordered" id="tabla_ots">
+		<table class="table table-striped table-bordered" id="tabla_ots" width="100%">
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Titulo </th>
-					<th> Cliente </th>
-					<th> Vehiculo </th>
-					<th> Valor Total </th>
-					<th> Km. </th>
-					<th> Estado </th>
-					<th class="text-center">Acciones</th>
+					<th> Date </th>
+					<th> Address </th>
+					<th> Total </th>
+					<th> Status </th>
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php foreach ($ots as $ot) : ?>
 					<tr data-regid="<?php echo $ot->id; ?>">
 						<td data-regid="<?php echo $ot->id; ?>"> <?php echo $ot->id; ?> </td>
-						<td data-titulo="<?php echo $ot->titulo; ?>"> <?php echo $ot->titulo; ?> </td>
-						<td data-cliente="<?php echo $ot->cliente_id; ?>"> <?php echo Mopar::getNombreCliente($ot->cliente_id) ?> </td>
+						<td data-titulo="<?php echo $ot->titulo; ?>"> <?php echo $ot->fecha; ?> </td>
 						<td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getNombreVehiculo($ot->vehiculo_id) ?> </td>
 						<td data-valor="<?php echo $ot->valor; ?>"> $ <?php echo number_format($ot->valor, 0, ',', '.') ?> </td>
-						<td data-km="<?php echo $ot->km; ?>"> <?php echo $ot->km; ?> </td>
 						<td data-estado="<?php echo $ot->estado; ?>" class="text-center align-middle">
 							<?php if (3 == $ot->solicitud_estado) : ?>
 								<a>
@@ -120,7 +89,7 @@ if ($_POST) {
 						</td>
 						<td class="text-center" style="white-space: nowrap;">
 							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $ot->id; ?>" data-toggle="tooltip" title="Editar"><i class="fa fa-pencil"></i></button>
-							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>
+							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/estimate-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>
 							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar"><i class="fa fa-trash-o"></i></button>
 							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Finalizar Trabajo"><i class="fa fa-check"></i></button>
 						</td>
@@ -131,149 +100,28 @@ if ($_POST) {
 		<br>
 		<ul>
 			<li>
-				<i class="fa fa-circle text-success"></i> El trabajo de esta cotización ha sido completado
+				<i class="fa fa-circle text-success"></i> This estimate was accepted and signed.
 			</li>
 			<li>
-				<i class="fa fa-circle text-warning"></i> Esta cotización no tiene una orden de ingreso
+				<!--	<i class="fa fa-circle text-warning"></i> Esta cotización no tiene una orden de ingreso
+			-->
 			</li>
 			<li>
-				<i class="fa fa-circle text-danger"></i> En esta cotización no se ha realizado un trabajo
+				<i class="fa fa-circle text-danger"></i> There are no actions for this estimate
 			</li>
 		</ul>
 	</div>
 </div>
-
-
-
-
-<!-- Nuevo OT -->
-<div class="modal fade" id="modalNewOT" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	<form method="post" id="formNuevoOT" enctype="multipart/form-data">
-		<input type="hidden" name="action" value="insertar_ot">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Datos de la Cotización</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Cliente</span>
-								</div>
-								<select name="cliente" class="form-control">
-									<option value="">Seleccione</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Vehiculo</span>
-								</div>
-								<select name="vehiculo" class="form-control" disabled required>
-									<option value="">Seleccione Cliente primero</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Titulo Descriptivo</span>
-								</div>
-								<input type="text" name="titulo" class="form-control" required>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<table class="table">
-								<thead>
-									<tr>
-										<th> Detalle </th>
-										<th> Precio </th>
-										<th></th>
-									</tr>
-								</thead>
-								<tbody class="bg-light">
-									<tr>
-										<td class="">
-											<input type="text" name="detalle[item][]" class="form-control" required>
-										</td>
-										<td class="">
-											<input type="text" name="detalle[precio][]" class="form-control precio text-right" required>
-										</td>
-										<td></td>
-									</tr>
-								</tbody>
-								<tfoot>
-									<tr>
-										<th colspan="3"><button type="button" class="btn btn-success float-right btn-sm btnPlus" data-toggle="tooltip" title="Agregar linea de detalle"><i class="fa fa-plus"></i></button></th>
-									</tr>
-								</tfoot>
-							</table>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Km.</span>
-								</div>
-								<input type="text" class="form-control" name="km" required>
-							</div>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Total</span>
-								</div>
-								<input type="text" class="form-control text-right" name="valor" required readonly>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Observaciones</span>
-								</div>
-								<textarea class="form-control" name="observaciones"></textarea>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Archivo Adicional</span>
-								</div>
-								<input type="file" name="uploadsHistory" class="form-control">
-							</div>
-							<small class="text-muted w-100">(Dependiendo del peso del archivo, el proceso de guardar puede tomar mas tiempo de lo estimado. Evite que pese mas de 1MB)</small>
-						</div>
-					</div>
-
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
-				</div>
-			</div>
-		</div>
-	</form>
-</div>
-
-
-
-
-
 
 <!-- EDITAR OT -->
 <div class="modal fade" id="modalEditOT" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 	<form method="post" id="formEditOT" enctype="multipart/form-data">
 		<input type="hidden" name="action" value="editar_ot">
 		<input type="hidden" name="ot_id" value="">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Datos de la Cotización</h5>
+					<h5 class="modal-title">Estimate</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -283,17 +131,7 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Cliente</span>
-								</div>
-								<select name="cliente" class="form-control" disabled>
-									<option value="">Seleccione</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Vehiculo</span>
+									<span class="input-group-text">Address</span>
 								</div>
 								<select name="vehiculo" class="form-control" disabled required>
 									<option value="">Seleccione Cliente primero</option>
@@ -303,17 +141,42 @@ if ($_POST) {
 						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Titulo Descriptivo</span>
+									<span class="input-group-text">Project Description</span>
 								</div>
-								<input type="text" name="titulo" class="form-control" required>
+								<!-- <input type="text" name="titulo" class="form-control" required> -->
+								 <textarea name="titulo" class="form-control"></textarea>
+							</div>
+						</div>
+						<div class="form-group col-md-12">
+							<div class="row">
+								<label class="col-md-3">
+									<input type="checkbox" name="cb[site_services]"> site services
+								</label>
+								<label class="col-md-3">
+									<input type="checkbox" name="cb[customer_to_provide]"> customer to provide
+								</label>
+								<label class="col-md-3">
+									<input type="checkbox" name="cb[not_included]"> not included
+								</label>
+								<label class="col-md-3">
+									<input type="checkbox" name="cb[price_breakdown]"> price breakdown
+								</label>
+							</div>
+						</div>
+						<div class="form-group col-md-12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Site Services</span>
+								</div>
+								<input type="text" name="site_services" class="form-control">
 							</div>
 						</div>
 						<div class="form-group col-md-12">
 							<table class="table">
 								<thead>
 									<tr>
-										<th> Detalle </th>
-										<th> Precio </th>
+										<th> Details </th>
+										<th> Price </th>
 										<th></th>
 									</tr>
 								</thead>
@@ -326,12 +189,20 @@ if ($_POST) {
 								</tfoot>
 							</table>
 						</div>
-						<div class="form-group col-md-6">
+						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Km.</span>
+									<span class="input-group-text">Customer to Provide</span>
 								</div>
-								<input type="text" class="form-control" name="km" required>
+								<input type="text" name="customer_to_provide" class="form-control">
+							</div>
+						</div>
+						<div class="form-group col-md-12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Not Included</span>
+								</div>
+								<input type="text" name="not_included" class="form-control">
 							</div>
 						</div>
 						<div class="form-group col-md-6">
@@ -342,39 +213,12 @@ if ($_POST) {
 								<input type="text" class="form-control text-right" name="valor" required readonly>
 							</div>
 						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Observaciones</span>
-								</div>
-								<textarea class="form-control" name="observaciones"></textarea>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Archivo Adicional</span>
-								</div>
-								<input type="file" name="uploadsHistory" class="form-control">
-							</div>
-							<small class="text-muted w-100">(Dependiendo del peso del archivo, el proceso de guardar puede tomar mas tiempo de lo estimado. Evite que pese mas de 1MB)</small>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Archivo:</span>
-								</div>
-								<a class="btn-link btn border archivo_link" target="_blank" href=""></a>
-								<input type="hidden" name="hdn_archivo">
-								<button type="button" class="btn btn-danger btnQuitarArchivo" data-toggle="tooltip" data-placement="right" title="Quitar archivo"><i class="fa fa-times"></i></button>
-							</div>
-						</div>
 					</div>
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
@@ -389,19 +233,12 @@ if ($_POST) {
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 	$(document).ready(function() {
-		$(`[name="cliente"]`).css(`display`, `none`).select2({
+		$(`[name="vehiculo"]`).css(`display`, `none`).select2({
 			theme: `bootstrap4`,
 			minimumInputLength: 3,
 			ajax: {
-				url: `../wp-json/mopar-taller/v1/clientes`
+				url: `../wp-json/mopar-taller/v1/select2-property-for-leads`
 			}
-		})
-
-		$(document).on('click', '.btnQuitarArchivo', function(e) {
-			e.preventDefault();
-			$('#modalEditOT [name=hdn_archivo]').val("");
-			$('#modalEditOT a.archivo_link').attr('href', '');
-			$('#modalEditOT a.archivo_link').html('');
 		})
 
 		$(".btnEdit").click(function() {
@@ -420,29 +257,29 @@ if ($_POST) {
 					$(".overlay").hide();
 					$('#modalEditOT [name=ot_id]').val(json.ot.id);
 
-					$('#modalEditOT [name=cliente]').html(`<option value="${json.ot.cliente_id}" selected>${json.cliente.nombres} ${json.cliente.apellidoPaterno}</option>`)
-
 					$('[name=vehiculo]').empty();
 					$('[name=vehiculo]').append(new Option('Seleccione Vehiculo', ''));
 					$.each(json.vehiculos, function(k, v) {
-						$('[name=vehiculo]').append(new Option(v.marca + " - " + v.ano, v.id));
+						$('[name=vehiculo]').append(new Option(v.street_address + " - " + v.address_line_2, v.id));
 					})
 					$("[name=vehiculo]").val(json.ot.vehiculo_id);
 
+					$(`[name="site_services"]`).val(json.ot.site_services)
+					$(`[name="cb[site_services]"]`).attr(`checked`, `` != json.ot.site_services).trigger(`change`)
+
+					$(`[name="customer_to_provide"]`).val(json.ot.customer_to_provide)
+					$(`[name="cb[customer_to_provide]"]`).attr(`checked`, `` != json.ot.customer_to_provide).trigger(`change`)
+
+					$(`[name="not_included"]`).val(json.ot.not_included)
+					$(`[name="cb[not_included]"]`).attr(`checked`, `` != json.ot.not_included).trigger(`change`)
+
+					$(`[name="cb[price_breakdown]"]`).attr(`checked`, 1 == json.ot.price_breakdown)
+
 					$('#modalEditOT [name=titulo]').val(json.ot.titulo);
-
-					icon = '';
-					if (json.ot.archivo) {
-						icon = ' &nbsp; <i class="fa fa-external-link"></i>';
-					}
-
-					$('#modalEditOT [name=hdn_archivo]').val(json.ot.archivo);
-					$('#modalEditOT a.archivo_link').attr('href', '<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/uploads/' + json.ot.archivo);
-					$('#modalEditOT a.archivo_link').html(json.ot.archivo + icon);
 
 					$("#modalEditOT table tbody").empty();
 					$.each(detalle.item, function(k, v) {
-						h = '<tr>';
+						h = '<tr data-row-num="' + k + 'a">';
 						h += '	<td>';
 						h += '		<input type="text" value="' + detalle.item[k] + '" name="detalle[item][]" class="form-control" required>';
 						h += '	</td>';
@@ -455,24 +292,26 @@ if ($_POST) {
 								<a href="#" class="btn btn-info btn-sm btnDown"><i class="fa fa-arrow-down"></i></a>
 							</td>`;
 						h += '</tr>';
+						h += `
+							<tr data-row-num="${k}b">
+								<td colspan="2">
+									<textarea name="detalle[observaciones][]" class="form-control">${detalle.observaciones[k]}</textarea>'
+								</td>
+								<td></td>
+							</tr>
+						`
 						$("#modalEditOT table tbody").append(h);
 						$("[data-toggle=tooltip]").tooltip();
 						$('.tooltip').hide();
 						recalcular();
 					})
 
-					$('#modalEditOT [name=km]').val(json.ot.km);
 					$('#modalEditOT [name=valor]').val(json.ot.valor);
-					$('#modalEditOT [name=observaciones]').val(json.ot.observaciones);
 
 					$('#modalEditOT').modal('show');
 				}
 			})
 		})
-
-		if (location.hash == "#new") {
-			$('#modalNewOT').modal('show');
-		}
 
 		$(document).on('keyup', '.precio', function(e) {
 			recalcular();
@@ -482,6 +321,7 @@ if ($_POST) {
 			e.preventDefault();
 			tr = $(this).closest('tr');
 			tr.fadeOut(300, function() {
+				tr.next().remove()
 				tr.remove();
 				recalcular();
 			})
@@ -491,20 +331,45 @@ if ($_POST) {
 
 		$(document).on('click', '.btnUp', function(e) {
 			e.preventDefault();
-			tr = $(this).closest('tr');
-			tr.insertBefore(tr.prev())
+			const tr = $(this).closest('tr');
+			const prev = tr.prev()
+
+			if (1 > prev.length) return false
+
+			const target_row_num = prev.attr(`data-row-num`).replace(`b`, `a`)
+			const target = tr.siblings(`tr[data-row-num="${target_row_num}"]`)
+
+			const observaciones_num = tr.attr(`data-row-num`).replace(`a`, `b`)
+			const observaciones = tr.siblings(`tr[data-row-num="${observaciones_num}"]`)
+
+			tr.insertBefore(target)
+			observaciones.insertBefore(target)
 		})
 
 		$(document).on('click', '.btnDown', function(e) {
 			e.preventDefault();
-			tr = $(this).closest('tr');
-			tr.insertAfter(tr.next())
+			const tr = $(this).closest('tr');
+			const next = tr.next().next()
+
+			if (1 > next.length) return false
+
+			const target_row_num = next.attr(`data-row-num`).replace(`a`, `b`)
+			const target = tr.siblings(`tr[data-row-num="${target_row_num}"]`)
+
+			const observaciones_num = tr.attr(`data-row-num`).replace(`a`, `b`)
+			const observaciones = tr.siblings(`tr[data-row-num="${observaciones_num}"]`)
+
+			observaciones.insertAfter(target)
+			tr.insertAfter(target)
 		})
 
 		$(".btnPlus").click(function(e) {
 			e.preventDefault();
+			const last_row_num = jQuery(this).parent().parent().parent().parent().find(`tbody`).find(`tr`).last().attr(`data-row-num`).replace(`b`, ``)
+			const new_row_num = parseInt(last_row_num) + 1
+
 			h = '';
-			h += '<tr>';
+			h += '<tr data-row-num="' + new_row_num + 'a">';
 			h += '	<td>';
 			h += '		<input type="text" name="detalle[item][]" class="form-control" required>';
 			h += '	</td>';
@@ -517,31 +382,18 @@ if ($_POST) {
 					<a href="#" class="btn btn-info btn-sm btnDown"><i class="fa fa-arrow-down"></i></a>
 				</td>`;
 			h += '</tr>';
+			h += `
+				<tr data-row-num="${new_row_num}b">
+					<td colspan="2">
+						<textarea name="detalle[observaciones][]" class="form-control"></textarea>
+					</td>
+					<td></td>
+				</tr>
+			`
 			$(this).closest('.modal').find('table tbody').append(h)
 			$("[data-toggle=tooltip]").tooltip();
 			$('.tooltip').hide();
 			recalcular();
-		})
-
-		$("[name=cliente]").change(function() {
-			cliente_id = $(this).val();
-			$.ajax({
-				type: 'POST',
-				url: '<?php echo admin_url('admin-ajax.php'); ?>',
-				dataType: 'json',
-				data: 'action=get_vehiculos_by_cliente&cliente_id=' + cliente_id,
-				beforeSend: function() {
-					$("[name=vehiculo]").html('<option value="">Cargando Vehiculos...</option>');
-				},
-				success: function(json) {
-					$('[name=vehiculo]').empty();
-					$('[name=vehiculo]').append(new Option('Seleccione Vehiculo', ''));
-					$.each(json.vehiculos, function(k, v) {
-						$('[name=vehiculo]').append(new Option(v.marca + " - " + v.ano, v.id));
-					})
-					$("#modalNewOT [name=vehiculo]").removeAttr('disabled');
-				}
-			})
 		})
 
 		$(".btnDelete").click(function() {
@@ -671,6 +523,7 @@ if ($_POST) {
 
 
 		$('#tabla_ots').DataTable({
+			"scrollX": true,
 			"ordering": false
 		});
 	});
@@ -687,6 +540,27 @@ if ($_POST) {
 		})
 		$("[name=valor]").val(tot);
 	}
+
+	$(`[name="cb[site_services]"]`).change(function() {
+		const checked = jQuery(this).is(`:checked`)
+		const input = $(`[name="site_services"]`).parent().parent()
+		if (checked) input.show()
+		else input.hide()
+	})
+
+	$(`[name="cb[customer_to_provide]"]`).change(function() {
+		const checked = jQuery(this).is(`:checked`)
+		const input = $(`[name="customer_to_provide"]`).parent().parent()
+		if (checked) input.show()
+		else input.hide()
+	})
+
+	$(`[name="cb[not_included]"]`).change(function() {
+		const checked = jQuery(this).is(`:checked`)
+		const input = $(`[name="not_included"]`).parent().parent()
+		if (checked) input.show()
+		else input.hide()
+	})
 </script>
 
 <?php include 'footer.php'; ?>

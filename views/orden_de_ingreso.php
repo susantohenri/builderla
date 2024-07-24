@@ -29,18 +29,20 @@ if ($_POST) {
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left"> Orden de Ingreso </h2>
+		<h2 class="font-weight-light text-center text-muted float-left"> Active Projects </h2>
 		<div class="clearfix"></div>
 	</div>
 	<div class="box-body">
-		<table class="table table-striped table-bordered" id="tabla_solicituds">
+		<table class="table table-striped table-bordered" id="tabla_solicituds" width="100%">
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Cliente </th>
-					<th> Vehiculo </th>
-					<th> Estado </th>
-					<th class="text-center">Acciones</th>
+					<th> Customer </th>
+					<th> Address</th>
+					<!--
+					<th> Status</th>
+					-->
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -66,12 +68,15 @@ if ($_POST) {
 		</table>
 		<br>
 		<ul>
+		    
+		    <!--
 			<li>
 				<i class="fa fa-circle text-success"></i> Trabajo completado
 			</li>
 			<li>
 				<i class="fa fa-circle text-danger"></i> Trabajo en curso
 			</li>
+			-->
 		</ul>
 	</div>
 </div>
@@ -166,7 +171,7 @@ if ($_POST) {
 
 					$('[name=vehiculo]').empty();
 					$.each(json.vehiculos, function(k, v) {
-						$('[name=vehiculo]').append(new Option(v.marca + " - " + v.ano, v.id));
+						$('[name=vehiculo]').append(new Option(v.street_address + " - " + v.address_line_2, v.id));
 					})
 					$("[name=vehiculo]").removeAttr('disabled');
 					$("[name=vehiculo]").val(json.solicitud.vehiculo_id);
@@ -196,7 +201,7 @@ if ($_POST) {
 				success: function(json) {
 					$('[name=vehiculo]').empty();
 					$.each(json.vehiculos, function(k, v) {
-						$('[name=vehiculo]').append(new Option(v.marca + " - " + v.ano, v.id));
+						$('[name=vehiculo]').append(new Option(v.street_address + " - " + v.address_line_2, v.id));
 					})
 					$("[name=vehiculo]").removeAttr('disabled');
 				}
@@ -282,6 +287,7 @@ if ($_POST) {
 		});
 
 		$('#tabla_solicituds').DataTable({
+			"scrollX": true,
 			"ordering": false,
 			"columnDefs": [{
 				"width": "20%",
