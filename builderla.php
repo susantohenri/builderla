@@ -910,7 +910,6 @@ class Mopar{
 	public static function getOneSolicitud($id){
 		global $wpdb;
     	$solicitud = $wpdb->get_row('SELECT * FROM solicitud WHERE id = ' . $id);
-echo $wpdb->last_query;
     	return $solicitud;
 	}
 
