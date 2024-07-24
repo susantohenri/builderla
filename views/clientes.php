@@ -11,7 +11,7 @@ else:
 	<div class="box-header mb-4">
 		<div class="row">
 			<div class="col-xs-12 col-md-10">
-				<h2 class="font-weight-light text-center text-muted float-left"> Customer Database </h2>
+				<h2 class="font-weight-light text-center text-muted float-left"> Customers</h2>
 			</div>
 			<div class="col-xs-12 text-center col-md-2">
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalNewCliente">New Customer</button>

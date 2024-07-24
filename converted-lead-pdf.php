@@ -48,9 +48,9 @@ if (user_can( $current_user, 'administrator' )) {
 		<tr>
 			<td style="width: 295px; border: 1px solid #000;">
 				<table class="no_padding">
-					<tr><td><strong>Nombre: </strong></td><td>' . $cliente->nombres . ' ' . $cliente->apellidoPaterno . '</td></tr>
+					<tr><td><strong>Name: </strong></td><td>' . $cliente->nombres . ' ' . $cliente->apellidoPaterno . '</td></tr>
 					<tr><td><strong>Email: </strong></td><td>' . $cliente->email . '</td></tr>
-					<tr><td><strong>Teléfono: </strong></td><td>' . $cliente->telefono . '</td></tr>
+					<tr><td><strong>Phone: </strong></td><td>' . $cliente->telefono . '</td></tr>
 				</table>
 			</td>
 			<td style="width: 295px; border: 1px solid #000;">

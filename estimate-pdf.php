@@ -10,9 +10,9 @@ $current_user = wp_get_current_user();
 if (user_can($current_user, 'administrator')) {
 	$titulo_pdf = 'Estimate';
 	$ot_id = $_GET['id'];
-	$solicitud = Mopar::getOneSolicitud($_GET['id']);
+	$ot = Mopar::getOneOt($_GET['id']);
+	$solicitud = Mopar::getOneSolicitudByOtId($_GET['id']);
 	$vehiculo = Mopar::getOneVehiculo($solicitud->vehiculo_id);
-	$ot = Mopar::getOneOt($solicitud->ot_id);
 	$cliente = Mopar::getOneCliente($vehiculo->cliente_id);
 	$cliente2 = Mopar::getOneCliente($vehiculo->cliente_id_2);
 

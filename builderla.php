@@ -9,19 +9,19 @@
  */
 
 function theme_options_panel(){
-	add_menu_page('Doctor Mopar Taller', 'Construction Management', 'manage_options', 'mopar-taller', 'taller_home_func','dashicons-admin-tools',2);
-	add_submenu_page( 'mopar-taller', 'Clientes', 'Customers', 'manage_options', 'mopar-clientes', 'taller_clientes_func');
-	add_submenu_page( 'mopar-taller', 'Vehiculos', 'Properties', 'manage_options', 'mopar-vehiculos', 'taller_vehiculos_func');
+	add_menu_page('Project Management', 'Project Management', 'manage_options', 'mopar-taller', 'taller_home_func','dashicons-admin-tools',2);
+	add_submenu_page( 'mopar-taller', 'Customers', 'Customers', 'manage_options', 'mopar-clientes', 'taller_clientes_func');
+	add_submenu_page( 'mopar-taller', 'Properties', 'Properties', 'manage_options', 'mopar-vehiculos', 'taller_vehiculos_func');
 	// add_submenu_page( 'mopar-taller', 'OT', 'OT', 'manage_options', 'mopar-ot', 'taller_ot_func');
-	add_submenu_page( 'mopar-taller', 'Solicitudes de Servicio', 'Leads', 'manage_options', 'mopar-solicitudes-de-servicio', 'taller_solicitudes_de_servicio_func');
-	add_submenu_page( 'mopar-taller', 'Solicitudes Perdidas', 'Lost Leads', 'manage_options', 'mopar-perdidas', 'taller_perdidas_func');
-	add_submenu_page( 'mopar-taller', 'Solicitudes Agendadas', 'Converted Leads', 'manage_options', 'mopar-agendadas', 'taller_agendadas_func');
+	add_submenu_page( 'mopar-taller', 'Leads', 'Leads', 'manage_options', 'mopar-solicitudes-de-servicio', 'taller_solicitudes_de_servicio_func');
+	add_submenu_page( 'mopar-taller', 'Lost Leads', 'Lost Leads', 'manage_options', 'mopar-perdidas', 'taller_perdidas_func');
+	add_submenu_page( 'mopar-taller', 'Converted Leads', 'Converted Leads', 'manage_options', 'mopar-agendadas', 'taller_agendadas_func');
 
-	add_submenu_page( 'mopar-taller', 'Cotizaciones', 'Estimates', 'manage_options', 'mopar-cotizaciones', 'taller_cotizaciones_func');
+	add_submenu_page( 'mopar-taller', 'Estimates', 'Estimates', 'manage_options', 'mopar-cotizaciones', 'taller_cotizaciones_func');
 	
-		add_submenu_page( 'mopar-taller', 'Ordenes de Ingreso', 'Active Projects', 'manage_options', 'mopar-orden-de-ingreso', 'taller_orden_de_ingreso_func');
+		add_submenu_page( 'mopar-taller', 'Active Projects', 'Active Projects', 'manage_options', 'mopar-orden-de-ingreso', 'taller_orden_de_ingreso_func');
 	
-	add_submenu_page( 'mopar-taller', 'Trabajos Realizados', 'Completed Projects', 'manage_options', 'mopar-trabajos-realizado', 'taller_trabajos_realizado_func');
+	add_submenu_page( 'mopar-taller', 'Completed Projects', 'Completed Projects', 'manage_options', 'mopar-trabajos-realizado', 'taller_trabajos_realizado_func');
 //	add_submenu_page( 'mopar-taller', 'Preparación Contable', 'Preparación Contable', 'manage_options', 'preparacion-contable', 'taller_preparacion_contable_func');
 //	add_submenu_page( 'mopar-taller', 'Conciliación Contable', 'Conciliación Contable', 'manage_options', 'conciliacion-contable', 'taller_conciliacion_contable_func');
 }
@@ -161,6 +161,7 @@ function validate_cliente_callback(){
 	echo json_encode($json);
 	exit();
 }
+
 
 function insertar_cliente_callback(){
 	global $wpdb;
@@ -909,7 +910,6 @@ class Mopar{
 	public static function getOneSolicitud($id){
 		global $wpdb;
     	$solicitud = $wpdb->get_row('SELECT * FROM solicitud WHERE id = ' . $id);
-
     	return $solicitud;
 	}
 
