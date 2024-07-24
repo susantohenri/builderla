@@ -88,7 +88,7 @@ else:
 						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Email</span>
 						        </div>
-						        <input type="email" name="email" class="form-control" required>
+						        <input type="email" name="email" class="form-control">
 					      	</div>
 				    	</div>
 				    	<div class="form-group col-md-6">
@@ -244,58 +244,39 @@ $(document).ready(function(){
 		e.preventDefault();
 		validateEmail($(this), is_valid => {
 			if (!is_valid) return false
-			else $.confirm({
-				title: 'Nueva Password para nuevo cliente!',
-				content: 'Al crear un nuevo cliente, se generará una password aleatoria y será enviada al email del cliente ingresado.<br>¿Proceder?',
-				type: 'red',
-				theme: 'bootstrap',
-				icon: 'fa fa-warning',
-				buttons: {
-					NO:{
-						text: 'No',
-						btnClass: 'btn-red',
-					},
-					SI:{
-						text: 'Si',
-						btnClass: 'btn-green',
-						action: function(){
-							$.ajax({
-								type: 'POST',
-								url: '<?php echo admin_url('admin-ajax.php'); ?>',
-								dataType: 'json',
-								data: $('#formNuevoCliente').serialize(),
-								beforeSend: function(){
-									$(".overlay").show();
-								},
-								success: function(json){
-									$(".overlay").hide();
-									if( json.status == 'OK' ){
-										$('#modalNewCliente').modal('hide');
-										$.alert({
-											title: false,
-											type: 'green',
-											content: 'Cliente ingresado correctamente',
-											buttons: {
-												volver: {
-													action: function () {
-														location.reload();
-													}
-												}
-											}
-										});
-									} else {
-										$.alert({
-											title: false,
-											type: 'red',
-											content: json.msg
-										});
+			else $.ajax({
+				type: 'POST',
+				url: '<?php echo admin_url('admin-ajax.php'); ?>',
+				dataType: 'json',
+				data: $('#formNuevoCliente').serialize(),
+				beforeSend: function(){
+					$(".overlay").show();
+				},
+				success: function(json){
+					$(".overlay").hide();
+					if( json.status == 'OK' ){
+						$('#modalNewCliente').modal('hide');
+						$.alert({
+							title: false,
+							type: 'green',
+							content: 'Cliente ingresado correctamente',
+							buttons: {
+								volver: {
+									action: function () {
+										location.reload();
 									}
 								}
-							})
-						}
+							}
+						});
+					} else {
+						$.alert({
+							title: false,
+							type: 'red',
+							content: json.msg
+						});
 					}
 				}
-			});
+			})
 		})
 	});
 

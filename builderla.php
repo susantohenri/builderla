@@ -179,7 +179,7 @@ function insertar_cliente_callback(){
 	//Enviar por correo la pass
 	$body = "Hola " . $_POST['nombres'] . "\n\nBienvenido! Has sido creado como cliente en el taller Doctor Mopar, se ha creado un password para acceder a nuestro portal de clientes:\n\n\nTu password es: " . $pass . "\n\n";
 	$body .= "https://www.doctormopar.com/clientes/";
-	mail($_POST['email'].",j.basso@me.com",'Password para entrar a DoctorMopar',$body);
+	// mail($_POST['email'].",j.basso@me.com",'Password para entrar a DoctorMopar',$body); disable mail sending
 
 	$json = [
 		'status' => 'OK'
