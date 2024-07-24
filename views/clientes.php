@@ -242,41 +242,38 @@ $(document).ready(function(){
 
 	$("#formNuevoCliente").submit(function(e){
 		e.preventDefault();
-		validateEmail($(this), is_valid => {
-			if (!is_valid) return false
-			else $.ajax({
-				type: 'POST',
-				url: '<?php echo admin_url('admin-ajax.php'); ?>',
-				dataType: 'json',
-				data: $('#formNuevoCliente').serialize(),
-				beforeSend: function(){
-					$(".overlay").show();
-				},
-				success: function(json){
-					$(".overlay").hide();
-					if( json.status == 'OK' ){
-						$('#modalNewCliente').modal('hide');
-						$.alert({
-							title: false,
-							type: 'green',
-							content: 'Cliente ingresado correctamente',
-							buttons: {
-								volver: {
-									action: function () {
-										location.reload();
-									}
+		$.ajax({
+			type: 'POST',
+			url: '<?php echo admin_url('admin-ajax.php'); ?>',
+			dataType: 'json',
+			data: $('#formNuevoCliente').serialize(),
+			beforeSend: function(){
+				$(".overlay").show();
+			},
+			success: function(json){
+				$(".overlay").hide();
+				if( json.status == 'OK' ){
+					$('#modalNewCliente').modal('hide');
+					$.alert({
+						title: false,
+						type: 'green',
+						content: 'Cliente ingresado correctamente',
+						buttons: {
+							volver: {
+								action: function () {
+									location.reload();
 								}
 							}
-						});
-					} else {
-						$.alert({
-							title: false,
-							type: 'red',
-							content: json.msg
-						});
-					}
+						}
+					});
+				} else {
+					$.alert({
+						title: false,
+						type: 'red',
+						content: json.msg
+					});
 				}
-			})
+			}
 		})
 	});
 
