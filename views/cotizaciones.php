@@ -91,7 +91,7 @@ if ($_POST) {
 							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $ot->id; ?>" data-toggle="tooltip" title="Editar"><i class="fa fa-pencil"></i></button>
 							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/estimate-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>
 							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar"><i class="fa fa-trash-o"></i></button>
-							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Finalizar Trabajo"><i class="fa fa-check"></i></button>
+							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Send Estimate"><i class="fa fa-envelope"></i></button>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -100,7 +100,7 @@ if ($_POST) {
 		<br>
 		<ul>
 			<li>
-				<i class="fa fa-circle text-success"></i> This estimate was accepted and signed.
+				<i class="fa fa-circle text-success"></i> This estimate was sent to the customer.
 			</li>
 			<li>
 				<!--	<i class="fa fa-circle text-warning"></i> Esta cotización no tiene una orden de ingreso
@@ -439,47 +439,36 @@ if ($_POST) {
 			tr = $(this).closest('tr');
 			regid = tr.data('regid');
 
-			$.confirm({
-				title: 'Trabajo finalizado',
-				content: '¿Quiere completar el trabajo para esta cotizacion?',
-				type: 'green',
-				icon: 'fa fa-success',
-				buttons: {
-					NO: {
-						text: 'Cancelar',
-						btnClass: 'btn-red',
-					},
-					SI: {
-						text: 'Si',
-						btnClass: 'btn-green',
-						action: function() {
-							$.ajax({
-								type: 'POST',
-								url: '<?php echo admin_url('admin-ajax.php'); ?>',
-								dataType: 'json',
-								data: 'action=completar_ot&regid=' + regid,
-								beforeSend: function() {},
-								success: function(json) {
-									if (`ERROR` === json.status) {
-										$.alert({
-											title: false,
-											type: 'red',
-											content: json.message
-										});
-									} else {
-										$.alert({
-											title: false,
-											type: 'green',
-											content: 'Cotizacion borrada correctamente'
-										});
-										window.location.reload()
-									}
+			$.ajax({
+				type: 'POST',
+				url: '<?php echo admin_url('admin-ajax.php'); ?>',
+				dataType: 'json',
+				data: 'action=send_estimation_email&regid=' + regid,
+				beforeSend: function() {
+					$(".overlay").show();
+				},
+				success: function(json) {
+					$(".overlay").hide();
+					if (`ERROR` === json.status) {
+						$.alert({
+							title: false,
+							type: 'red',
+							content: json.message
+						});
+					} else {
+						$.alert({
+							title: false,
+							type: 'green',
+							content: 'Email sent successfully',
+							buttons: {
+								ok: () => {
+									window.location.reload()
 								}
-							})
-						}
+							}
+						});
 					}
 				}
-			});
+			})
 		});
 
 

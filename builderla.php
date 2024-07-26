@@ -8,6 +8,9 @@
  * 	Author URI: http://www.doctormopar.com
  */
 
+require __DIR__ . '/vendor/autoload.php';
+use Spipu\Html2Pdf\Html2Pdf;
+
 function theme_options_panel(){
 	add_menu_page('Project Management', 'Project Management', 'manage_options', 'mopar-taller', 'taller_home_func','dashicons-admin-tools',2);
 	add_submenu_page( 'mopar-taller', 'Customers', 'Customers', 'manage_options', 'mopar-clientes', 'taller_clientes_func');
@@ -622,6 +625,33 @@ function editar_ot_callback(){
 	exit();  
 }
 
+function send_estimation_email_callback() {
+	global $wpdb;
+	$ot_id = $_POST['regid'];
+	$recipient = $wpdb->get_row("
+		SELECT
+			ot.id
+			, clientes.email
+			, clientes.nombres
+			, clientes.apellidoPaterno
+			, vehiculos.street_address
+			, vehiculos.address_line_2
+		FROM ot
+		LEFT JOIN vehiculos ON ot.vehiculo_id = vehiculos.id
+		LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
+		WHERE ot.id = {$ot_id}
+	");
+
+	if (!$recipient->email) exit(json_encode([
+		'status' => 'ERROR',
+		'message' => 'Please add the email to this customer first'
+	]));
+
+	Mopar::sendMail($recipient, 'send_estimation');
+
+	exit(json_encode(['status' => 'OK']));
+}
+
 function get_vehiculos_by_cliente_callback(){
 	$cliente_id = $_POST['cliente_id'];
 	$vehiculos = Mopar::getVehiculosByCliente($cliente_id);
@@ -722,6 +752,7 @@ add_action('wp_ajax_get_vehiculos_by_cliente','get_vehiculos_by_cliente_callback
 add_action('wp_ajax_get_ot','get_ot_callback');
 add_action('wp_ajax_get_solicitud','get_solicitud_callback');
 add_action('rest_api_init', 'mopar_taller_select2_clientes');
+add_action('wp_ajax_send_estimation_email','send_estimation_email_callback');
 
 class Mopar{
 
@@ -1228,6 +1259,8 @@ class Mopar{
 		$recipient = '';
 		$subject = '';
 		$message = '';
+		$headers = '';
+		$attachments = [];
 		switch ($event) {
 			case 'fecha_updated':
 				$solicitud = Mopar::getOneSolicitud($entity_id);
@@ -1324,13 +1357,37 @@ Doctor Mopar
 					$subject = 'Your new password on Doctormopar';
 					$message = "Here is your new password for Doctormopar client area: {$entity_id['new_password']}";
 				break;
-		}
+			case 'send_estimation':
+				$ot_id = $entity_id->id;
+				include plugin_dir_path(__FILE__) . 'pdf/estimate.php';
+				$orientation = 'potrait';
+				$html2pdf = new Html2Pdf($orientation,'LETTER','es');
+				$html2pdf->writeHTML($html);
+				$temporary_file = plugin_dir_path(__FILE__) . 'tmp/' . rand() . '.pdf';
+				$html2pdf->output($temporary_file, 'F');
+				$attachments[] = $temporary_file;
+
+				$user_name = get_user_meta(get_current_user_id(), 'nickname', true);
+				$recipient = $entity_id->email;
+				$subject = 'Your Estimate from FHS Construction';
+				$message = "Dear {$entity_id->nombres} {$entity_id->apellidoPaterno}
+We have prepared the estimate for your project located at {$entity_id->street_address} - {$entity_id->address_line_2}. Please find the attached estimate for your review.
+If you have any questions or need further information, feel free to contact us. We look forward to working with you to bring your vision to life. Thank you for considering FHS Construction.
+
+Best regards,
+{$user_name} FHS Construction
+				";
+				break;
+			}
 		add_filter( 'wp_mail_from', function () {
 			return 'taller@doctormopar.com';
 		});
 		add_filter( 'wp_mail_from_name', function () {
 			return 'Doctor Mopar';
 		});
-		wp_mail($recipient, $subject, $message);
+
+		wp_mail($recipient, $subject, $message, $headers, $attachments);
+		if (isset($temporary_file)) unlink($temporary_file);
+
 	}
 }
