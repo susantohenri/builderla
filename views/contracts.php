@@ -21,6 +21,7 @@
                         <td data-titulo="<?php echo $ot->titulo; ?>"> <?php echo $ot->fecha; ?> </td>
                         <td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getNombreVehiculo($ot->vehiculo_id) ?> </td>
                         <td class="text-center" style="white-space: nowrap;">
+                            <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/contract-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
