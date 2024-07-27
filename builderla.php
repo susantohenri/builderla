@@ -666,7 +666,12 @@ function inititate_contract_callback() {
 	$ot = Mopar::getOneOt($ot_id);
 	$solicitud = Mopar::getOneSolicitudByOtId($ot_id);
 
-	if (2 != $ot->estado || 5 != $solicitud->estado) exit(json_encode([
+	if (6 == $solicitud->estado) exit(json_encode([
+		'status' => 'ERROR',
+		'message' => 'Contract already initiated'
+	]));
+
+	else if (2 != $ot->estado || 5 != $solicitud->estado) exit(json_encode([
 		'status' => 'ERROR',
 		'message' => 'Sending estimation email is required'
 	]));
