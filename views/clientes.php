@@ -257,7 +257,7 @@ $(document).ready(function(){
 					$.alert({
 						title: false,
 						type: 'green',
-						content: 'Cliente ingresado correctamente',
+						content: 'Customer Successfully Added',
 						buttons: {
 							volver: {
 								action: function () {

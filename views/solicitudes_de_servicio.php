@@ -186,8 +186,8 @@ if ($_POST) {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
@@ -252,7 +252,7 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Datos de la Motivo</h5>
+					<h5 class="modal-title">Provide a reason why the lead was lost:</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -262,7 +262,7 @@ if ($_POST) {
 						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Motivo</span>
+									<span class="input-group-text">Reason</span>
 								</div>
 								<textarea class="form-control" name="motivo" required></textarea>
 							</div>
@@ -271,8 +271,8 @@ if ($_POST) {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
@@ -287,7 +287,7 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Datos de la Fecha</h5>
+					<h5 class="modal-title">Set Appointment</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -297,7 +297,7 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Fecha</span>
+									<span class="input-group-text">Date</span>
 								</div>
 								<input type="text" class="form-control" name="fecha" required>
 							</div>
@@ -305,7 +305,7 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Hora</span>
+									<span class="input-group-text">Time</span>
 								</div>
 								<input type="text" class="form-control" name="hora" required>
 							</div>
@@ -314,8 +314,8 @@ if ($_POST) {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
@@ -488,7 +488,7 @@ if ($_POST) {
 			$.alert({
 				type: 'green',
 				title: false,
-				content: 'Solicitud actualizada correctamente'
+				content: 'Processing lead...'
 			})
 		<?php } ?>
 

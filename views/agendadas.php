@@ -263,8 +263,8 @@ if ($_POST) {
 			regid = tr.data('regid');
 
 			$.confirm({
-				title: 'Cancelar Cita?',
-				content: '¿Desea Cancelar la cita para esta solicitud y regresarla al menú solicitudes de servicio?',
+				title: 'Cancel Appointment?',
+				content: 'Would you like to cancel the appointment for this request and return it to the leads menu?',
 				type: 'red',
 				icon: 'fa fa-warning',
 				buttons: {
@@ -286,7 +286,7 @@ if ($_POST) {
 									$.alert({
 										title: false,
 										type: 'green',
-										content: 'Solicitud restaurada'
+										content: 'Appointment cancelled'
 									});
 									tr.fadeOut(400);
 								}

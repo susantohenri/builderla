@@ -88,9 +88,9 @@ if ($_POST) {
 							<?php endif; ?>
 						</td>
 						<td class="text-center" style="white-space: nowrap;">
-							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $ot->id; ?>" data-toggle="tooltip" title="Editar"><i class="fa fa-pencil"></i></button>
-							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/estimate-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>
-							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $ot->id; ?>" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
+							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/estimate-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
+							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
 							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Send Estimate"><i class="fa fa-envelope"></i></button>
 							<button class="btn btn-primary btnContract" data-toggle="tooltip" title="Initiate Contract"><i class="fa fa-check"></i></button>
 						</td>
@@ -104,8 +104,7 @@ if ($_POST) {
 				<i class="fa fa-circle text-success"></i> This estimate was sent to the customer.
 			</li>
 			<li>
-				<!--	<i class="fa fa-circle text-warning"></i> Esta cotización no tiene una orden de ingreso
-			-->
+					<i class="fa fa-circle text-warning"></i> This estimate is currently being prepared.
 			</li>
 			<li>
 				<i class="fa fa-circle text-danger"></i> There are no actions for this estimate
@@ -402,8 +401,8 @@ if ($_POST) {
 			regid = tr.data('regid');
 
 			$.confirm({
-				title: 'Eliminar Cotización!',
-				content: '¿Desea eliminar la cotizacion seleccionada?',
+				title: 'Delete Estimate!',
+				content: 'Do you want to delete the selected estimate?',
 				type: 'red',
 				icon: 'fa fa-warning',
 				buttons: {
@@ -412,7 +411,7 @@ if ($_POST) {
 						btnClass: 'btn-red',
 					},
 					SI: {
-						text: 'Si',
+						text: 'Yes',
 						btnClass: 'btn-green',
 						action: function() {
 							$.ajax({
@@ -425,7 +424,7 @@ if ($_POST) {
 									$.alert({
 										title: false,
 										type: 'green',
-										content: 'Cotización borrada correctamente'
+										content: 'Estimate deleted'
 									});
 									tr.fadeOut(400);
 								}
@@ -537,7 +536,7 @@ if ($_POST) {
 			$.alert({
 				type: 'green',
 				title: false,
-				content: 'OT actualizada correctamente'
+				content: 'Estimate updated'
 			})
 		<?php } ?>
 

@@ -68,7 +68,7 @@ if( $_POST ){
 					<td data-cliente="<?php echo $ot->cliente_id; ?>"> <?php echo Mopar::getNombreCliente($ot->cliente_id) ?> </td>
 					<td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getNombreVehiculo($ot->vehiculo_id) ?> </td>
 					<td data-valor="<?php echo $ot->valor; ?>"> $ <?php echo number_format($ot->valor,0,',','.') ?> </td>
-					<!-- <td class="text-center align-middle">
+					<td class="text-center align-middle">
 						<?php if (0 == $ot->entregar) : ?>
 							<a>
 								<i class="fa fa-circle text-danger"></i>
@@ -78,7 +78,7 @@ if( $_POST ){
 								<i class="fa fa-circle text-success"></i>
 							</a>
 						<?php endif; ?>
-					</td> -->
+					</td>
 					<td class="text-center" style="white-space: nowrap;">
 						<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $ot->id; ?>" data-toggle="tooltip" title="Editar"><i class="fa fa-pencil"></i></button>
 						<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>

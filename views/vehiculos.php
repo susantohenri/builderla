@@ -256,8 +256,8 @@ $(document).ready(function(){
 		tr = $(this).closest('tr');
 		regid = tr.data('regid');
 		$.confirm({
-		    title: 'Eliminar Vehiculo!',
-		    content: '¿Desea eliminar el vehiculo seleccionado?',
+		    title: 'Delete Property!',
+		    content: 'Do you want to delete the selected property?',
 			type: 'red',
 			theme: 'bootstrap',
 			icon: 'fa fa-warning',
@@ -284,7 +284,7 @@ $(document).ready(function(){
 		            			$.alert({
 		            				title: false,
 		            				type: 'green',
-		            				content: 'Vehiculo borrado correctamente'
+									content: 'Property deleted successfully'
 		            			});
 		            			tr.fadeOut(400);
 		            		}
@@ -313,7 +313,7 @@ $(document).ready(function(){
         			$.alert({
 						title: false,
 						type: 'green',
-						content: 'Vehiculo ingresado correctamente',
+						content: 'Property Successfully Added',
 						buttons: {
 							volver: {
 					            action: function () {
