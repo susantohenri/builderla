@@ -21,6 +21,7 @@ function theme_options_panel(){
 	add_submenu_page( 'mopar-taller', 'Converted Leads', 'Converted Leads', 'manage_options', 'mopar-agendadas', 'taller_agendadas_func');
 
 	add_submenu_page( 'mopar-taller', 'Estimates', 'Estimates', 'manage_options', 'mopar-cotizaciones', 'taller_cotizaciones_func');
+	add_submenu_page( 'mopar-taller', 'Contracts', 'Contracts', 'manage_options', 'mopar-contracts', 'taller_contracts_func');
 	
 		add_submenu_page( 'mopar-taller', 'Active Projects', 'Active Projects', 'manage_options', 'mopar-orden-de-ingreso', 'taller_orden_de_ingreso_func');
 	
@@ -59,6 +60,11 @@ function taller_cotizaciones_func(){
 	$clientes = Mopar::getClientes();
     $ots = Mopar::getCotizaciones();
 	include('views/cotizaciones.php');	
+}
+
+function taller_contracts_func(){
+	$contracts = Mopar::getContracts();
+	include('views/contracts.php');
 }
 
 function taller_trabajos_realizado_func(){
@@ -648,7 +654,24 @@ function send_estimation_email_callback() {
 	]));
 
 	Mopar::sendMail($recipient, 'send_estimation');
+	$wpdb->update('ot', ['estado' => 2], ['id' => $ot_id]);
+	$wpdb->update('solicitud', ['estado' => 5], ['ot_id' => $ot_id]);
 
+	exit(json_encode(['status' => 'OK']));
+}
+
+function inititate_contract_callback() {
+	global $wpdb;
+	$ot_id = $_POST['regid'];
+	$ot = Mopar::getOneOt($ot_id);
+	$solicitud = Mopar::getOneSolicitudByOtId($ot_id);
+
+	if (2 != $ot->estado || 5 != $solicitud->estado) exit(json_encode([
+		'status' => 'ERROR',
+		'message' => 'Sending estimation email is required'
+	]));
+
+	$wpdb->update('solicitud', ['estado' => 6], ['ot_id' => $ot_id]);
 	exit(json_encode(['status' => 'OK']));
 }
 
@@ -753,6 +776,7 @@ add_action('wp_ajax_get_ot','get_ot_callback');
 add_action('wp_ajax_get_solicitud','get_solicitud_callback');
 add_action('rest_api_init', 'mopar_taller_select2_clientes');
 add_action('wp_ajax_send_estimation_email','send_estimation_email_callback');
+add_action('wp_ajax_initiate_contract','inititate_contract_callback');
 
 class Mopar{
 
@@ -1095,6 +1119,22 @@ class Mopar{
 		");
 
     	return $ots;
+	}
+
+	public static function getContracts(){
+		global $wpdb;
+		$ots = $wpdb->get_results("
+			SELECT
+				ot.*
+				, solicitud.estado solicitud_estado
+				, solicitud.fecha
+			FROM ot
+			LEFT JOIN solicitud ON ot.id = solicitud.ot_id
+			WHERE solicitud.estado = 6
+			ORDER BY id DESC
+		");
+
+		return $ots;
 	}
 
 	public static function getTrabajosRealizado(){

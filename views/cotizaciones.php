@@ -92,6 +92,7 @@ if ($_POST) {
 							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/estimate-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>
 							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar"><i class="fa fa-trash-o"></i></button>
 							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Send Estimate"><i class="fa fa-envelope"></i></button>
+							<button class="btn btn-primary btnContract" data-toggle="tooltip" title="Initiate Contract"><i class="fa fa-check"></i></button>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -471,7 +472,41 @@ if ($_POST) {
 			})
 		});
 
+		$(".btnContract").click(function() {
+			tr = $(this).closest('tr');
+			regid = tr.data('regid');
 
+			$.ajax({
+				type: 'POST',
+				url: '<?php echo admin_url('admin-ajax.php'); ?>',
+				dataType: 'json',
+				data: 'action=initiate_contract&regid=' + regid,
+				beforeSend: function() {
+					$(".overlay").show();
+				},
+				success: function(json) {
+					$(".overlay").hide();
+					if (`ERROR` === json.status) {
+						$.alert({
+							title: false,
+							type: 'red',
+							content: json.message
+						});
+					} else {
+						$.alert({
+							title: false,
+							type: 'green',
+							content: 'Contract Initiated Successfully',
+							buttons: {
+								ok: () => {
+									location.href = '<?php bloginfo('wpurl') ?>/wp-admin/admin.php?page=mopar-contracts';
+								}
+							}
+						});
+					}
+				}
+			})
+		});
 
 		$("#formNuevoOT").submit(function(e) {
 			$(".overlay").show();
