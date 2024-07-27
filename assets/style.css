@@ -104,3 +104,9 @@ span.select2.select2-container.select2-container--bootstrap4.select2-container--
 	flex: 1 1 auto;
 	width: 1% !important;
 }
+
+/* add estimate with enter */
+textarea.observaciones {
+	background-color: transparent;
+	border: 0;
+}

@@ -295,7 +295,8 @@ if ($_POST) {
 						h += `
 							<tr data-row-num="${k}b">
 								<td colspan="2">
-									<textarea name="detalle[observaciones][]" class="form-control">${detalle.observaciones[k]}</textarea>'
+									<input type="text" class="form-control observaciones" placeholder="write the details and press Enter to add it to the estimate">
+									<textarea name="detalle[observaciones][]" class="form-control observaciones">${detalle.observaciones[k]}</textarea>'
 								</td>
 								<td></td>
 							</tr>
@@ -315,6 +316,25 @@ if ($_POST) {
 
 		$(document).on('keyup', '.precio', function(e) {
 			recalcular();
+		})
+
+		$(document).on('keydown', '[type="text"].observaciones', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault()
+
+				const input = jQuery(this)
+				const textArea = input.siblings(`textarea`)
+				const curVal = textArea.html()
+                let text = input.val().trim()
+
+				if (!text) return false
+				else text = text.charAt(0).toUpperCase() + text.slice(1)
+
+				text = `- ${text}`
+				text = `` == curVal ? text : `\n ${text}`
+				textArea.html(curVal + text)
+				input.val(``)
+            }
 		})
 
 		$(document).on('click', '.btnLess', function(e) {
@@ -385,7 +405,8 @@ if ($_POST) {
 			h += `
 				<tr data-row-num="${new_row_num}b">
 					<td colspan="2">
-						<textarea name="detalle[observaciones][]" class="form-control"></textarea>
+						<input type="text" class="form-control observaciones" placeholder="write the details and press Enter to add it to the estimate">
+						<textarea name="detalle[observaciones][]" class="form-control observaciones"></textarea>
 					</td>
 					<td></td>
 				</tr>
