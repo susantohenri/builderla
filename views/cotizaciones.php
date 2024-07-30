@@ -279,6 +279,7 @@ if ($_POST) {
 
 					$("#modalEditOT table tbody").empty();
 					$.each(detalle.item, function(k, v) {
+						const observaciones_row_count = detalle.observaciones[k].split(`\n`).length
 						h = '<tr data-row-num="' + k + 'a">';
 						h += '	<td>';
 						h += '		<input type="text" value="' + detalle.item[k] + '" name="detalle[item][]" class="form-control" required>';
@@ -296,7 +297,7 @@ if ($_POST) {
 							<tr data-row-num="${k}b">
 								<td colspan="2">
 									<input type="text" class="form-control observaciones" placeholder="write the details and press Enter to add it to the estimate">
-									<textarea name="detalle[observaciones][]" class="form-control observaciones">${detalle.observaciones[k]}</textarea>'
+									<textarea rows="${observaciones_row_count}" name="detalle[observaciones][]" class="form-control observaciones">${detalle.observaciones[k]}</textarea>'
 								</td>
 								<td></td>
 							</tr>
@@ -325,6 +326,7 @@ if ($_POST) {
 				const input = jQuery(this)
 				const textArea = input.siblings(`textarea`)
 				const curVal = textArea.html()
+				const curRow = curVal.split(`\n`).length
                 let text = input.val().trim()
 
 				if (!text) return false
@@ -333,6 +335,7 @@ if ($_POST) {
 				text = `- ${text}`
 				text = `` == curVal ? text : `\n ${text}`
 				textArea.html(curVal + text)
+				textArea.attr(`rows`, curRow + 1)
 				input.val(``)
             }
 		})

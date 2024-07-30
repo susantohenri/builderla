@@ -11,16 +11,34 @@ $ot_id = $_GET['id'];
 $html = '';
 
 // page-1
-$html .= "<page backtop='7mm' backbottom='7mm' backleft='10mm' backright='10mm'>
+$html .= "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
     <div style='border: 5px solid black; height: 98%;'>
+        <div style='text-align: center;'>
+            <h1 style='margin-bottom: 0;'>HOME IMPROVEMENT CONTRACT</h1>
+            <p style='font-size: 18px; margin: 5px 0;'>NOT APPLICABLE TO SWIMMING POOLS OR SPAS</p>
+            <i>(Complies with Section 7159 of California Business and Professions Code, and Civil Code Section 8170 as amended)</i>
+            <h4 style='margin: 5px 0;'>AGREEMENT BETWEEN DIRECT CONTRACTOR AND PROPERTY OWNER</h4>
+            <p style='font-size: 16px; margin: 0;'>The Notice of Cancellation may be mailed to the address of the direct contractor as shown below:</p>
+        </div>
+        <table style='width: 99%; margin: 10px 5px 0;'>
+            <tr>
+                <td style='width: 45%; text-align: center;'>
+                    <input type='text' value='(Complies with Section 7159 of California Business and Professions Code, and Civil Code Section 8170 as amended)'>
+                </td>
+                <td style='width: 10%; text-align: center;'><h4 style='margin: 0;'>And</h4></td>
+                <td style='width: 45%;'>
+                    (Complies with Section 7159 of California Business and Professions Code, and Civil Code Section 8170 as amended)
+                </td>
+            </tr>
+        </table>
     </div>
 </page>";
 
 // page-2
-$html .= "<page backtop='7mm' backbottom='7mm' backleft='10mm' backright='10mm'>
+$html .= "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
     <div style='border: 5px solid black; height: 98%;'>
         <h4 style='text-align: center;'>TERMS AND CONDITIONS</h4>
-        <table style='width: 104%; font-size: 9.35px; text-align: justify;'>
+        <table style='width: 104%; font-size: 9.8px; text-align: justify;'>
             <tr>
                 <td class='left-column' style='width: 48%; padding-left: 5px;'>
                     <b>1. Owner’s Responsibilities.</b> The Owner is responsible to supply water,
