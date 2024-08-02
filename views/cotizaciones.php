@@ -329,7 +329,7 @@ if ($_POST) {
 
 				const input = jQuery(this)
 				const textArea = input.siblings(`textarea`)
-				const curVal = textArea.html()
+				const curVal = textArea.val()
 				const curRow = curVal.split(`\n`).length
                 let text = input.val().trim()
 
@@ -338,7 +338,7 @@ if ($_POST) {
 
 				text = `- ${text}`
 				text = `` == curVal ? text : `\n ${text}`
-				textArea.html(curVal + text)
+				textArea.val(curVal + text)
 				textArea.attr(`rows`, curRow + 1)
 				input.val(``)
             }
