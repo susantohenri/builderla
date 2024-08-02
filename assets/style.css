@@ -82,7 +82,8 @@ section#history .badge.badge-pill em.dia{
 	content: 'Buscar' !important;
 }
 
-tr[data-row-num$="b"] td{
+tr[data-row-num$="b"] td,
+tr[data-row-num$="c"] td{
 	border-top: 0;
 }
 

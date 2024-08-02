@@ -172,7 +172,7 @@ if ($_POST) {
 							</div>
 						</div>
 						<div class="form-group col-md-12">
-							<table class="table">
+							<table class="table table-estimate">
 								<thead>
 									<tr>
 										<th> Details </th>
@@ -280,33 +280,37 @@ if ($_POST) {
 					$("#modalEditOT table tbody").empty();
 					$.each(detalle.item, function(k, v) {
 						const observaciones_row_count = detalle.observaciones[k].split(`\n`).length
-						h = '<tr data-row-num="' + k + 'a">';
+						h = '<tr>';
 						h += '	<td>';
 						h += '		<input type="text" value="' + detalle.item[k] + '" name="detalle[item][]" class="form-control" required>';
 						h += '	</td>';
 						h += '	<td>';
 						h += '		<input type="text" value="' + detalle.precio[k] + '" name="detalle[precio][]" class="form-control precio text-right" value="0" required>';
 						h += '	</td>';
-						h += `	<td>
-								<a href="#" data-toggle="tooltip" title="Borra Linea" class="btn btn-danger btn-sm btnLess"><i class="fa fa-minus"></i></a>
-								<a href="#" class="btn btn-info btn-sm btnUp"><i class="fa fa-arrow-up"></i></a>
-								<a href="#" class="btn btn-info btn-sm btnDown"><i class="fa fa-arrow-down"></i></a>
-							</td>`;
 						h += '</tr>';
 						h += `
-							<tr data-row-num="${k}b">
+							<tr">
 								<td colspan="2">
 									<input type="text" class="form-control observaciones" placeholder="write the details and press Enter to add it to the estimate">
 									<textarea rows="${observaciones_row_count}" name="detalle[observaciones][]" class="form-control observaciones">${detalle.observaciones[k]}</textarea>'
 								</td>
-								<td></td>
+							</tr>
+						`
+						h += `
+							<tr>
+								<td colspan="2" class="text-right">
+									<a href="#" data-toggle="tooltip" title="Borra Linea" class="btn btn-danger btn-sm btnLess"><i class="fa fa-minus"></i></a>
+									<a href="#" class="btn btn-info btn-sm btnUp"><i class="fa fa-arrow-up"></i></a>
+									<a href="#" class="btn btn-info btn-sm btnDown"><i class="fa fa-arrow-down"></i></a>
+								</td>
 							</tr>
 						`
 						$("#modalEditOT table tbody").append(h);
 						$("[data-toggle=tooltip]").tooltip();
 						$('.tooltip').hide();
-						recalcular();
 					})
+					recalcular()
+					rewrite_row_num()
 
 					$('#modalEditOT [name=valor]').val(json.ot.valor);
 
@@ -343,9 +347,10 @@ if ($_POST) {
 		$(document).on('click', '.btnLess', function(e) {
 			e.preventDefault();
 			tr = $(this).closest('tr');
+			const row_num = tr.attr(`data-row-num`).replace(`c`, ``)
+
 			tr.fadeOut(300, function() {
-				tr.next().remove()
-				tr.remove();
+				jQuery(`tr[data-row-num^="${row_num}"]`).remove()
 				recalcular();
 			})
 			$("[data-toggle=tooltip]").tooltip();
@@ -355,63 +360,51 @@ if ($_POST) {
 		$(document).on('click', '.btnUp', function(e) {
 			e.preventDefault();
 			const tr = $(this).closest('tr');
-			const prev = tr.prev()
+			const row_num = parseInt(tr.attr(`data-row-num`).replace(`c`, ``))
+			if (1 > row_num) return false;
 
-			if (1 > prev.length) return false
-
-			const target_row_num = prev.attr(`data-row-num`).replace(`b`, `a`)
-			const target = tr.siblings(`tr[data-row-num="${target_row_num}"]`)
-
-			const observaciones_num = tr.attr(`data-row-num`).replace(`a`, `b`)
-			const observaciones = tr.siblings(`tr[data-row-num="${observaciones_num}"]`)
-
-			tr.insertBefore(target)
-			observaciones.insertBefore(target)
+			jQuery(`[data-row-num^=${row_num}]`).insertBefore(jQuery(`[data-row-num="${row_num - 1}a"]`))
+			rewrite_row_num()
 		})
 
 		$(document).on('click', '.btnDown', function(e) {
 			e.preventDefault();
 			const tr = $(this).closest('tr');
-			const next = tr.next().next()
+			const row_num = parseInt(tr.attr(`data-row-num`).replace(`c`, ``))
+			const next_row= jQuery(`[data-row-num="${row_num + 1}c"]`)
 
-			if (1 > next.length) return false
-
-			const target_row_num = next.attr(`data-row-num`).replace(`a`, `b`)
-			const target = tr.siblings(`tr[data-row-num="${target_row_num}"]`)
-
-			const observaciones_num = tr.attr(`data-row-num`).replace(`a`, `b`)
-			const observaciones = tr.siblings(`tr[data-row-num="${observaciones_num}"]`)
-
-			observaciones.insertAfter(target)
-			tr.insertAfter(target)
+			if (1 > next_row.length) return false
+			jQuery(`[data-row-num^="${row_num}"]`).insertAfter(next_row)
+			rewrite_row_num()
 		})
 
 		$(".btnPlus").click(function(e) {
 			e.preventDefault();
-			const last_row_num = jQuery(this).parent().parent().parent().parent().find(`tbody`).find(`tr`).last().attr(`data-row-num`).replace(`b`, ``)
-			const new_row_num = parseInt(last_row_num) + 1
 
 			h = '';
-			h += '<tr data-row-num="' + new_row_num + 'a">';
+			h += '<tr>';
 			h += '	<td>';
 			h += '		<input type="text" name="detalle[item][]" class="form-control" required>';
 			h += '	</td>';
 			h += '	<td>';
 			h += '		<input type="text" name="detalle[precio][]" class="form-control precio text-right" value="0" required>';
 			h += '	</td>';
-			h += `	<td>
-					<a href="#" data-toggle="tooltip" title="Borra Linea" class="btn btn-danger btn-sm btnLess"><i class="fa fa-minus"></i></a>
-					<a href="#" class="btn btn-info btn-sm btnUp"><i class="fa fa-arrow-up"></i></a>
-					<a href="#" class="btn btn-info btn-sm btnDown"><i class="fa fa-arrow-down"></i></a>
-				</td>`;
 			h += '</tr>';
 			h += `
-				<tr data-row-num="${new_row_num}b">
+				<tr>
 					<td colspan="2">
 						<input type="text" class="form-control observaciones" placeholder="write the details and press Enter to add it to the estimate">
 						<textarea name="detalle[observaciones][]" class="form-control observaciones"></textarea>
 					</td>
-					<td></td>
+				</tr>
+			`
+			h += `
+				<tr>
+					<td colspan="2" class="text-right">
+						<a href="#" data-toggle="tooltip" title="Borra Linea" class="btn btn-danger btn-sm btnLess"><i class="fa fa-minus"></i></a>
+						<a href="#" class="btn btn-info btn-sm btnUp"><i class="fa fa-arrow-up"></i></a>
+						<a href="#" class="btn btn-info btn-sm btnDown"><i class="fa fa-arrow-down"></i></a>
+					</td>
 				</tr>
 			`
 			$(this).closest('.modal').find('table tbody').append(h)
@@ -574,6 +567,21 @@ if ($_POST) {
 			"ordering": false
 		});
 	});
+
+	function rewrite_row_num () {
+		let number = 0
+		const letter = [`a`,`b`,`c`]
+		let current_letter_index = 0
+		jQuery(`.table-estimate tbody tr`).each((index, tr) => {
+			jQuery(tr).attr(`data-row-num`, `${number}${letter[current_letter_index]}`)
+
+			current_letter_index++
+			if (!letter[current_letter_index]) {
+				current_letter_index = 0
+				number++
+			}
+		})
+	}
 
 	function recalcular() {
 		tot = 0;
