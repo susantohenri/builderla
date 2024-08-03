@@ -8,11 +8,12 @@ include '../../../wp-load.php';
 
 $ot_id = $_GET['id'];
 
-$html = '';
+$orientation = 'potrait';
+$titulo_pdf = 'Contract';
+$html2pdf = new Html2Pdf($orientation, 'LEGAL', 'es');
 
-// page-1
-$html .= "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
-    <div style='border: 5px solid black; height: 98%;'>
+$page_1 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
+    <div style='border: 8px solid black; height: 98%; padding-left: 8px;'>
         <div style='text-align: center;'>
             <h1 style='margin-bottom: 0;'>HOME IMPROVEMENT CONTRACT</h1>
             <p style='font-size: 18px; margin: 5px 0;'>NOT APPLICABLE TO SWIMMING POOLS OR SPAS</p>
@@ -20,25 +21,262 @@ $html .= "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
             <h4 style='margin: 5px 0;'>AGREEMENT BETWEEN DIRECT CONTRACTOR AND PROPERTY OWNER</h4>
             <p style='font-size: 16px; margin: 0;'>The Notice of Cancellation may be mailed to the address of the direct contractor as shown below:</p>
         </div>
-        <table style='width: 99%; margin: 10px 5px 0;'>
+
+        <table style='width: 98%; text-align: center; font-size: 8px;'>
+
             <tr>
-                <td style='width: 45%; text-align: center;'>
-                    <input type='text' value='(Complies with Section 7159 of California Business and Professions Code, and Civil Code Section 8170 as amended)'>
+                <td style='width: 46%;'><br></td>
+                <td style='width: 8%;' rowspan='2'><h5 style='margin: 0;'>And</h5></td>
+                <td style='width: 46%;'></td>
+            </tr>
+            <tr>
+                <td style='border-top: 1px solid black;'>(Direct Contractor’s Name)</td>
+                <td style='border-top: 1px solid black;'>(Property Owner’s Name)</td>
+            </tr>
+
+            <tr>
+                <td><br></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style='border-top: 1px solid black;'>(Direct Contractor’s License Number)</td>
+                <td></td>
+                <td style='border-top: 1px solid black;'>(Property Owner’s Mailing Address)</td>
+            </tr>
+
+            <tr>
+                <td><br></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style='border-top: 1px solid black;'>(Direct Contractor’s Address)</td>
+                <td></td>
+                <td style='border-top: 1px solid black;'>(City, State & Zip)</td>
+            </tr>
+
+            <tr>
+                <td><br></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style='border-top: 1px solid black;'>(City, State & Zip)</td>
+                <td></td>
+                <td style='border-top: 1px solid black;'>(Property Owner’s Phone)</td>
+            </tr>
+
+            <tr>
+                <td><br></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style='border-top: 1px solid black;'>(Direct Contractor’s Telephone - FAX)</td>
+                <td></td>
+                <td style='border-top: 1px solid black;'>(Property Owner’s Fax)</td>
+            </tr>
+
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td><h5 style='margin: 0;'>Email</h5></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style='border-top: 1px solid black; width: 290px;'>
+                                (Direct Contractor’s)
+                            </td>
+                        </tr>
+                    </table>
                 </td>
-                <td style='width: 10%; text-align: center;'><h4 style='margin: 0;'>And</h4></td>
-                <td style='width: 45%;'>
-                    (Complies with Section 7159 of California Business and Professions Code, and Civil Code Section 8170 as amended)
+                <td></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td><h5 style='margin: 0;'>Email</h5></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style='border-top: 1px solid black; width: 290px;'>
+                                (Property Owner’s)
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+        </table>
+
+        <table style='width: 98%; text-align: center; font-size: 8px;'>
+            <tr>
+                <td><h4 style='margin: 0;'>WORK TO BE PERFORMED AT:</h4></td>
+                <td colspan='2' style='width: 66%; border-bottom: 1px solid black;'></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>(Address)</td>
+                <td>(City, State & Zip)</td>
+            </tr>
+        </table>
+
+        <table style='width: 98%; text-align: center; font-size: 8px;'>
+            <tr>
+                <td><h4 style='margin: 0;'>CONSTRUCTION LENDER:</h4></td>
+                <td style='width: 71.5%; border-bottom: 1px solid black;'></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>(Name and Address of Construction Fund Holder)</td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td colspan='2'><h4 style='margin: 0;'>DESCRIPTION OF THE PROJECT AND DESCRIPTION OF THE SIGNIFICANT MATERIALS</h4></td>
+            </tr>
+            <tr>
+                <td><h4 style='margin: 0;'>TO BE USED AND EQUIPMENT TO BE INSTALLED:</h4></td>
+                <td>Direct Contractor will furnish all labor and materials to</td>
+            </tr>
+        </table>
+        <table style='width: 100%;'>
+            <tr>
+                <td>construct and complete in a good, workmanlike and substantial manner a:</td>
+                <td style='border-bottom: 1px solid black; width: 39.5%;'>&nbsp;</td>
+            </tr>
+            <tr><td colspan='2' style='border-bottom: 1px solid black;'><br></td></tr>
+            <tr><td colspan='2' style='border-bottom: 1px solid black;'><br></td></tr>
+            <tr><td colspan='2' style='border-bottom: 1px solid black;'><br></td></tr>
+            <tr><td colspan='2' style='border-bottom: 1px solid black;'><br></td></tr>
+            <tr><td colspan='2' style='border-bottom: 1px solid black;'><br></td></tr>
+            <tr><td colspan='2' style='border-bottom: 1px solid black;'><br></td></tr>
+
+            <tr>
+                <td colspan='2' style='text-align: center; font-size: 8px;'>
+                    (Describe Labor, Significant Materials, and Equipment to be Furnished. Include Materials and Equipment to be used or installed under this Contract. If necessary, continue the description 
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center; font-size: 8px;'>
+                    of the work on an additional attachment page and describe the attachment in the section below entitled, “List of Documents to be Incorporated into the Contract.”)
                 </td>
             </tr>
         </table>
+
+
+
     </div>
 </page>";
+$html2pdf->writeHTML($page_1);
 
-// page-2
-$html .= "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
-    <div style='border: 5px solid black; height: 98%;'>
+$x_left = 14;
+$x_right = 119;
+$y_next_line = 7;
+$input = [
+    'name' => '',
+    'w' => 88.5,
+    'h' => 4,
+    'prop' => [],
+    'opt' => ['v' => ''],
+    'x' => $x_left,
+    'y' => 44.5,
+    'js' => false
+];
+
+$input['name'] = 'left_name';
+$input['x'] = $x_left;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'right_name';
+$input['x'] = $x_right;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+
+$input['name'] = 'left_license';
+$input['x'] = $x_left;
+$input['y'] = $input['y'] + $y_next_line;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'right_address';
+$input['x'] = $x_right;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+
+$input['name'] = 'left_address';
+$input['x'] = $x_left;
+$input['y'] = $input['y'] + $y_next_line;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'right_zip';
+$input['x'] = $x_right;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+
+$input['name'] = 'left_zip';
+$input['x'] = $x_left;
+$input['y'] = $input['y'] + $y_next_line;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'right_phone';
+$input['x'] = $x_right;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+
+$input['name'] = 'left_fax';
+$input['x'] = $x_left;
+$input['y'] = $input['y'] + $y_next_line;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'right_fax';
+$input['x'] = $x_right;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+
+$input['name'] = 'left_email';
+$input['x'] = $x_left + 11;
+$input['y'] = $input['y'] + $y_next_line + 2;
+$input['w'] -= 12;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'right_email';
+$input['x'] = $x_right + 11;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'work_tobe_performed';
+$input['w'] = 126.5;
+$input['x'] = 80;
+$input['y'] = 91.5;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'construction_lender';
+$input['w'] = 136.5;
+$input['x'] = 70;
+$input['y'] = 100.5;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'manner';
+$input['x'] = 130;
+$input['y'] = 122;
+$input['w'] = 78;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['x'] = 14;
+$input['w'] = 193;
+for ($line = 1; $line <= 6; $line++) {
+    $input['name'] = 'manner' . $line;
+    $input['y'] += $y_next_line - 2;
+    $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+}
+
+$page_2 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
+    <div style='border: 8px solid black; height: 98%; font-size: 11px;'>
         <h4 style='text-align: center;'>TERMS AND CONDITIONS</h4>
-        <table style='width: 104%; font-size: 9.8px; text-align: justify;'>
+        <table style='width: 104%; text-align: justify;'>
             <tr>
                 <td class='left-column' style='width: 48%; padding-left: 5px;'>
                     <b>1. Owner’s Responsibilities.</b> The Owner is responsible to supply water,
@@ -249,18 +487,24 @@ $html .= "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
         </table>
     </div>
 </page>";
+$html2pdf->writeHTML($page_2);
 
-// page-3
-$html .= "<page backtop='7mm' backbottom='7mm' backleft='10mm' backright='10mm'></page>";
+$page_3 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
+    <div style='border: 8px solid black; height: 98%;'>
+    </div>
+</page>";
+$html2pdf->writeHTML($page_3);
 
-// page-4
-$html .= "<page backtop='7mm' backbottom='7mm' backleft='10mm' backright='10mm'></page>";
+$page_4 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
+    <div style='border: 8px solid black; height: 98%;'>
+    </div>
+</page>";
+$html2pdf->writeHTML($page_4);
 
-// page-5
-$html .= "<page backtop='7mm' backbottom='7mm' backleft='10mm' backright='10mm'></page>";
+$page_5 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
+    <div style='border: 8px solid black; height: 98%;'>
+    </div>
+</page>";
+$html2pdf->writeHTML($page_5);
 
-$orientation = 'potrait';
-$titulo_pdf = 'Contract';
-$html2pdf = new Html2Pdf($orientation, 'LETTER', 'es');
-$html2pdf->writeHTML($html);
 $html2pdf->output($titulo_pdf . '_000' . $ot_id . '.pdf');
