@@ -12,7 +12,7 @@ $orientation = 'potrait';
 $titulo_pdf = 'Contract';
 $html2pdf = new Html2Pdf($orientation, 'LEGAL', 'es');
 
-$page_1 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
+$page_1 = "<page backtop='2mm' backbottom='0mm' backleft='3mm' backright='8mm'>
     <div style='border: 8px solid black; height: 98%; padding-left: 8px;'>
         <div style='text-align: center;'>
             <h1 style='margin-bottom: 0;'>HOME IMPROVEMENT CONTRACT</h1>
@@ -22,7 +22,7 @@ $page_1 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
             <p style='font-size: 16px; margin: 0;'>The Notice of Cancellation may be mailed to the address of the direct contractor as shown below:</p>
         </div>
 
-        <table style='width: 98%; text-align: center; font-size: 8px;'>
+        <table style='text-align: center; font-size: 8px;'>
 
             <tr>
                 <td style='width: 46%;'><br></td>
@@ -112,7 +112,7 @@ $page_1 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
 
         </table>
 
-        <table style='width: 98%; text-align: center; font-size: 8px;'>
+        <table style='width: 93%; text-align: center; font-size: 8px;'>
             <tr>
                 <td><h4 style='margin: 0;'>WORK TO BE PERFORMED AT:</h4></td>
                 <td colspan='2' style='width: 66%; border-bottom: 1px solid black;'></td>
@@ -124,7 +124,7 @@ $page_1 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
             </tr>
         </table>
 
-        <table style='width: 98%; text-align: center; font-size: 8px;'>
+        <table style='width: 93%; text-align: center; font-size: 8px;'>
             <tr>
                 <td><h4 style='margin: 0;'>CONSTRUCTION LENDER:</h4></td>
                 <td style='width: 71.5%; border-bottom: 1px solid black;'></td>
@@ -144,7 +144,7 @@ $page_1 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
                 <td>Direct Contractor will furnish all labor and materials to</td>
             </tr>
         </table>
-        <table style='width: 100%;'>
+        <table style='width: 98%;'>
             <tr>
                 <td>construct and complete in a good, workmanlike and substantial manner a:</td>
                 <td style='border-bottom: 1px solid black; width: 39.5%;'>&nbsp;</td>
@@ -168,14 +168,53 @@ $page_1 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
             </tr>
         </table>
 
+        <table style='width: 80%;'>
+            <tr>
+                <td>Substantial commencement of work under this contract is described as:</td>
+                <td style='border-bottom: 1px solid black; width: 50%;'></td>
+            </tr>
+        </table>
 
+        <table style='width: 47%;'>
+            <tr>
+                <td><b>Approximate Start Date:</b></td>
+                <td style='border-bottom: 1px solid black; width: 50%;'></td>
+                <td style='width: 6%;'></td>
+                <td><b>Approximate Completion Date:</b></td>
+                <td style='border-bottom: 1px solid black; width: 50%;'></td>
+            </tr>
+            <tr style='font-size: 8px; text-align: center;'>
+                <td></td>
+                <td>(Work will begin)</td>
+                <td></td>
+                <td></td>
+                <td>(Work is to be completed)</td>
+            </tr>
+        </table>
+
+        <table style='width: 51.5%;'>
+            <tr>
+                <td><b>CONTRACT PRICE: $</b></td>
+                <td style='border-bottom: 1px solid black; width: 50%;'></td>
+                <td style='width: 6%;'></td>
+                <td><b>DOWN PAYMENT: $</b></td>
+                <td style='border-bottom: 1px solid black; width: 64%;'></td>
+            </tr>
+            <tr style='font-size: 8px; text-align: center;'>
+                <td></td>
+                <td>(Owner agrees to pay Contractor total cash price)</td>
+                <td></td>
+                <td></td>
+                <td>(If any; if not applicable, put “none”)</td>
+            </tr>
+        </table>
 
     </div>
 </page>";
 $html2pdf->writeHTML($page_1);
 
-$x_left = 14;
-$x_right = 119;
+$x_left = 13;
+$x_right = 110;
 $y_next_line = 7;
 $input = [
     'name' => '',
@@ -248,32 +287,38 @@ $input['x'] = $x_right + 11;
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'work_tobe_performed';
-$input['w'] = 126.5;
-$input['x'] = 80;
+$input['w'] = 120;
+$input['x'] = 78;
 $input['y'] = 91.5;
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'construction_lender';
-$input['w'] = 136.5;
-$input['x'] = 70;
+$input['w'] = 130;
+$input['x'] = 68;
 $input['y'] = 100.5;
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'manner';
 $input['x'] = 130;
 $input['y'] = 122;
-$input['w'] = 78;
+$input['w'] = 74;
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['x'] = 14;
-$input['w'] = 193;
+$input['w'] = 190;
 for ($line = 1; $line <= 6; $line++) {
     $input['name'] = 'manner' . $line;
     $input['y'] += $y_next_line - 2;
     $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 }
 
-$page_2 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
+$input['name'] = 'described_as';
+$input['x'] = 125;
+$input['y'] = 165;
+$input['w'] = 78;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$page_2 = "<page backtop='2mm' backbottom='0mm' backleft='3mm' backright='4mm'>
     <div style='border: 8px solid black; height: 98%; font-size: 11px;'>
         <h4 style='text-align: center;'>TERMS AND CONDITIONS</h4>
         <table style='width: 104%; text-align: justify;'>
@@ -489,22 +534,22 @@ $page_2 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
 </page>";
 $html2pdf->writeHTML($page_2);
 
-$page_3 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
-    <div style='border: 8px solid black; height: 98%;'>
-    </div>
-</page>";
-$html2pdf->writeHTML($page_3);
+// $page_3 = "<page backtop='2mm' backbottom='0mm' backleft='3mm' backright='4mm'>
+//     <div style='border: 8px solid black; height: 98%;'>
+//     </div>
+// </page>";
+// $html2pdf->writeHTML($page_3);
 
-$page_4 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
-    <div style='border: 8px solid black; height: 98%;'>
-    </div>
-</page>";
-$html2pdf->writeHTML($page_4);
+// $page_4 = "<page backtop='2mm' backbottom='0mm' backleft='3mm' backright='4mm'>
+//     <div style='border: 8px solid black; height: 98%;'>
+//     </div>
+// </page>";
+// $html2pdf->writeHTML($page_4);
 
-$page_5 = "<page backtop='2mm' backbottom='2mm' backleft='4mm' backright='4mm'>
-    <div style='border: 8px solid black; height: 98%;'>
-    </div>
-</page>";
-$html2pdf->writeHTML($page_5);
+// $page_5 = "<page backtop='2mm' backbottom='0mm' backleft='3mm' backright='4mm'>
+//     <div style='border: 8px solid black; height: 98%;'>
+//     </div>
+// </page>";
+// $html2pdf->writeHTML($page_5);
 
 $html2pdf->output($titulo_pdf . '_000' . $ot_id . '.pdf');
