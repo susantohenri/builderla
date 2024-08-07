@@ -114,15 +114,10 @@ if ($_POST) {
 						<td class="text-center" style="white-space: nowrap;">
 							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
 							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/solicitud-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
-
-							<!--
-							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar"><i class="fa fa-trash-o"></i></button>
-							-->
-
+							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
 							<!--
 							<button class="btn btn-warning btnProceedWithoutIngreso" data-toggle="tooltip" title="Iniciar Cotización"><i class="fa fa-list"></i></button>
 							-->
-
 							<button class="btn btn-success btnFecha" data-toggle="tooltip" title="Schedule"><i class="fa fa-check"></i></button>
 							<button class="btn btn-danger btnMotivo" data-toggle="tooltip" title="Discard"><i class="fa fa-times"></i></button>
 						</td>
@@ -398,8 +393,8 @@ if ($_POST) {
 			regid = tr.data('regid');
 
 			$.confirm({
-				title: 'Eliminar Solicitud!',
-				content: '¿Desea eliminar la Solicitud seleccionada?',
+				title: 'Delete Lead!',
+				content: '¿Are you sure you want to delete this lead?',
 				type: 'red',
 				icon: 'fa fa-warning',
 				buttons: {
@@ -408,7 +403,7 @@ if ($_POST) {
 						btnClass: 'btn-red',
 					},
 					SI: {
-						text: 'Si',
+						text: 'Yes',
 						btnClass: 'btn-green',
 						action: function() {
 							$.ajax({
@@ -421,7 +416,7 @@ if ($_POST) {
 									$.alert({
 										title: false,
 										type: 'green',
-										content: 'Solicitud borrado correctamente'
+										content: 'Lead Deleted'
 									});
 									tr.fadeOut(400);
 								}
