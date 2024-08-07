@@ -28,7 +28,6 @@ $ots = Mopar::getOtByVehiculo($_GET['vid']);
                             <th> Cliente </th>
                             <th> Vehiculo </th>
                             <th> Valor Total </th>
-                            <th> Km. </th>
                             <th> Tipo de Documento </th>
                             <th class="text-center">Acciones</th>
                         </tr>
@@ -41,7 +40,6 @@ $ots = Mopar::getOtByVehiculo($_GET['vid']);
                             <td data-cliente="<?php echo $ot->cliente_id; ?>"> <?php echo Mopar::getNombreCliente($ot->cliente_id) ?> </td>
                             <td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getNombreVehiculo($ot->vehiculo_id) ?> </td>
                             <td data-valor="<?php echo $ot->valor; ?>"> $ <?php echo number_format($ot->valor,0,',','.') ?> </td>
-                            <td data-km="<?php echo $ot->km; ?>"> <?php echo $ot->km; ?> </td>
                             <td data-estado="<?php echo $ot->estado; ?>"> <?php echo Mopar::getEstado($ot->estado); ?> </td>
                             <td class="text-center">
                                 <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info btnEdit" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>

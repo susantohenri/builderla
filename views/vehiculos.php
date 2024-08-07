@@ -9,40 +9,41 @@ if(isset($_GET['vid'])){
 <div class="box pr-4">
 
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left"> Lista de Vehiculos </h2>
-		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewVehiculo">Nuevo Vehiculo</button>
+		<h2 class="font-weight-light text-center text-muted float-left"> Properties</h2>
+		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewVehiculo">New Property</button>
 
 		<div class="clearfix"></div>
 	</div>
 
-	<table class="table table-striped table-bordered" id="tabla_vehiculos">
+	<table class="table table-striped table-bordered" id="tabla_vehiculos" width="100%">
 		<thead>
 			<tr>
 				<th> # </th>
-				<th> Patente </th>
-				<th> Marca </th>
-				<th> Año </th>
-				<th> Color </th>
-				<th> VIN </th>
-				<th> Cliente </th>
-				<th class="text-center">Acciones</th>
+				<th> Address 1 </th>
+				<th> Address 2 </th>
+				<th> City </th>
+				<th> Zip Code </th>
+				<th> Customer </th>
+				<th> Customer 2</th>
+				<th class="text-center">Options</th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach ($vehiculos as $key => $vehiculo): ?>
-			<tr data-regid="<?php echo $vehiculo->id ?>" <?php foreach (['street_address', 'address_line_2', 'city', 'zip_code'] as $field) { echo "data-{$field}=\"{$vehiculo->$field}\"";} ?>>
-				<td data-regid="<?php echo $vehiculo->id ?>"> <?php echo $vehiculo->id ?> </td>
-				<td data-patente="<?php echo $vehiculo->patente ?>"> <?php echo $vehiculo->patente ?> </td>
-				<td data-marca="<?php echo $vehiculo->marca ?>"> <?php echo $vehiculo->marca ?> </td>
-				<td data-ano="<?php echo $vehiculo->ano ?>"> <?php echo $vehiculo->ano ?> </td>
-				<td data-color="<?php echo $vehiculo->color ?>"> <?php echo $vehiculo->color ?> </td>
-				<td data-nro_motor="<?php echo $vehiculo->nro_motor ?>"> <?php echo $vehiculo->nro_motor ?> </td>
-				<td data-cliente_id="<?php echo $vehiculo->cliente_id ?>"> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id) ?> </td>
-				
+			<tr data-regid="<?php echo $vehiculo->id ?>" <?php foreach (['street_address', 'address_line_2', 'city', 'state', 'zip_code', 'cliente_id', 'cliente_id_2'] as $field) { echo "data-{$field}=\"{$vehiculo->$field}\"";} ?>>
+				<td> <?php echo $vehiculo->id ?> </td>
+				<td> <?php echo $vehiculo->street_address ?> </td>
+				<td> <?php echo $vehiculo->address_line_2 ?> </td>
+				<td> <?php echo $vehiculo->city ?> </td>
+				<td> <?php echo $vehiculo->zip_code ?> </td>
+				<td> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id) ?> </td>
+				<td> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id_2) ?> </td>
 				<td class="text-center">
-					<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Editar Vehiculo"><i class="fa fa-pencil"></i></button>
-					<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar Vehiculo"><i class="fa fa-trash-o"></i></button>
+					<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
+					<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
+					<!--
 					<a href="admin.php?page=mopar-vehiculos&vid=<?php echo $vehiculo->id ?>" class="btn btn-info" data-toggle="tooltip" title="Ver OTs del Vehiculo"><i class="fa fa-search"></i></a>
+					-->
 				</td>
 			</tr>
 			<?php endforeach; ?>
@@ -58,49 +59,17 @@ if(isset($_GET['vid'])){
 		<div class="modal-dialog modal-lg">
 	    	<div class="modal-content">
 	      		<div class="modal-header">
-	        		<h5 class="modal-title">Datos del Vehiculo</h5>
+	        		<h5 class="modal-title">Property Information</h5>
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          			<span aria-hidden="true">&times;</span>
 	        		</button>
 	      		</div>
 	      		<div class="modal-body">
         			<div class="form-row">
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Patente</span>
-						        </div>
-						        <input type="text" name="patente" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Año</span>
-						        </div>
-						        <input type="text" name="ano" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Marca</span>
-						        </div>
-						        <input type="text" name="marca" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Color</span>
-						        </div>
-						        <input type="text" name="color" class="form-control" required>
-					      	</div>
-				    	</div>
 						<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Street Address*</span>
+					          		<span class="input-group-text">Street Address</span>
 						        </div>
 						        <input type="text" name="street_address" class="form-control" required>
 					      	</div>
@@ -108,7 +77,7 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Address Line 2</span>
+					          		<span class="input-group-text">Address 2</span>
 						        </div>
 						        <input type="text" name="address_line_2" class="form-control">
 					      	</div>
@@ -116,9 +85,19 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">City*</span>
+					          		<span class="input-group-text">City</span>
 						        </div>
 						        <input type="text" name="city" class="form-control" required>
+					      	</div>
+				    	</div>
+				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">State</span>
+						        </div>
+								<select name="state" class="form-control" required>
+									<option value="California (CA)">California (CA)</option>
+								</select>
 					      	</div>
 				    	</div>
 				    	<div class="form-group col-md-6">
@@ -129,20 +108,25 @@ if(isset($_GET['vid'])){
 						        <input type="text" name="zip_code" class="form-control" required>
 					      	</div>
 				    	</div>
-						<div class="form-group col-md-6">
+				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">VIN</span>
+					          		<span class="input-group-text">Customer</span>
 						        </div>
-						        <input type="text" name="nro_motor" class="form-control" required>
+						        <select name="cliente" class="form-control">
+						        	<option value="">Seleccione</option>
+						        	<?php foreach ($clientes as $cliente) { ?>
+						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
+						        	<?php } ?>
+						        </select>
 					      	</div>
 				    	</div>
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Cliente</span>
+					          		<span class="input-group-text">Customer 2</span>
 						        </div>
-						        <select name="cliente" class="form-control">
+						        <select name="cliente_2" class="form-control">
 						        	<option value="">Seleccione</option>
 						        	<?php foreach ($clientes as $cliente) { ?>
 						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
@@ -153,8 +137,8 @@ if(isset($_GET['vid'])){
 				  	</div>
 	      		</div>
 	      		<div class="modal-footer">
-	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-	        		<button type="submit" class="btn btn-success">Guardar <i class="fa fa-save"></i> </button>
+	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+	        		<button type="submit" class="btn btn-success">Save <i class="fa fa-save"></i> </button>
 	      		</div>
 			</div>
 	  	</div>
@@ -173,49 +157,17 @@ if(isset($_GET['vid'])){
 		<div class="modal-dialog modal-lg">
 	    	<div class="modal-content">
 	      		<div class="modal-header">
-	        		<h5 class="modal-title">Datos del Vehiculo</h5>
+	        		<h5 class="modal-title">Customer Information</h5>
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          			<span aria-hidden="true">&times;</span>
 	        		</button>
 	      		</div>
 	      		<div class="modal-body">
         			<div class="form-row">
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Patente</span>
-						        </div>
-						        <input type="text" name="patente" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Año</span>
-						        </div>
-						        <input type="text" name="ano" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Marca</span>
-						        </div>
-						        <input type="text" name="marca" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Color</span>
-						        </div>
-						        <input type="text" name="color" class="form-control" required>
-					      	</div>
-				    	</div>
 						<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Street Address*</span>
+					          		<span class="input-group-text">Street Address</span>
 						        </div>
 						        <input type="text" name="street_address" class="form-control" required>
 					      	</div>
@@ -223,7 +175,7 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Address Line 2</span>
+					          		<span class="input-group-text">Address 2</span>
 						        </div>
 						        <input type="text" name="address_line_2" class="form-control">
 					      	</div>
@@ -231,9 +183,19 @@ if(isset($_GET['vid'])){
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">City*</span>
+					          		<span class="input-group-text">City</span>
 						        </div>
 						        <input type="text" name="city" class="form-control" required>
+					      	</div>
+				    	</div>
+				    	<div class="form-group col-md-6">
+					      	<div class="input-group">
+						        <div class="input-group-prepend">
+					          		<span class="input-group-text">State</span>
+						        </div>
+								<select name="state" class="form-control" required>
+									<option value="California (CA)">California (CA)</option>
+								</select>
 					      	</div>
 				    	</div>
 				    	<div class="form-group col-md-6">
@@ -244,20 +206,25 @@ if(isset($_GET['vid'])){
 						        <input type="text" name="zip_code" class="form-control" required>
 					      	</div>
 				    	</div>
-						<div class="form-group col-md-6">
+				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">VIN</span>
+					          		<span class="input-group-text">Customer</span>
 						        </div>
-						        <input type="text" name="nro_motor" class="form-control" required>
+						        <select name="cliente" class="form-control">
+						        	<option value="">Seleccione</option>
+						        	<?php foreach ($clientes as $cliente) { ?>
+						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
+						        	<?php } ?>
+						        </select>
 					      	</div>
 				    	</div>
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Cliente</span>
+					          		<span class="input-group-text">Customer 2</span>
 						        </div>
-						        <select name="cliente" class="form-control">
+						        <select name="cliente_2" class="form-control">
 						        	<option value="">Seleccione</option>
 						        	<?php foreach ($clientes as $cliente) { ?>
 						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
@@ -268,8 +235,8 @@ if(isset($_GET['vid'])){
 				  	</div>
 	      		</div>
 	      		<div class="modal-footer">
-	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-	        		<button type="submit" class="btn btn-success">Guardar <i class="fa fa-save"></i> </button>
+	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+	        		<button type="submit" class="btn btn-success">Save <i class="fa fa-save"></i> </button>
 	      		</div>
 			</div>
 	  	</div>
@@ -289,8 +256,8 @@ $(document).ready(function(){
 		tr = $(this).closest('tr');
 		regid = tr.data('regid');
 		$.confirm({
-		    title: 'Eliminar Vehiculo!',
-		    content: '¿Desea eliminar el vehiculo seleccionado?',
+		    title: 'Delete Property!',
+		    content: 'Do you want to delete the selected property?',
 			type: 'red',
 			theme: 'bootstrap',
 			icon: 'fa fa-warning',
@@ -317,7 +284,7 @@ $(document).ready(function(){
 		            			$.alert({
 		            				title: false,
 		            				type: 'green',
-		            				content: 'Vehiculo borrado correctamente'
+									content: 'Property deleted successfully'
 		            			});
 		            			tr.fadeOut(400);
 		            		}
@@ -346,7 +313,7 @@ $(document).ready(function(){
         			$.alert({
 						title: false,
 						type: 'green',
-						content: 'Vehiculo ingresado correctamente',
+						content: 'Property Successfully Added',
 						buttons: {
 							volver: {
 					            action: function () {
@@ -370,31 +337,26 @@ $(document).ready(function(){
 
 
 	$(".btnEdit").click(function(){
-		patente = $(this).closest('tr').find('[data-patente]').data('patente');
-		ano = $(this).closest('tr').find('[data-ano]').data('ano');
-		marca = $(this).closest('tr').find('[data-marca]').data('marca');
-		color = $(this).closest('tr').find('[data-color]').data('color');
-		street_address = $(this).closest('tr').data('street_address');
-		address_line_2 = $(this).closest('tr').data('address_line_2');
-		city = $(this).closest('tr').data('city');
-		zip_code = $(this).closest('tr').data('zip_code');
-		nro_motor = $(this).closest('tr').find('[data-nro_motor]').data('nro_motor');
-		cliente_id = $(this).closest('tr').find('[data-cliente_id]').data('cliente_id');
-
 		tr = $(this).closest('tr');
+
+		street_address = tr.data('street_address');
+		address_line_2 = tr.data('address_line_2');
+		city = tr.data('city');
+		state = tr.data('state');
+		zip_code = tr.data('zip_code');
+		cliente_id =tr.data('cliente_id');
+		cliente_id_2 = tr.data('cliente_id_2');
+
 		regid = tr.data('regid');
 
 		$("#formEditVehiculo [name=regid]").val(regid);
-		$("#formEditVehiculo [name=patente]").val(patente);
-		$("#formEditVehiculo [name=ano]").val(ano);
-		$("#formEditVehiculo [name=marca]").val(marca);
-		$("#formEditVehiculo [name=color]").val(color);
 		$("#formEditVehiculo [name=street_address]").val(street_address);
 		$("#formEditVehiculo [name=address_line_2]").val(address_line_2);
 		$("#formEditVehiculo [name=city]").val(city);
+		$("#formEditVehiculo [name=state]").val(state);
 		$("#formEditVehiculo [name=zip_code]").val(zip_code);
-		$("#formEditVehiculo [name=nro_motor]").val(nro_motor);
 		$("#formEditVehiculo [name=cliente]").val(cliente_id);
+		$("#formEditVehiculo [name=cliente_2]").val(cliente_id_2);
 
 		$("#modalEditVehiculo").modal('show');
 	})
@@ -437,7 +399,7 @@ $(document).ready(function(){
     	})
 	});
 
-	$('#tabla_vehiculos').DataTable({order: [[0, 'desc']]});
+	$('#tabla_vehiculos').DataTable({scrollX: true, order: [[0, 'desc']]});
 
 })
 

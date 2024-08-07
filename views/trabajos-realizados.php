@@ -6,40 +6,10 @@ $updated = false;
 if( $_POST ){
 	global $wpdb;
 
-    $tmpFilePath = $_FILES['uploadsHistory']['tmp_name'];
-    if ($tmpFilePath == ""){
-    	if( $_POST['hdn_archivo'] == "" ){
-    		$archivo = '';
-    	} else {
-    		$archivo = $_POST['hdn_archivo'];
-    	}
-    } else {
-        $name = $_FILES['uploadsHistory']['name'];
-        $pathinfo = pathinfo($name);
-        $array_extension_allowed = array('pdf','xls', 'xlsx', 'doc', 'docx','jpeg','jpg','png');
-
-        if( in_array($pathinfo['extension'],$array_extension_allowed) ){
-            
-            $filename_body = uniqid($input_name);
-            $newName = $pathinfo['filename'].'___'.$filename_body.'.'.$pathinfo['extension'];
-            $newFilePath = $folder . $newName;
-            
-            if(move_uploaded_file($tmpFilePath, $newFilePath)) {
-                $archivo = $newName;
-            } else {
-                $archivo = '';
-            }
-        }
-    }
-
-
-    $array_insert = [
+	$array_insert = [
 		'titulo' => $_POST['titulo'],
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
-		'km' => $_POST['km'],
-		'observaciones' => $_POST['observaciones'],
-		'archivo' => $archivo
 	];
 
 	if( $_POST['action'] == 'insertar_ot' ){
@@ -71,22 +41,23 @@ if( $_POST ){
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left">Trabajos Realizados </h2>
+		<h2 class="font-weight-light text-center text-muted float-left">Completed Projects </h2>
 
 		<div class="clearfix"></div>
 	</div>
 	<div class="box-body">
-		<table class="table table-striped table-bordered" id="tabla_ots">
+		<table class="table table-striped table-bordered" id="tabla_ots" width="100%">
 			<thead>
 				<tr>
 					<th>#</th>
-					<th> Titulo </th>
-					<th> Cliente </th>
-					<th> Vehiculo </th>
-					<th> Valor Total </th>
-					<th> Km. </th>
+					<th> Title </th>
+					<th> Customer </th>
+					<th> Address </th>
+					<th> Total </th>
+					<!--
 					<th> Estado </th>
-					<th class="text-center">Acciones</th>
+					-->
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -97,7 +68,6 @@ if( $_POST ){
 					<td data-cliente="<?php echo $ot->cliente_id; ?>"> <?php echo Mopar::getNombreCliente($ot->cliente_id) ?> </td>
 					<td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getNombreVehiculo($ot->vehiculo_id) ?> </td>
 					<td data-valor="<?php echo $ot->valor; ?>"> $ <?php echo number_format($ot->valor,0,',','.') ?> </td>
-					<td data-km="<?php echo $ot->km; ?>"> <?php echo $ot->km; ?> </td>
 					<td class="text-center align-middle">
 						<?php if (0 == $ot->entregar) : ?>
 							<a>
@@ -121,12 +91,14 @@ if( $_POST ){
 		</table>
 		<br>
 		<ul>
+		    <!--
 			<li>
 				<i class="fa fa-circle text-success"></i> Vehículo entregado
 			</li>
 			<li>
 				<i class="fa fa-circle text-danger"></i> Vehiculo no entregado
 			</li>
+			-->
 		</ul>
 	</div>
 </div>
@@ -206,35 +178,10 @@ if( $_POST ){
 						<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Km.</span>
-						        </div>
-						        <input type="text" class="form-control" name="km" required>
-					      	</div>
-				    	</div>
-						<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Total</span>
 						        </div>
 						        <input type="text" class="form-control text-right" name="valor" required readonly>
 					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-12">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Observaciones</span>
-						        </div>
-						        <textarea class="form-control" name="observaciones"></textarea>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-12">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Archivo Adicional</span>
-						        </div>
-						        <input type="file" name="uploadsHistory" class="form-control">
-					      	</div>
-					      	<small class="text-muted w-100">(Dependiendo del peso del archivo, el proceso de guardar puede tomar mas tiempo de lo estimado. Evite que pese mas de 1MB)</small>
 				    	</div>
 	      			</div>
 
@@ -317,44 +264,9 @@ if( $_POST ){
 						<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Km.</span>
-						        </div>
-						        <input type="text" class="form-control" name="km" required>
-					      	</div>
-				    	</div>
-						<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Total</span>
 						        </div>
 						        <input type="text" class="form-control text-right" name="valor" required readonly>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-12">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Observaciones</span>
-						        </div>
-						        <textarea class="form-control" name="observaciones"></textarea>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-12">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Archivo Adicional</span>
-						        </div>
-						        <input type="file" name="uploadsHistory" class="form-control">
-					      	</div>
-					      	<small class="text-muted w-100">(Dependiendo del peso del archivo, el proceso de guardar puede tomar mas tiempo de lo estimado. Evite que pese mas de 1MB)</small>
-				    	</div>
-				    	<div class="form-group col-md-12">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Archivo:</span>
-						        </div>
-						        <a class="btn-link btn border archivo_link" target="_blank" href=""></a>
-						        <input type="hidden" name="hdn_archivo">
-						        <button type="button" class="btn btn-danger btnQuitarArchivo" data-toggle="tooltip" data-placement="right" title="Quitar archivo"><i class="fa fa-times"></i></button>
 					      	</div>
 				    	</div>
 	      			</div>
@@ -386,13 +298,6 @@ $(document).ready(function(){
 		}
 	})
 
-	$(document).on('click','.btnQuitarArchivo', function(e){
-		e.preventDefault();
-		$('#modalEditOT [name=hdn_archivo]').val("");
-		$('#modalEditOT a.archivo_link').attr('href','');
-		$('#modalEditOT a.archivo_link').html('');
-	})
-
 	$(".btnEdit").click(function(){
 		ot_id = $(this).data('regid');
 		$.ajax({
@@ -420,18 +325,9 @@ $(document).ready(function(){
 
 				$('#modalEditOT [name=titulo]').val(json.ot.titulo);
 
-				icon = '';
-				if( json.ot.archivo ){
-					icon = ' &nbsp; <i class="fa fa-external-link"></i>';
-				}
-
-				$('#modalEditOT [name=hdn_archivo]').val(json.ot.archivo);
-				$('#modalEditOT a.archivo_link').attr('href','<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/uploads/' + json.ot.archivo);
-				$('#modalEditOT a.archivo_link').html(json.ot.archivo + icon);
-
 				$("#modalEditOT table tbody").empty();
 				$.each(detalle.item,function(k,v){
-					h = '<tr>';
+					h = '<tr data-row-num="'+k+'a">';
 					h += '	<td>';
 					h += '		<input type="text" value="'+detalle.item[k]+'" name="detalle[item][]" class="form-control" required>';
 					h += '	</td>';
@@ -444,6 +340,14 @@ $(document).ready(function(){
 								<a href="#" class="btn btn-info btn-sm btnDown"><i class="fa fa-arrow-down"></i></a>
 							</td>`;
 					h += '</tr>';
+					h += `
+							<tr data-row-num="${k}b">
+								<td colspan="2">
+									<textarea name="detalle[observaciones][]" class="form-control">${detalle.observaciones[k]}</textarea>'
+								</td>
+								<td></td>
+							</tr>
+						`
 					$("#modalEditOT table tbody").append(h);
 					$("[data-toggle=tooltip]").tooltip();
 					$('.tooltip').hide();
@@ -451,9 +355,7 @@ $(document).ready(function(){
 				})
 
 				$('#modalEditOT [name=estado]').val(json.ot.estado);
-				$('#modalEditOT [name=km]').val(json.ot.km);
 				$('#modalEditOT [name=valor]').val(json.ot.valor);
-				$('#modalEditOT [name=observaciones]').val(json.ot.observaciones);
 
     			$('#modalEditOT').modal('show');		
     		}
@@ -472,6 +374,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		tr = $(this).closest('tr');
 		tr.fadeOut(300, function(){
+			tr.next().remove()
 			tr.remove();
 			recalcular();
 		})
@@ -481,20 +384,44 @@ $(document).ready(function(){
 
 	$(document).on('click','.btnUp',function(e){
 		e.preventDefault();
-		tr = $(this).closest('tr');
-		tr.insertBefore(tr.prev())
+		const tr = $(this).closest('tr');
+		const prev = tr.prev()
+
+		if (1 > prev.length) return false
+
+		const target_row_num = prev.attr(`data-row-num`).replace(`b`, `a`)
+		const target = tr.siblings(`tr[data-row-num="${target_row_num}"]`)
+
+		const observaciones_num = tr.attr(`data-row-num`).replace(`a`, `b`)
+		const observaciones = tr.siblings(`tr[data-row-num="${observaciones_num}"]`)
+
+		tr.insertBefore(target)
+		observaciones.insertBefore(target)
 	})
 
 	$(document).on('click','.btnDown',function(e){
 		e.preventDefault();
-		tr = $(this).closest('tr');
-		tr.insertAfter(tr.next())
+		const tr = $(this).closest('tr');
+		const next = tr.next().next()
+
+		if (1 > next.length) return false
+
+		const target_row_num = next.attr(`data-row-num`).replace(`a`, `b`)
+		const target = tr.siblings(`tr[data-row-num="${target_row_num}"]`)
+
+		const observaciones_num = tr.attr(`data-row-num`).replace(`a`, `b`)
+		const observaciones = tr.siblings(`tr[data-row-num="${observaciones_num}"]`)
+
+		observaciones.insertAfter(target)
+		tr.insertAfter(target)
 	})
 
 	$(".btnPlus").click(function(e){
 		e.preventDefault();
+		const last_row_num = jQuery(this).parent().parent().parent().parent().find(`tbody`).find(`tr`).last().attr(`data-row-num`).replace(`b`, ``)
+		const new_row_num = parseInt(last_row_num) + 1
 		h = '';
-		h += '<tr>';
+		h += '<tr data-row-num="'+new_row_num+'a">';
 		h += '	<td>';
 		h += '		<input type="text" name="detalle[item][]" class="form-control" required>';
 		h += '	</td>';
@@ -507,6 +434,14 @@ $(document).ready(function(){
 					<a href="#" class="btn btn-info btn-sm btnDown"><i class="fa fa-arrow-down"></i></a>
 				</td>`;
 		h += '</tr>';
+		h+= `
+				<tr data-row-num="${new_row_num}b">
+					<td colspan="2">
+						<textarea name="detalle[observaciones][]" class="form-control"></textarea>
+					</td>
+					<td></td>
+				</tr>
+		`
 		$(this).closest('.modal').find('table tbody').append(h)
 		$("[data-toggle=tooltip]").tooltip();
 		$('.tooltip').hide();
@@ -660,6 +595,7 @@ $(document).ready(function(){
 
 
     $('#tabla_ots').DataTable({
+		"scrollX": true,
     	"ordering": false 
     });
 });

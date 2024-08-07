@@ -8,9 +8,8 @@ $current_user = wp_get_current_user();
 if (user_can( $current_user, 'administrator' )) {
 
 	$solicitud = Mopar::getOneSolicitud($_GET['id']);
-	$cliente = Mopar::getOneCliente($solicitud->cliente_id);
-	$vehiculo = 0 != $solicitud->vehiculo_id ? Mopar::getOneVehiculo($solicitud->vehiculo_id) : json_decode('{"marca":"","ano":"","color":"","patente":"","nro_motor":""}');
-	$title = 1 == $solicitud->estado ? 'Solicitud de servicio' : 'Orden de Ingreso';
+	$vehiculo = Mopar::getOneVehiculo($solicitud->vehiculo_id);
+	$cliente = Mopar::getOneCliente($vehiculo->cliente_id);
 
 	$html = '
 	<!--
@@ -32,12 +31,7 @@ if (user_can( $current_user, 'administrator' )) {
 			<td style="width: 295px;">
 			</td>
 			<td style="width: 295px; text-align: center">
-				<h3 style="margin-bottom: 10px">Taller Doctor Mopar</h3>
-				<h4 style="margin: 0; font-weight: lighter">
-					Los Cerezos 375, Ñuñoa <br>
-					Región Metropolitana <br>
-					Fono: +569 8599 1053
-				</h4>
+				<h3 style="margin-bottom: 10px">FHS CONSTRUCTION INC</h3>
 			</td>
 		</tr>
 	</table>
@@ -45,7 +39,7 @@ if (user_can( $current_user, 'administrator' )) {
 	<table style="width: 590px;">
 		<tr>
 			<td style="width: 590px;">
-				<h1 style="text-align: center">'.$title.' n&deg;000'.$solicitud->id.'</h1>
+				<h1 style="text-align: center">Lead n&deg;000'.$solicitud->id.'</h1>
 			</td>
 		</tr>
 	</table>
@@ -62,24 +56,24 @@ if (user_can( $current_user, 'administrator' )) {
 			<td style="width: 295px; border: 1px solid #000;">
 				<table class="no_padding">
 					<tr>
-						<td><strong>Marca: </strong></td>
-						<td>' . $vehiculo->marca . '</td>
+						<td><strong>Address: </strong></td>
+						<td>' . $vehiculo->street_address . '</td>
 					</tr>
 					<tr>
-						<td><strong>A&ntilde;o: </strong></td>
-						<td>' . $vehiculo->ano . '</td>
+						<td></td>
+						<td>' . $vehiculo->address_line_2 . '</td>
 					</tr>
 					<tr>
-						<td><strong>Color: </strong></td>
-						<td>' . $vehiculo->color . '</td>
+						<td><strong>City: </strong></td>
+						<td>' . $vehiculo->city . '</td>
 					</tr>
 					<tr>
-						<td><strong>Patente: </strong></td>
-						<td>' . $vehiculo->patente . '</td>
+						<td><strong>State: </strong></td>
+						<td>' . $vehiculo->state . '</td>
 					</tr>
 					<tr>
-						<td><strong>VIN: </strong></td>
-						<td>' . $vehiculo->nro_motor . '</td>
+						<td><strong>ZIP Code: </strong></td>
+						<td>' . $vehiculo->zip_code . '</td>
 					</tr>
 				</table>
 			</td>
@@ -88,7 +82,7 @@ if (user_can( $current_user, 'administrator' )) {
 	<br><br><br>
 	<table border="1">
 		<tr>
-			<td style="width: 635px; text-align: center;"> <strong>Solicitud</strong> </td>
+			<td style="width: 635px; text-align: center;"> <strong>Request</strong> </td>
 		</tr>';
 
 		$lastupdated = is_null($solicitud->upddate) ? '-' : date_format(date_create($solicitud->upddate), 'd/m/Y - H:i');

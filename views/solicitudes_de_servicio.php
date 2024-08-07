@@ -4,15 +4,17 @@ $updated = false;
 
 if ($_POST) {
 	global $wpdb;
+	$upload_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/builderla/uploads/';
 
 	if (in_array($_POST['action'], ['insertar_solicitud', 'editar_solicitud'])) $array_insert = [
-		'cliente_id' => $_POST['cliente'],
 		'vehiculo_id' => $_POST['vehiculo'],
-		'solicitud' => $_POST['solicitud']
+		'solicitud' => $_POST['solicitud'],
+		'photos' => '[]'
 	];
 
 	if ($_POST['action'] == 'insertar_solicitud') {
 		$array_insert['estado'] = 1;
+
 		if ($wpdb->insert('solicitud', $array_insert)) {
 			$inserted = true;
 		}
@@ -66,28 +68,26 @@ if ($_POST) {
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<h2 class="font-weight-light text-center text-muted float-left"> Solicitudes de Servicio </h2>
-		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewSolicitud">Nueva Solicitud</button>
+		<h2 class="font-weight-light text-center text-muted float-left"> Leads </h2>
+		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewSolicitud">New Lead</button>
 
 		<div class="clearfix"></div>
 	</div>
 	<div class="box-body">
-		<table class="table table-striped table-bordered" id="tabla_solicituds">
+		<table class="table table-striped table-bordered" id="tabla_solicituds" width="100%">
 			<thead>
 				<tr>
-					<th>#</th>
-					<th> Cliente </th>
-					<th> Vehiculo </th>
-					<th> Estado </th>
-					<th class="text-center">Acciones</th>
+					<th> Date </th>
+					<th> Customer </th>
+					<th> Status </th>
+					<th class="text-center">Options</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php foreach ($solicituds as $solicitud) : ?>
 					<tr data-regid="<?php echo $solicitud->id; ?>">
-						<td data-regid="<?php echo $solicitud->id; ?>"> <?php echo $solicitud->id; ?> </td>
-						<td data-cliente="<?php echo $solicitud->cliente_id; ?>"> <?php echo Mopar::getNombreCliente($solicitud->cliente_id, false) ?> </td>
-						<td data-vehiculo="<?php echo $solicitud->vehiculo_id; ?>"> <?php if (0 != $solicitud->vehiculo_id) echo Mopar::getNombreVehiculo($solicitud->vehiculo_id) ?> </td>
+						<td data-regid="<?php echo $solicitud->id; ?>"> <?php echo $solicitud->fecha_format; ?> </td>
+						<td data-vehiculo="<?php echo $solicitud->vehiculo_id; ?>"> <?php if (0 != $solicitud->vehiculo_id) echo Mopar::getTitleVehiculo($solicitud->vehiculo_id) ?> </td>
 						<td data-estado="<?php echo $solicitud->estado; ?>" class="text-center align-middle">
 							<?php if (!is_null($solicitud->fecha)) : ?>
 								<a>
@@ -112,33 +112,36 @@ if ($_POST) {
 							<?php endif; ?>
 						</td>
 						<td class="text-center" style="white-space: nowrap;">
-							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Editar"><i class="fa fa-pencil"></i></button>
-							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/solicitud-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>
-							<!--<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Eliminar"><i class="fa fa-trash-o"></i></button>-->
+							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
+							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/solicitud-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
+
+							
+							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
+							
+
+							<!--
 							<button class="btn btn-warning btnProceedWithoutIngreso" data-toggle="tooltip" title="Iniciar Cotización"><i class="fa fa-list"></i></button>
-							<button class="btn btn-success btnFecha" data-toggle="tooltip" title="Agendar"><i class="fa fa-check"></i></button>
-							<button class="btn btn-danger btnMotivo" data-toggle="tooltip" title="Descartar"><i class="fa fa-times"></i></button>
+							-->
+
+							<button class="btn btn-success btnFecha" data-toggle="tooltip" title="Schedule"><i class="fa fa-check"></i></button>
+							<button class="btn btn-danger btnMotivo" data-toggle="tooltip" title="Discard"><i class="fa fa-times"></i></button>
 						</td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>
 		</table>
-		<br>
 		<ul>
 			<li>
-				<i class="fa fa-check text-success"></i> Cliente agendado, no registra ingreso
+				<i class="fa fa-check text-success"></i> This lead has been scheduled for inspection.
 			</li>
 			<li>
-				<i class="fa fa-times text-danger"></i> La solicitud ha sido declarada como perdida o rechazada
+				<i class="fa fa-times text-danger"></i> This lead has been marked as lost or rejected.
 			</li>
 			<li>
-				<i class="fa fa-circle text-success"></i> Hay una orden de ingreso para esta solicitud o el trabajo ha sido completado
+				<i class="fa fa-circle text-success"></i> This lead is an active project or has been completed.
 			</li>
 			<li>
-				<i class="fa fa-circle text-warning"></i> Hay una cotización para esta orden de ingreso, no registra ingreso
-			</li>
-			<li>
-				<i class="fa fa-circle text-danger"></i> No hay acciones para esta solicitud
+				<i class="fa fa-circle text-danger"></i> There are no actions for this request.
 			</li>
 		</ul>
 	</div>
@@ -154,37 +157,27 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Datos de la Solicitud</h5>
+					<h5 class="modal-title">Request</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
 					<div class="form-row">
-						<div class="form-group col-md-6">
+						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Cliente</span>
+									<span class="input-group-text">Address</span>
 								</div>
-								<select name="cliente" class="form-control">
-									<option value="">Seleccione</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Vehiculo</span>
-								</div>
-								<select name="vehiculo" class="form-control" disabled>
-									<option value="">Seleccione Cliente primero</option>
+								<select name="vehiculo" class="form-control">
+									<option value="">Select property first</option>
 								</select>
 							</div>
 						</div>
 						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Solicitud</span>
+									<span class="input-group-text">Request</span>
 								</div>
 								<textarea class="form-control" name="solicitud"></textarea>
 							</div>
@@ -193,8 +186,8 @@ if ($_POST) {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
@@ -211,10 +204,10 @@ if ($_POST) {
 	<form method="post" id="formEditSolicitud" enctype="multipart/form-data">
 		<input type="hidden" name="action" value="editar_solicitud">
 		<input type="hidden" name="solicitud_id" value="">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Datos de la Solicitud</h5>
+					<h5 class="modal-title">Lead Details</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -224,19 +217,9 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Cliente</span>
+									<span class="input-group-text">Address</span>
 								</div>
-								<select name="cliente" class="form-control">
-									<option value="">Seleccione</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Vehiculo</span>
-								</div>
-								<select name="vehiculo" class="form-control" disabled>
+								<select name="vehiculo" class="form-control">
 									<option value="">Seleccione Cliente primero</option>
 								</select>
 							</div>
@@ -244,7 +227,7 @@ if ($_POST) {
 						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Solicitud</span>
+									<span class="input-group-text">Request</span>
 								</div>
 								<textarea class="form-control" name="solicitud"></textarea>
 							</div>
@@ -253,8 +236,8 @@ if ($_POST) {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
@@ -269,7 +252,7 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Datos de la Motivo</h5>
+					<h5 class="modal-title">Provide a reason why the lead was lost:</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -279,7 +262,7 @@ if ($_POST) {
 						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Motivo</span>
+									<span class="input-group-text">Reason</span>
 								</div>
 								<textarea class="form-control" name="motivo" required></textarea>
 							</div>
@@ -288,8 +271,8 @@ if ($_POST) {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
@@ -304,7 +287,7 @@ if ($_POST) {
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Datos de la Fecha</h5>
+					<h5 class="modal-title">Set Appointment</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -314,7 +297,7 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Fecha</span>
+									<span class="input-group-text">Date</span>
 								</div>
 								<input type="text" class="form-control" name="fecha" required>
 							</div>
@@ -322,7 +305,7 @@ if ($_POST) {
 						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">Hora</span>
+									<span class="input-group-text">Time</span>
 								</div>
 								<input type="text" class="form-control" name="hora" required>
 							</div>
@@ -331,8 +314,8 @@ if ($_POST) {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Cerrar y volver</button>
-					<button type="submit" class="btn btn-success btnGuardar">Guardar <i class="fa fa-save"></i> </button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 				</div>
 			</div>
 		</div>
@@ -351,11 +334,11 @@ if ($_POST) {
 		$(`#modalEditSolicitud`).on(`hidden.bs.modal`, () => {
 			if (null !== url_retrieve_id) location.href = '<?php bloginfo('wpurl') ?>/wp-admin/admin.php?page=mopar-solicitudes-de-servicio';
 		});
-		$(`[name="cliente"]`).css(`display`, `none`).select2({
+		$(`[name="vehiculo"]`).css(`display`, `none`).select2({
 			theme: `bootstrap4`,
 			minimumInputLength: 3,
 			ajax: {
-				url: `../wp-json/mopar-taller/v1/clientes`
+				url: `../wp-json/mopar-taller/v1/select2-property-for-leads`
 			}
 		})
 		$('[name="fecha"]').datetimepicker({
@@ -390,13 +373,10 @@ if ($_POST) {
 					$(".overlay").hide();
 					$('#modalEditSolicitud [name=solicitud_id]').val(json.solicitud.id);
 
-					$('#modalEditSolicitud [name=cliente]').html(`<option value="${json.solicitud.cliente_id}" selected>${json.cliente.nombres} ${json.cliente.apellidoPaterno}</option>`)
-
 					$('[name=vehiculo]').empty();
 					$.each(json.vehiculos, function(k, v) {
-						$('[name=vehiculo]').append(new Option(v.marca + " - " + v.ano, v.id));
+						$('[name=vehiculo]').append(new Option(v.street_address + " - " + v.address_line_2, v.id));
 					})
-					$("[name=vehiculo]").removeAttr('disabled');
 					$("[name=vehiculo]").val(json.solicitud.vehiculo_id);
 					$('#modalEditSolicitud [name=solicitud]').val(json.solicitud.solicitud);
 
@@ -413,33 +393,13 @@ if ($_POST) {
 			$('#modalNewOT').modal('show');
 		}
 
-		$("[name=cliente]").change(function() {
-			cliente_id = $(this).val();
-			$.ajax({
-				type: 'POST',
-				url: '<?php echo admin_url('admin-ajax.php'); ?>',
-				dataType: 'json',
-				data: 'action=get_vehiculos_by_cliente&cliente_id=' + cliente_id,
-				beforeSend: function() {
-					$("[name=vehiculo]").html('<option value="">Cargando Vehiculos...</option>');
-				},
-				success: function(json) {
-					$('[name=vehiculo]').empty();
-					$.each(json.vehiculos, function(k, v) {
-						$('[name=vehiculo]').append(new Option(v.marca + " - " + v.ano, v.id));
-					})
-					$("[name=vehiculo]").removeAttr('disabled');
-				}
-			})
-		})
-
 		$(".btnDelete").click(function() {
 			tr = $(this).closest('tr');
 			regid = tr.data('regid');
 
 			$.confirm({
-				title: 'Eliminar Solicitud!',
-				content: '¿Desea eliminar la Solicitud seleccionada?',
+				title: 'Delete Lead!',
+				content: '¿Are you sure you want to delete this lead?',
 				type: 'red',
 				icon: 'fa fa-warning',
 				buttons: {
@@ -448,7 +408,7 @@ if ($_POST) {
 						btnClass: 'btn-red',
 					},
 					SI: {
-						text: 'Si',
+						text: 'Yes',
 						btnClass: 'btn-green',
 						action: function() {
 							$.ajax({
@@ -461,56 +421,9 @@ if ($_POST) {
 									$.alert({
 										title: false,
 										type: 'green',
-										content: 'Solicitud borrado correctamente'
+										content: 'Lead Deleted'
 									});
 									tr.fadeOut(400);
-								}
-							})
-						}
-					}
-				}
-			});
-		});
-
-		$(".btnProceedWithoutIngreso").click(function() {
-			tr = $(this).closest('tr');
-			regid = tr.data('regid');
-
-			$.confirm({
-				title: 'Completar Solicitud',
-				content: '¿Desea hacer una Cotización para esta solicitud?',
-				type: 'red',
-				icon: 'fa fa-warning',
-				buttons: {
-					NO: {
-						text: 'No',
-						btnClass: 'btn-red',
-					},
-					SI: {
-						text: 'Si',
-						btnClass: 'btn-green',
-						action: function() {
-							$.ajax({
-								type: 'POST',
-								url: '<?php echo admin_url('admin-ajax.php'); ?>',
-								dataType: 'json',
-								data: 'action=proceed_solicitud_without_ingreso&regid=' + regid,
-								beforeSend: function() {},
-								success: function(json) {
-									if (`ERROR` === json.status) {
-										$.alert({
-											title: false,
-											type: 'red',
-											content: json.message
-										});
-									} else {
-										$.alert({
-											title: false,
-											type: 'green',
-											content: 'Solicitud borrado correctamente'
-										});
-										window.location.reload()
-									}
 								}
 							})
 						}
@@ -566,7 +479,7 @@ if ($_POST) {
 			$.alert({
 				type: 'green',
 				title: false,
-				content: 'Solicitud ingresada correctamente'
+				content: 'Processing Lead...'
 			})
 		<?php } ?>
 
@@ -575,7 +488,7 @@ if ($_POST) {
 			$.alert({
 				type: 'green',
 				title: false,
-				content: 'Solicitud actualizada correctamente'
+				content: 'Processing lead...'
 			})
 		<?php } ?>
 
@@ -585,12 +498,14 @@ if ($_POST) {
 
 
 		$('#tabla_solicituds').DataTable({
+			"scrollX": true,
 			"ordering": false,
 			"columnDefs": [{
 				"width": "20%",
-				"targets": 4
+				"targets": 3
 			}]
 		});
+
 	});
 </script>
 
