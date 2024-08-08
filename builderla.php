@@ -11,6 +11,8 @@
 require __DIR__ . '/vendor/autoload.php';
 use Spipu\Html2Pdf\Html2Pdf;
 
+include('lead-form/lead-form.php');
+
 function theme_options_panel(){
 	add_menu_page('Project Management', 'Project Management', 'manage_options', 'mopar-taller', 'taller_home_func','dashicons-admin-tools',2);
 	add_submenu_page( 'mopar-taller', 'Customers', 'Customers', 'manage_options', 'mopar-clientes', 'taller_clientes_func');
