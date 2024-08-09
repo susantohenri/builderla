@@ -70,8 +70,8 @@ add_shortcode('builderla-lead-form', function () {
                 </div>
 
                 <div class=\"contact-form-row\">
-                    <div class=\"contact-col\">
-                        <input class=\"wpcf7-form-control wpcf7-submit has-spinner\" id=\"submit_btn\" type=\"submit\" value=\"Next >>\">
+                    <div class=\"contact-col full\" style=\"text-align: right; padding-right: 10px;\">
+                        <input style=\"background-color:#333333;\" class=\"wpcf7-form-control wpcf7-submit has-spinner\" id=\"submit_btn\" type=\"submit\" value=\"Next >>\">
                     </div>
                 </div>
                 
