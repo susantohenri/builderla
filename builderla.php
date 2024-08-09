@@ -183,7 +183,8 @@ function insertar_cliente_callback(){
 		'email' => $_POST['email'],
 		'telefono' => $_POST['telefono'],
 		'secret' => md5($pass),
-		'nuevo' => 1
+		'nuevo' => 1,
+		'createdBy' => get_current_user_id()
 	];
 	$wpdb->insert('clientes',$array_insert);
 
@@ -257,7 +258,8 @@ function insertar_vehiculo_callback(){
 		'state' => $_POST['state'],
 		'zip_code' => $_POST['zip_code'],
 		'cliente_id' => $_POST['cliente'],
-		'cliente_id_2' => $_POST['cliente_2']
+		'cliente_id_2' => $_POST['cliente_2'],
+		'createdBy' => get_current_user_id()
 	];
 	$wpdb->insert('vehiculos',$array_insert);
 	$last_query = $wpdb->last_query;
@@ -747,6 +749,12 @@ function mopar_taller_select2_clientes () {
 			return Mopar::getSelect2Properties();
 		}
 	]);
+}
+
+function builderla_get_creator_display_name ($user_id) {
+	global $wpdb;
+	if (0 == $user_id) return 'System';
+	else return $wpdb->get_var($wpdb->prepare("SELECT display_name FROM {$wpdb->prefix}users WHERE ID = %d", [$user_id]));
 }
 
 //Clientes

@@ -27,6 +27,7 @@ CREATE TABLE `clientes` (
   `telefono` int(10) NOT NULL,
   `secret` text NOT NULL,
   `nuevo` int(1) NOT NULL,
+  `createdBy` int(10) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
@@ -95,6 +96,7 @@ CREATE TABLE `solicitud` (
   `iva_credito` double NOT NULL,
   `gastos` double NOT NULL,
   `utilidad` double NOT NULL,
+  `createdBy` int(10) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -110,6 +112,7 @@ CREATE TABLE `vehiculos` (
   `zip_code` varchar(10) NOT NULL,
   `cliente_id` int(11) DEFAULT NULL,
   `cliente_id_2` int(11) DEFAULT NULL,
+  `createdBy` int(10) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cliente_id` (`cliente_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;

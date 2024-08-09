@@ -19,6 +19,7 @@ if(isset($_GET['vid'])){
 		<thead>
 			<tr>
 				<th> # </th>
+				<th> Source </th>
 				<th> Address 1 </th>
 				<th> Address 2 </th>
 				<th> City </th>
@@ -32,6 +33,7 @@ if(isset($_GET['vid'])){
 			<?php foreach ($vehiculos as $key => $vehiculo): ?>
 			<tr data-regid="<?php echo $vehiculo->id ?>" <?php foreach (['street_address', 'address_line_2', 'city', 'state', 'zip_code', 'cliente_id', 'cliente_id_2'] as $field) { echo "data-{$field}=\"{$vehiculo->$field}\"";} ?>>
 				<td> <?php echo $vehiculo->id ?> </td>
+				<td> <?php echo builderla_get_creator_display_name($vehiculo->createdBy); ?> </td>
 				<td> <?php echo $vehiculo->street_address ?> </td>
 				<td> <?php echo $vehiculo->address_line_2 ?> </td>
 				<td> <?php echo $vehiculo->city ?> </td>
