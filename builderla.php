@@ -887,7 +887,7 @@ class Mopar{
 
 	public static function getSolicitudsDeServicioso(){
 		global $wpdb;
-		$solicituds = $wpdb->get_results('SELECT *, DATE_FORMAT(fecha, "%m-%d-%Y") fecha_format FROM solicitud WHERE estado IN (1,2,3,4,5) ORDER BY id DESC');
+		$solicituds = $wpdb->get_results('SELECT *, DATE_FORMAT(regdate, "%m-%d-%Y") regdate_format FROM solicitud WHERE estado IN (1,2,3,4,5) ORDER BY id DESC');
 
     	return $solicituds;
 	}
@@ -964,7 +964,7 @@ class Mopar{
 
 	public static function getAgendadas(){
 		global $wpdb;
-		$solicituds = $wpdb->get_results('SELECT *, DATE_FORMAT(fecha, "%m-%d-%Y") fecha_format FROM solicitud WHERE fecha IS NOT NULL ORDER BY id DESC');
+		$solicituds = $wpdb->get_results('SELECT *, DATE_FORMAT(regdate, "%m-%d-%Y") regdate_format FROM solicitud WHERE fecha IS NOT NULL ORDER BY id DESC');
 
 		return $solicituds;
 	}
