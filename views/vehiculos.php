@@ -18,7 +18,6 @@ if(isset($_GET['vid'])){
 	<table class="table table-striped table-bordered" id="tabla_vehiculos" width="100%">
 		<thead>
 			<tr>
-				<th> # </th>
 				<th> Source </th>
 				<th> Address 1 </th>
 				<th> Address 2 </th>
@@ -32,7 +31,6 @@ if(isset($_GET['vid'])){
 		<tbody>
 			<?php foreach ($vehiculos as $key => $vehiculo): ?>
 			<tr data-regid="<?php echo $vehiculo->id ?>" <?php foreach (['street_address', 'address_line_2', 'city', 'state', 'zip_code', 'cliente_id', 'cliente_id_2'] as $field) { echo "data-{$field}=\"{$vehiculo->$field}\"";} ?>>
-				<td> <?php echo $vehiculo->id ?> </td>
 				<td class="text-center"> <?php echo builderla_get_creator_display_name($vehiculo->createdBy); ?> </td>
 				<td> <?php echo $vehiculo->street_address ?> </td>
 				<td> <?php echo $vehiculo->address_line_2 ?> </td>
