@@ -753,7 +753,7 @@ function mopar_taller_select2_clientes () {
 
 function builderla_get_creator_display_name ($user_id) {
 	global $wpdb;
-	if (0 == $user_id) return 'System';
+	if (0 == $user_id) return 'system';
 	else return $wpdb->get_var($wpdb->prepare("SELECT display_name FROM {$wpdb->prefix}users WHERE ID = %d", [$user_id]));
 }
 

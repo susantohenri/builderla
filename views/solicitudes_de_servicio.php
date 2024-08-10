@@ -89,7 +89,7 @@ if ($_POST) {
 				<?php foreach ($solicituds as $solicitud) : ?>
 					<tr data-regid="<?php echo $solicitud->id; ?>">
 						<td data-regid="<?php echo $solicitud->id; ?>"> <?php echo $solicitud->regdate_format; ?> </td>
-						<td data-createdBy="<?php echo $solicitud->createdBy; ?>"> <?php echo builderla_get_creator_display_name($solicitud->createdBy); ?> </td>
+						<td class="text-center" data-createdBy="<?php echo $solicitud->createdBy; ?>"> <?php echo builderla_get_creator_display_name($solicitud->createdBy); ?> </td>
 						<td data-vehiculo="<?php echo $solicitud->vehiculo_id; ?>"> <?php if (0 != $solicitud->vehiculo_id) echo Mopar::getTitleVehiculo($solicitud->vehiculo_id) ?> </td>
 						<td data-estado="<?php echo $solicitud->estado; ?>" class="text-center align-middle">
 							<?php if (!is_null($solicitud->fecha)) : ?>

@@ -22,7 +22,6 @@ else:
 		<table class="table table-striped table-bordered" id="tabla_clientes" width="100%">
 			<thead>
 				<tr>
-					<th>#</th>
 					<th> Source </th>
 					<th> Name </th>
 					<th> Email </th>
@@ -33,8 +32,7 @@ else:
 			<tbody>
 				<?php foreach ($clientes as $cliente): ?>
 				<tr data-regid="<?php echo $cliente->id; ?>">
-					<td data-regid="<?php echo $cliente->id; ?>"> <?php echo $cliente->id; ?> </td>
-					<td data-createdBy="<?php echo $cliente->createdBy; ?>"> <?php echo builderla_get_creator_display_name($cliente->createdBy); ?> </td>
+					<td class="text-center" data-createdBy="<?php echo $cliente->createdBy; ?>"> <?php echo builderla_get_creator_display_name($cliente->createdBy); ?> </td>
 					<td data-nombres="<?php echo $cliente->nombres; ?>" data-apellidopaterno="<?php echo $cliente->apellidoPaterno; ?>"> <?php echo Mopar::getNombreCliente($cliente->id, false) ?> </td>
 					<td data-email="<?php echo $cliente->email; ?>"> <?php echo $cliente->email; ?> </td>
 					<td data-telefono="<?php echo $cliente->telefono; ?>"> <?php echo $cliente->telefono; ?> </td>
