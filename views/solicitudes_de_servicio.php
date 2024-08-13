@@ -54,7 +54,7 @@ if ($_POST) {
 		$time = explode(':', $hora[0]);
 		$hour = $time[0];
 		$minute = $time[1];
-		if ('pm' == $am_pm) $hour += 12;
+		if ('PM' == $am_pm) $hour += 12;
 		$mysql_time = "{$hour}:{$minute}";
 
 		$array_insert = ['fecha' => $_POST['fecha'], 'hora' => $mysql_time];
@@ -351,17 +351,7 @@ if ($_POST) {
 			format: `YYYY-MM-DD`
 		})
 		$('[name="hora"]').datetimepicker({
-			format: `h:m a`,
-			icons: {
-				time: `fa fa-clock-o`,
-				date: `fa fa-calendar`,
-				up: `fa fa-arrow-up`,
-				down: `fa fa-arrow-down`,
-				previous: `fa fa-chevron-left`,
-				next: `fa fa-chevron-right`,
-				today: `fa fa-clock-o`,
-				clear: `fa fa-trash-o`
-			}
+			format: `LT`
 		})
 
 		$(".btnEdit").click(function() {
