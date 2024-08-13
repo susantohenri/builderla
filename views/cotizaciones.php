@@ -150,7 +150,7 @@ if ($_POST) {
 						<div class="form-group col-md-12">
 							<div class="row">
 								<label class="col-md-3">
-									<input type="checkbox" name="cb[site_services]"> site services
+									<input type="checkbox" name="cb[site_services]"> Portable toilet
 								</label>
 								<label class="col-md-3">
 									<input type="checkbox" name="cb[customer_to_provide]"> customer to provide
@@ -168,7 +168,7 @@ if ($_POST) {
 								<div class="input-group-prepend">
 									<span class="input-group-text">Site Services</span>
 								</div>
-								<input type="text" name="site_services" class="form-control">
+								<input type="text" name="site_services" readonly class="form-control">
 							</div>
 						</div>
 						<div class="form-group col-md-12">
@@ -194,16 +194,18 @@ if ($_POST) {
 								<div class="input-group-prepend">
 									<span class="input-group-text">Customer to Provide</span>
 								</div>
-								<input type="text" name="customer_to_provide" class="form-control">
+								<input type="text" name="feeder[customer_to_provide]" class="form-control">
 							</div>
+							<textarea name="customer_to_provide" class="form-control customer_to_provide"></textarea>
 						</div>
 						<div class="form-group col-md-12">
 							<div class="input-group">
 								<div class="input-group-prepend">
 									<span class="input-group-text">Not Included</span>
 								</div>
-								<input type="text" name="not_included" class="form-control">
+								<input type="text" name="feeder[not_included]" class="form-control">
 							</div>
+							<textarea name="not_included" class="form-control not_included"></textarea>
 						</div>
 						<div class="form-group col-md-6">
 							<div class="input-group">
@@ -267,10 +269,10 @@ if ($_POST) {
 					$(`[name="site_services"]`).val(json.ot.site_services)
 					$(`[name="cb[site_services]"]`).attr(`checked`, `` != json.ot.site_services).trigger(`change`)
 
-					$(`[name="customer_to_provide"]`).val(json.ot.customer_to_provide)
+					$(`[name="customer_to_provide"]`).val(json.ot.customer_to_provide).attr(`rows`, json.ot.customer_to_provide.split(`\n`).length)
 					$(`[name="cb[customer_to_provide]"]`).attr(`checked`, `` != json.ot.customer_to_provide).trigger(`change`)
 
-					$(`[name="not_included"]`).val(json.ot.not_included)
+					$(`[name="not_included"]`).val(json.ot.not_included).attr(`rows`, json.ot.not_included.split(`\n`).length)
 					$(`[name="cb[not_included]"]`).attr(`checked`, `` != json.ot.not_included).trigger(`change`)
 
 					$(`[name="cb[price_breakdown]"]`).attr(`checked`, 1 == json.ot.price_breakdown)
@@ -598,23 +600,47 @@ if ($_POST) {
 
 	$(`[name="cb[site_services]"]`).change(function() {
 		const checked = jQuery(this).is(`:checked`)
-		const input = $(`[name="site_services"]`).parent().parent()
-		if (checked) input.show()
-		else input.hide()
+		const input = $(`[name="site_services"]`)
+		const container = input.parent().parent()
+		if (checked) {
+			input.val(`Contractor will provide a portable toilet`)
+			container.show()
+		} else container.hide()
 	})
 
 	$(`[name="cb[customer_to_provide]"]`).change(function() {
 		const checked = jQuery(this).is(`:checked`)
-		const input = $(`[name="customer_to_provide"]`).parent().parent()
+		const input = $(`[name="feeder[customer_to_provide]"]`).parent().parent()
 		if (checked) input.show()
 		else input.hide()
 	})
 
 	$(`[name="cb[not_included]"]`).change(function() {
 		const checked = jQuery(this).is(`:checked`)
-		const input = $(`[name="not_included"]`).parent().parent()
+		const input = $(`[name="feeder[not_included]"]`).parent().parent()
 		if (checked) input.show()
 		else input.hide()
+	})
+
+	$(document).on(`keydown`, `[name^="feeder"]`, function(event) {
+		if (event.key === 'Enter') {
+			event.preventDefault()
+
+			const input = jQuery(this)
+			const textArea = input.parent().siblings(`textarea`)
+			const curVal = textArea.val()
+			const curRow = curVal.split(`\n`).length
+			let text = input.val().trim()
+
+			if (!text) return false
+			else text = text.charAt(0).toUpperCase() + text.slice(1)
+
+			text = `- ${text}`
+			text = `` == curVal ? text : `\n ${text}`
+			textArea.val(curVal + text)
+			textArea.attr(`rows`, curRow + 1)
+			input.val(``)
+		}
 	})
 </script>
 
