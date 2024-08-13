@@ -339,7 +339,7 @@ if ($_POST) {
 				else text = text.charAt(0).toUpperCase() + text.slice(1)
 
 				text = `- ${text}`
-				text = `` == curVal ? text : `\n ${text}`
+				text = `` == curVal ? text : `\n${text}`
 				textArea.val(curVal + text)
 				textArea.attr(`rows`, curRow + 1)
 				input.val(``)
@@ -636,7 +636,7 @@ if ($_POST) {
 			else text = text.charAt(0).toUpperCase() + text.slice(1)
 
 			text = `- ${text}`
-			text = `` == curVal ? text : `\n ${text}`
+			text = `` == curVal ? text : `\n${text}`
 			textArea.val(curVal + text)
 			textArea.attr(`rows`, curRow + 1)
 			input.val(``)

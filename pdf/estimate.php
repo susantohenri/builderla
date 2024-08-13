@@ -21,6 +21,7 @@ $images = [
 ];
 
 $html = '';
+$html .= '<page backtop="-20px" backleft="-20px" backright="-20px" backimg="' . $images['footer'] . '" backimgy="bottom">';
 $html .= '<table style="width: 100%;">';
 
 // header
@@ -48,12 +49,26 @@ $html .= '<div id="client" style="font-size: 11px;">
                 </div>';
 
 $html .= '<br><div id="project_description">
-                    <b>Project description</b> ' . str_replace("\n", '<br>', $ot->titulo) . '
+                    <b>Project Description:</b> ' . str_replace("\n", '<br>', $ot->titulo) . '
                 </div>';
 
-if ('' != $ot->site_services) $html .= '<br><div id="site_services">
-                    <b>Site services</b> ' . $ot->site_services . '
-                </div>';
+if ('' != $ot->site_services) {
+    $html .= '<br><div id="site_services">
+                <b>Site Services:</b> ' . $ot->site_services . '
+            </div>';
+}
+
+if ('' != $ot->customer_to_provide) {
+    $html .= '<br><div id="site_services">
+                <b>Customer to Provide:</b><br>' . str_replace("\n", '<br>', $ot->customer_to_provide) . '
+            </div>';
+}
+
+if ('' != $ot->not_included) {
+    $html .= '<br><div id="site_services">
+                <b>Not Included:</b><br>' . str_replace("\n", '<br>', $ot->not_included) . '
+            </div>';
+}
 
 // detalle open tag
 $html .= '<br><div id="detalle" style="padding: 0 25px;">';
@@ -91,11 +106,5 @@ $html .= '</div>';
 $html .= '</td>';
 $html .= '</tr>';
 
-// footer
-$html .= '<tr>';
-$html .= '<td>';
-$html .= '<img src="' . $images['footer'] . '" style="width: 100%">';
-$html .= '</td>';
-$html .= '</tr>';
-
 $html .= '</table>';
+$html .= '</page>';
