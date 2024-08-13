@@ -21,6 +21,7 @@ $images = [
 ];
 
 $html = '';
+$html .= '<page backtop="-20px" backleft="-20px" backright="-20px" backimg="' . $images['footer'] . '" backimgy="bottom">';
 $html .= '<table style="width: 100%;">';
 
 // header
@@ -91,11 +92,5 @@ $html .= '</div>';
 $html .= '</td>';
 $html .= '</tr>';
 
-// footer
-$html .= '<tr>';
-$html .= '<td>';
-$html .= '<img src="' . $images['footer'] . '" style="width: 100%">';
-$html .= '</td>';
-$html .= '</tr>';
-
 $html .= '</table>';
+$html .= '</page>';
