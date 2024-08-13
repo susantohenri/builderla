@@ -49,7 +49,15 @@ if ($_POST) {
 	}
 
 	if ($_POST['action'] == 'editar_fecha') {
-		$array_insert = ['fecha' => $_POST['fecha'], 'hora' => $_POST['hora']];
+		$hora = explode(' ', $_POST['hora']);
+		$am_pm = $hora[1];
+		$time = explode(':', $hora[0]);
+		$hour = $time[0];
+		$minute = $time[1];
+		if ('pm' == $am_pm) $hour += 12;
+		$mysql_time = "{$hour}:{$minute}";
+
+		$array_insert = ['fecha' => $_POST['fecha'], 'hora' => $mysql_time];
 		$before_update = (array) Mopar::getOneSolicitud($_POST['solicitud_id']);
 		$posted_attr = array_keys($array_insert);
 		$before_update = array_filter($before_update, function ($value, $attr) use ($posted_attr) {
@@ -343,7 +351,7 @@ if ($_POST) {
 			format: `YYYY-MM-DD`
 		})
 		$('[name="hora"]').datetimepicker({
-			format: `HH:mm`,
+			format: `h:m a`,
 			icons: {
 				time: `fa fa-clock-o`,
 				date: `fa fa-calendar`,
