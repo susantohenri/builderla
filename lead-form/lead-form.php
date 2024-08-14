@@ -14,11 +14,8 @@ add_shortcode('builderla-lead-form', function () {
             <div class=\"contact-form-inner\">
 
                 <div class=\"contact-form-row\" builderla-lead-form-step=\"1\">
-                    <div class=\"contact-col\">
+                    <div class=\"contact-col full\">
                         <input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-text wpcf7-validates-as-required\" aria-required=\"true\" aria-invalid=\"false\" placeholder=\"First Name\" value=\"\" type=\"text\" name=\"nombres\">
-                    </div>
-                    <div class=\"contact-col\">
-                        <input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-text wpcf7-validates-as-required\" aria-required=\"false\" aria-invalid=\"false\" placeholder=\"Last Name\" value=\"\" type=\"text\" name=\"apellidoPaterno\">
                     </div>
                     <div class=\"contact-col\">
                         <input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email\" aria-required=\"true\" aria-invalid=\"false\" placeholder=\"Email\" value=\"\" type=\"email\" name=\"email\">
@@ -86,7 +83,6 @@ add_action('wp_ajax_nopriv_builderla_lead_form', function () {
         case 1:
             $wpdb->insert('clientes', [
                 'nombres' => $_POST['nombres'],
-                'apellidoPaterno' => $_POST['apellidoPaterno'],
                 'email' => $_POST['email'],
                 'telefono' => $_POST['telefono']
             ]);
@@ -102,7 +98,6 @@ add_action('wp_ajax_nopriv_builderla_lead_form', function () {
                 'cliente_id' => $_POST['cliente_id']
             ]);
             exit('' . $wpdb->insert_id);
-            break;
             break;
         case 3:
             $wpdb->insert('solicitud', [

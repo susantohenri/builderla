@@ -179,7 +179,6 @@ function insertar_cliente_callback(){
 	$pass = Mopar::randomPassword();
 	$array_insert = [
 		'nombres' => $_POST['nombres'],
-		'apellidoPaterno' => $_POST['apellidoPaterno'],
 		'email' => $_POST['email'],
 		'telefono' => $_POST['telefono'],
 		'secret' => md5($pass),
@@ -207,7 +206,6 @@ function actualizar_cliente_callback(){
 
 	$array_edit = [
 		'nombres' => $_POST['nombres'],
-		'apellidoPaterno' => $_POST['apellidoPaterno'],
 		'email' => $_POST['email'],
 		'telefono' => $_POST['telefono']
 	];
@@ -643,7 +641,6 @@ function send_estimation_email_callback() {
 			ot.id
 			, clientes.email
 			, clientes.nombres
-			, clientes.apellidoPaterno
 			, vehiculos.street_address
 			, vehiculos.address_line_2
 		FROM ot
@@ -795,7 +792,7 @@ add_action('wp_ajax_initiate_contract','inititate_contract_callback');
 
 class Mopar{
 
-	public static function getClientes($sorting = ['field' => 'apellidoPaterno', 'type' => 'ASC']){
+	public static function getClientes($sorting = ['field' => 'nombres', 'type' => 'ASC']){
 		global $wpdb;
 		$clientes = $wpdb->get_results("SELECT * FROM clientes ORDER BY {$sorting['field']} {$sorting['type']}");
     	return $clientes;
@@ -804,9 +801,9 @@ class Mopar{
 	public static function getSelect2Clientes(){
 		global $wpdb;
 		$clientes = $wpdb->get_results("
-			SELECT id, CONCAT(nombres, ' ', apellidoPaterno) text
+			SELECT id, nombres as text
 			FROM clientes
-			WHERE CONCAT(apellidoPaterno, ' ', nombres) LIKE '%{$_GET['q']}%'
+			WHERE nombres LIKE '%{$_GET['q']}%'
 			ORDER BY id DESC
 			LIMIT 10
 		");
@@ -824,11 +821,9 @@ class Mopar{
 					, ' - '
 					, clientes.nombres
 					, ' '
-					, IF(clientes_2.id IS NOT NULL AND clientes_2.apellidoPaterno = clientes.apellidoPaterno, '', clientes.apellidoPaterno)
 					, IF(clientes_2.id IS NOT NULL, ' & ', '')
 					, IFNULL(clientes_2.nombres, '')
 					, ' '
-					, IFNULL(clientes_2.apellidoPaterno, '')
 				) text
 			FROM vehiculos
 			LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
@@ -840,11 +835,9 @@ class Mopar{
 				, ' '
 				, clientes.nombres
 				, ' '
-				, clientes.apellidoPaterno
 				, ' '
 				, IFNULL(clientes_2.nombres, '')
 				, ' '
-				, IFNULL(clientes_2.apellidoPaterno, '')
 			) LIKE '%{$_GET['q']}%'
 			AND vehiculos.cliente_id <> 0
 			ORDER BY vehiculos.id DESC
@@ -998,7 +991,7 @@ class Mopar{
 		}, $wpdb->get_results("
 			SELECT
 				solicitud.id
-				, CONCAT(clientes.nombres, ' ', clientes.apellidoPaterno) 'title'
+				, clientes.nombres 'title'
 				, CONCAT(fecha, ' ', hora) 'start'
 			FROM solicitud
 				LEFT JOIN clientes ON solicitud.cliente_id = clientes.id
@@ -1186,13 +1179,7 @@ class Mopar{
 		if( $cliente_id ):
 			$cliente = Mopar::getOneCliente($cliente_id);
 			if (!$cliente) return '';
-
-			if( $apellido_primero )
-				$nombre_cliente = $cliente->apellidoPaterno . " " . $cliente->nombres;
-			else
-				$nombre_cliente = $cliente->nombres . " " . $cliente->apellidoPaterno;
-
-			return $nombre_cliente;
+			return $cliente->nombres;
 		else:
 			return "";
 		endif;
@@ -1214,9 +1201,7 @@ class Mopar{
 				vehiculos.street_address
 				, vehiculos.address_line_2
 				, clientes.nombres as c1_first
-				, clientes.apellidoPaterno as c1_last
 				, clientes_2.nombres as c2_first
-				, clientes_2.apellidoPaterno as c2_last
 			FROM vehiculos
 			LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
 			LEFT JOIN clientes clientes_2 ON vehiculos.cliente_id_2 = clientes_2.id
@@ -1225,16 +1210,12 @@ class Mopar{
 		$vehiculo = $wpdb->get_row($sql);
 
 		$title = "{$vehiculo->street_address} {$vehiculo->address_line_2}";
-		if ($vehiculo->c1_first && $vehiculo->c1_last && $vehiculo->c2_first && $vehiculo->c2_last) {
-			if ($vehiculo->c1_last == $vehiculo->c2_last) {
-				$title .= " - {$vehiculo->c1_first} & {$vehiculo->c2_first} {$vehiculo->c1_last}";
-			} else {
-				$title .= " - {$vehiculo->c1_first} {$vehiculo->c1_last} & {$vehiculo->c2_first} {$vehiculo->c2_last}";
-			}
+		if ($vehiculo->c1_first && $vehiculo->c2_first) {
+			$title .= " - {$vehiculo->c1_first} & {$vehiculo->c2_first}";
 		} else if ($vehiculo->c1_first) {
-			$title .= " - {$vehiculo->c1_first} {$vehiculo->c1_last}";
+			$title .= " - {$vehiculo->c1_first}";
 		} else if ($vehiculo->c2_first) {
-			$title .= " - {$vehiculo->c2_first} {$vehiculo->c2_last}";
+			$title .= " - {$vehiculo->c2_first}";
 		}
 
 		return $title;
@@ -1425,7 +1406,7 @@ Doctor Mopar
 				$user_name = get_user_meta(get_current_user_id(), 'nickname', true);
 				$recipient = $entity_id->email;
 				$subject = 'Your Estimate from FHS Construction';
-				$message = "Dear {$entity_id->nombres} {$entity_id->apellidoPaterno}
+				$message = "Dear {$entity_id->nombres}
 We have prepared the estimate for your project located at {$entity_id->street_address} - {$entity_id->address_line_2}. Please find the attached estimate for your review.
 If you have any questions or need further information, feel free to contact us. We look forward to working with you to bring your vision to life. Thank you for considering FHS Construction.
 

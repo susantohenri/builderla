@@ -22,7 +22,6 @@ DROP TABLE IF EXISTS `clientes`;
 CREATE TABLE `clientes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombres` varchar(255) NOT NULL,
-  `apellidoPaterno` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `telefono` int(10) NOT NULL,
   `secret` text NOT NULL,

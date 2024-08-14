@@ -33,7 +33,7 @@ else:
 				<?php foreach ($clientes as $cliente): ?>
 				<tr data-regid="<?php echo $cliente->id; ?>">
 					<td class="text-center" data-createdBy="<?php echo $cliente->createdBy; ?>"> <?php echo builderla_get_creator_display_name($cliente->createdBy); ?> </td>
-					<td data-nombres="<?php echo $cliente->nombres; ?>" data-apellidopaterno="<?php echo $cliente->apellidoPaterno; ?>"> <?php echo Mopar::getNombreCliente($cliente->id, false) ?> </td>
+					<td data-nombres="<?php echo $cliente->nombres; ?>"> <?php echo Mopar::getNombreCliente($cliente->id, false) ?> </td>
 					<td data-email="<?php echo $cliente->email; ?>"> <?php echo $cliente->email; ?> </td>
 					<td data-telefono="<?php echo $cliente->telefono; ?>"> <?php echo $cliente->telefono; ?> </td>
 					<td class="text-center">
@@ -73,14 +73,6 @@ else:
 					          		<span class="input-group-text">Name</span>
 						        </div>
 						        <input type="text" name="nombres" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Last name</span>
-						        </div>
-						        <input type="text" name="apellidoPaterno" class="form-control" required>
 					      	</div>
 				    	</div>
 				    	<div class="form-group col-md-6">
@@ -140,14 +132,6 @@ else:
 				    	<div class="form-group col-md-6">
 					      	<div class="input-group">
 						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Last name</span>
-						        </div>
-						        <input type="text" name="apellidoPaterno" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
 					          		<span class="input-group-text">Email</span>
 						        </div>
 						        <input type="email" name="email" class="form-control" required>
@@ -159,14 +143,6 @@ else:
 					          		<span class="input-group-text">Phone</span>
 						        </div>
 						        <input type="text" name="telefono" class="form-control" required>
-					      	</div>
-				    	</div>
-				    	<div class="form-group col-md-6">
-					      	<div class="input-group">
-						        <div class="input-group-prepend">
-					          		<span class="input-group-text">Change Password</span>
-						        </div>
-						        <input type="text" name="secret" value="*********" autocomplete="off" class="form-control" required>
 					      	</div>
 				    	</div>
 	      			</div>
@@ -190,13 +166,6 @@ else:
 <script>
 
 $(document).ready(function(){
-
-	$(`[name="nombres"],[name="apellidoPaterno"]`).keyup(function () {
-		var str = $(this).val()
-		str = str.toLowerCase()
-		str = str.charAt(0).toUpperCase() + str.slice(1)
-		$(this).val(str)
-	})
 
 	$(".btnDelete").click(function(){
 		tr = $(this).closest('tr');
@@ -281,7 +250,6 @@ $(document).ready(function(){
 
 	$(".btnEdit").click(function(){
 		nombres = $(this).closest('tr').find('[data-nombres]').data('nombres');
-		apellidopaterno = $(this).closest('tr').find('[data-apellidopaterno]').data('apellidopaterno');
 		email = $(this).closest('tr').find('[data-email]').data('email');
 		telefono = $(this).closest('tr').find('[data-telefono]').data('telefono');
 		tr = $(this).closest('tr');
@@ -289,7 +257,6 @@ $(document).ready(function(){
 
 		$("#formEditCliente [name=regid]").val(regid);
 		$("#formEditCliente [name=nombres]").val(nombres);
-		$("#formEditCliente [name=apellidoPaterno]").val(apellidopaterno);
 		$("#formEditCliente [name=email]").val(email);
 		$("#formEditCliente [name=telefono]").val(telefono);
 

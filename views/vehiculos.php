@@ -116,7 +116,7 @@ if(isset($_GET['vid'])){
 						        <select name="cliente" class="form-control">
 						        	<option value="">Seleccione</option>
 						        	<?php foreach ($clientes as $cliente) { ?>
-						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
+						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->nombres ?></option>
 						        	<?php } ?>
 						        </select>
 					      	</div>
@@ -129,7 +129,7 @@ if(isset($_GET['vid'])){
 						        <select name="cliente_2" class="form-control">
 						        	<option value="">Seleccione</option>
 						        	<?php foreach ($clientes as $cliente) { ?>
-						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
+						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->nombres ?></option>
 						        	<?php } ?>
 						        </select>
 					      	</div>
@@ -214,7 +214,7 @@ if(isset($_GET['vid'])){
 						        <select name="cliente" class="form-control">
 						        	<option value="">Seleccione</option>
 						        	<?php foreach ($clientes as $cliente) { ?>
-						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
+						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->nombres ?></option>
 						        	<?php } ?>
 						        </select>
 					      	</div>
@@ -227,7 +227,7 @@ if(isset($_GET['vid'])){
 						        <select name="cliente_2" class="form-control">
 						        	<option value="">Seleccione</option>
 						        	<?php foreach ($clientes as $cliente) { ?>
-						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->apellidoPaterno ?> <?php echo $cliente->nombres ?></option>
+						        	<option value="<?php echo $cliente->id ?>"><?php echo $cliente->nombres ?></option>
 						        	<?php } ?>
 						        </select>
 					      	</div>
