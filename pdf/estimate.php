@@ -57,19 +57,6 @@ if ('' != $ot->site_services) {
                 <b>Site Services:</b> ' . $ot->site_services . '
             </div>';
 }
-
-if ('' != $ot->customer_to_provide) {
-    $html .= '<br><div id="site_services">
-                <b>Customer to Provide:</b><br>' . str_replace("\n", '<br>', $ot->customer_to_provide) . '
-            </div>';
-}
-
-if ('' != $ot->not_included) {
-    $html .= '<br><div id="site_services">
-                <b>Not Included:</b><br>' . str_replace("\n", '<br>', $ot->not_included) . '
-            </div>';
-}
-
 // detalle open tag
 $html .= '<br><div id="detalle" style="padding: 0 25px;">';
 
@@ -99,7 +86,19 @@ for ($row = 0; $row < count($items); $row++) {
 // detalle close tag
 $html .= '</div>';
 
-$html .= '<b>Price including the items mentioned above: $' . number_format($total_price, 0) . '</b>';
+if ('' != $ot->customer_to_provide) {
+    $html .= '<br><div id="customer_to_provide">
+        <b>Customer to Provide:</b><br>' . str_replace("\n", '<br>', $ot->customer_to_provide) . '
+    </div>';
+}
+
+if ('' != $ot->not_included) {
+    $html .= '<br><div id="not_included">
+        <b>Not Included:</b><br>' . str_replace("\n", '<br>', $ot->not_included) . '
+    </div>';
+}
+
+$html .= '<br><b>Price including the items mentioned above: $' . number_format($total_price, 0) . '</b>';
 
 // content frame close tag
 $html .= '</div>';
