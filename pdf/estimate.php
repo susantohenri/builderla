@@ -51,4 +51,4 @@ $total_price = number_format($total_price, 0);
 $lines[] = "<br><div style='font-weight: bold;'>Price including the items mentioned above: $ {$total_price}</div>";
 
 foreach ($lines as $line) $html .= $line;
-$html = '<page backleft="30px" backright="30px" backtop="150px" backbottom="75px" backimg="' . $background . '">' . $html . '</page>';
+$html = '<page backleft="75px" backright="75px" backtop="175px" backbottom="125px" backimg="' . $background . '">' . $html . '</page>';
