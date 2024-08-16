@@ -16,37 +16,39 @@ $lines = [];
 
 $lines[] = '<div id="title" style="text-align: center; width: 100%; font-size: 18px; font-weight: bold;">FHS CONSTRUCTION INC PROPOSAL</div>';
 
-$lines[] = '<div id="client" style="font-size: 11px;">' . $client_name;
-$lines[] = $vehiculo->street_address . ' ' . $vehiculo->address_line_2;
-$lines[] = $vehiculo->city . ', ' . $vehiculo->zip_code . '</div>';
+$lines[] = '<br><div id="client" style="font-size: 11px;">' . $client_name;
+$lines[] = '<br>' . $vehiculo->street_address . ' ' . $vehiculo->address_line_2;
+$lines[] = '<br>' . $vehiculo->city . ', ' . $vehiculo->zip_code . '</div>';
 
 $titulos = explode("\r\n", $ot->titulo);
-$lines[] = '<b>Project Description: </b>' . $titulos[0];
+$lines[] = '<br><b>Project Description: </b>' . $titulos[0];
 for ($tit = 1; $tit < count($titulos); $tit++) $lines[] = $titulos[$tit];
 
-if ('' !== $ot->site_services) $lines[] = "<br><b>Site Services: </b>{$ot->site_services}";
+if ('' !== $ot->site_services) $lines[] = "<br><br><b>Site Services: </b>{$ot->site_services}<br>";
 
 $total_price = (float) 0;
 for ($index = 0; $index < count($detalle->item); $index++) {
     $no = $index + 1;
     $price = $detalle->precio[$index];
     $total_price += (float) $price;
-    $price = '$' . number_format($price);
+    $price = 0 == $ot->price_breakdown ? '' : '$' . number_format($price);
     $item = $detalle->item[$index];
 
     $lines[] = "
-        <br><table style='font-weight: bold; margin-bottom: 0; border: 1px solid red;'>
+        <br><table style='font-weight: bold; margin-left: 30px;'>
             <tr>
-                <td style='width: 525px;'>{$no}) {$item}</td>
-                <td>{$price}</td>
+                <td style='vertical-align: top;'>{$no})</td>
+                <td style='width: 525px;'>{$item}</td>
+                <td style='vertical-align: top;'>{$price}</td>
             </tr>
         </table>
     ";
 
-    foreach (explode("\r\n", $detalle->observaciones[$index]) as $detail) $lines[] = $detail;
+    foreach (explode("\r\n", $detalle->observaciones[$index]) as $detail) $lines[] = "<div style='margin-left: 60px; width: 500px;'>{$detail}</div>";
 }
 
-$lines = array_merge(['<page backleft="30px" backright="30px" backtop="150px" backbottom="75px" backimg="' . $background . '">'], $lines);
-$lines = array_merge($lines, ['</page>']);
+$total_price = number_format($total_price, 0);
+$lines[] = "<br><div style='font-weight: bold;'>Price including the items mentioned above: $ {$total_price}</div>";
 
-foreach ($lines as $line) $html .= 0 === strpos($line, '<page') ? $line : "<br>{$line}";
+foreach ($lines as $line) $html .= $line;
+$html = '<page backleft="30px" backright="30px" backtop="150px" backbottom="75px" backimg="' . $background . '">' . $html . '</page>';
