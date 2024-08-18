@@ -13,7 +13,7 @@ if (user_can($current_user, 'administrator')) {
 	include plugin_dir_path(__FILE__) . 'pdf/estimate.php';
 
 	$orientation = 'potrait';
-	$html2pdf = new Html2Pdf($orientation,'LETTER','es');
+	$html2pdf = new Html2Pdf($orientation,'A4','es');
 	$html2pdf->writeHTML($html);
 	$html2pdf->output( $titulo_pdf . '_000'. $ot_id .'.pdf');
 }
