@@ -15,7 +15,7 @@ add_shortcode('builderla-lead-form', function () {
 
                 <div class=\"contact-form-row\" builderla-lead-form-step=\"1\">
                     <div class=\"contact-col full\">
-                        <input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-text wpcf7-validates-as-required\" aria-required=\"true\" aria-invalid=\"false\" placeholder=\"First Name\" value=\"\" type=\"text\" name=\"nombres\">
+                        <input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-text wpcf7-validates-as-required\" aria-required=\"true\" aria-invalid=\"false\" placeholder=\"Name\" value=\"\" type=\"text\" name=\"nombres\">
                     </div>
                     <div class=\"contact-col\">
                         <input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email\" aria-required=\"true\" aria-invalid=\"false\" placeholder=\"Email\" value=\"\" type=\"email\" name=\"email\">

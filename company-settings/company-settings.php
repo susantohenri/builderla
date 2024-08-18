@@ -4,13 +4,14 @@ function taller_company_settings()
 {
     global $wpdb;
     $fields = [
-        ['name' => 'mopar_company_name', 'label' => 'Company Name'],
-        ['name' => 'mopar_company_address', 'label' => 'Company Address'],
-        ['name' => 'mopar_company_phone_number', 'label' => 'Company Phone Number'],
-        ['name' => 'mopar_license_number', 'label' => 'License Number'],
-        ['name' => 'mopar_insurance_policy', 'label' => 'Insurance Policy'],
-        ['name' => 'mopar_agent_name', 'label' => 'Agent Name'],
-        ['name' => 'mopar_agent_phone', 'label' => 'Agent Phone']
+        ['name' => 'mopar_company_name', 'label' => "Direct Contractor's Name"],
+        ['name' => 'mopar_license_number', 'label' => "Direct Contractor's License Number"],
+        ['name' => 'mopar_company_address', 'label' => "Direct Contractor's Address"],
+        ['name' => 'mopar_city_state_zip', 'label' => "City, State & ZIP"],
+        ['name' => 'mopar_company_phone_number', 'label' => "Direct Contractor's Telephone - FAX"],
+        ['name' => 'mopar_company_email', 'label' => "Direct Contractor's Email"],
+        ['name' => 'mopar_insurance_policy', 'label' => 'Insurance Company Name'],
+        ['name' => 'mopar_insurance_phone', 'label' => 'Insurance Company Telephone'],
     ];
 
     $field_names = array_map(function ($field) {
