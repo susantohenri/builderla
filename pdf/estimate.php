@@ -42,8 +42,9 @@ $titulos = explode("\r\n", $ot->titulo);
 $lines[] = '<br><br><b>Project Description: </b>' . $titulos[0];
 for ($tit = 1; $tit < count($titulos); $tit++) $lines[] = '<br>' . $titulos[$tit];
 
-if ('' !== $ot->site_services) $lines[] = "<br><br><b>Site Services: </b>{$ot->site_services}<br>";
+if ('' !== $ot->site_services) $lines[] = "<br><br><b>Site Services: </b>{$ot->site_services}";
 
+$lines[] = '<br>';
 $total_price = (float) 0;
 for ($index = 0; $index < count($detalle->item); $index++) {
     $price = $detalle->precio[$index];
