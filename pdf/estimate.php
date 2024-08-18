@@ -14,41 +14,70 @@ if ($cliente2) $client_name .= " & {$cliente2->nombres}";
 
 $lines = [];
 
-$lines[] = '<div id="title" style="text-align: center; width: 100%; font-size: 18px; font-weight: bold;">FHS CONSTRUCTION INC PROPOSAL</div>';
+$lines[] = "
+    <style type='text/css'>
+        * {
+            line-height: 20px;
+            horizontal-spacing: 1.5px;
+        }
 
-$lines[] = '<br><div id="client" style="font-size: 11px;">' . $client_name;
+        .bold {
+            font-weight: bold;
+        }
+
+        .indent-right {
+            margin-left: 50px;
+            width: 500px;
+        }
+    </style>
+";
+
+$lines[] = '<div style="margin: 20px auto;text-align: center; width: 100%; font-size: 20px;" class="bold">FHS CONSTRUCTION INC PROPOSAL</div>';
+
+$lines[] = '<br><div>' . $client_name;
 $lines[] = '<br>' . $vehiculo->street_address . ' ' . $vehiculo->address_line_2;
-$lines[] = '<br>' . $vehiculo->city . ', ' . $vehiculo->zip_code . '</div>';
+$lines[] = '<br>' . $vehiculo->city . ', ' . $vehiculo->state . ' ' . $vehiculo->zip_code . '</div>';
 
 $titulos = explode("\r\n", $ot->titulo);
-$lines[] = '<br><b>Project Description: </b>' . $titulos[0];
-for ($tit = 1; $tit < count($titulos); $tit++) $lines[] = $titulos[$tit];
+$lines[] = '<br><br><b>Project Description: </b>' . $titulos[0];
+for ($tit = 1; $tit < count($titulos); $tit++) $lines[] = '<br>' . $titulos[$tit];
 
 if ('' !== $ot->site_services) $lines[] = "<br><br><b>Site Services: </b>{$ot->site_services}<br>";
 
 $total_price = (float) 0;
 for ($index = 0; $index < count($detalle->item); $index++) {
-    $no = $index + 1;
     $price = $detalle->precio[$index];
     $total_price += (float) $price;
     $price = 0 == $ot->price_breakdown ? '' : '$' . number_format($price);
     $item = $detalle->item[$index];
 
     $lines[] = "
-        <br><table style='font-weight: bold; margin-left: 30px;'>
+        <br><table class='bold' style='margin-left: 45px;'>
             <tr>
-                <td style='vertical-align: top;'>{$no})</td>
-                <td style='width: 525px;'>{$item}</td>
+                <td style='width: 525px;'>{$item}:</td>
                 <td style='vertical-align: top;'>{$price}</td>
             </tr>
         </table>
     ";
 
-    foreach (explode("\r\n", $detalle->observaciones[$index]) as $detail) $lines[] = "<div style='margin-left: 60px; width: 500px;'>{$detail}</div>";
+    foreach (explode("\r\n", $detalle->observaciones[$index]) as $detail) $lines[] = "<div class='indent-right'>{$detail}</div>";
+}
+
+if ('' !== $ot->customer_to_provide) {
+    $provides = explode("\r\n", $ot->customer_to_provide);
+    $lines[] = '<br><b class="indent-right">Customer to provide: </b>';
+    for ($tit = 0; $tit < count($provides); $tit++) $lines[] = '<div class="indent-right">' . $provides[$tit] . '</div>';
+}
+
+if ('' !== $ot->not_included) {
+    $excludes = explode("\r\n", $ot->not_included);
+    $lines[] = '<br><b class="indent-right">Not included: </b>';
+    for ($tit = 0; $tit < count($excludes); $tit++) $lines[] = '<div class="indent-right">' . $excludes[$tit] . '</div>';
 }
 
 $total_price = number_format($total_price, 0);
-$lines[] = "<br><div style='font-weight: bold;'>Price including the items mentioned above: $ {$total_price}</div>";
+$lines[] = "<br><br><div class='bold indent-right'>Total cost of project: $" . $total_price . "</div>";
 
 foreach ($lines as $line) $html .= $line;
-$html = '<page backleft="75px" backright="75px" backtop="175px" backbottom="125px" backimg="' . $background . '">' . $html . '</page>';
+// exit($html);
+$html = '<page backleft="75px" backright="75px" backtop="150px" backbottom="70px" backimg="' . $background . '">' . $html . '</page>';
