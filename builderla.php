@@ -702,7 +702,7 @@ function get_ot_callback(){
 	$ot = Mopar::getOneOt($ot_id);
 
 	$vehiculos = [Mopar::getOneVehiculo($ot->vehiculo_id)];
-	$cliente = Mopar::getOneCliente($ot->cliente_id);
+	$cliente = Mopar::getOneCliente($vehiculos[0]->cliente_id);
 
 	$json = [
 		'ot' => $ot,
@@ -720,7 +720,7 @@ function get_solicitud_callback(){
 	$solicitud = Mopar::getOneSolicitud($solicitud_id);
 
 	$vehiculos = [Mopar::getOneVehiculo($solicitud->vehiculo_id)];
-	$cliente = Mopar::getOneCliente($vehiculos->cliente_id);
+	$cliente = Mopar::getOneCliente($vehiculos[0]->cliente_id);
 
 	$json = [
 		'solicitud' => $solicitud,

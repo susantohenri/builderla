@@ -18,7 +18,6 @@ if(isset($_GET['vid'])){
 	<table class="table table-striped table-bordered" id="tabla_vehiculos" width="100%">
 		<thead>
 			<tr>
-				<th> Source </th>
 				<th> Address 1 </th>
 				<th> Address 2 </th>
 				<th> City </th>
@@ -26,25 +25,26 @@ if(isset($_GET['vid'])){
 				<th> Customer </th>
 				<th> Customer 2</th>
 				<th class="text-center">Options</th>
+				<th> Source </th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach ($vehiculos as $key => $vehiculo): ?>
 			<tr data-regid="<?php echo $vehiculo->id ?>" <?php foreach (['street_address', 'address_line_2', 'city', 'state', 'zip_code', 'cliente_id', 'cliente_id_2'] as $field) { echo "data-{$field}=\"{$vehiculo->$field}\"";} ?>>
-				<td class="text-center"> <?php echo builderla_get_creator_display_name($vehiculo->createdBy); ?> </td>
 				<td> <?php echo $vehiculo->street_address ?> </td>
 				<td> <?php echo $vehiculo->address_line_2 ?> </td>
 				<td> <?php echo $vehiculo->city ?> </td>
 				<td> <?php echo $vehiculo->zip_code ?> </td>
 				<td> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id) ?> </td>
 				<td> <?php echo Mopar::getNombreCliente($vehiculo->cliente_id_2) ?> </td>
-				<td class="text-center">
+				<td class="text-center" style="white-space: nowrap;">
 					<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
 					<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
 					<!--
 					<a href="admin.php?page=mopar-vehiculos&vid=<?php echo $vehiculo->id ?>" class="btn btn-info" data-toggle="tooltip" title="Ver OTs del Vehiculo"><i class="fa fa-search"></i></a>
 					-->
 				</td>
+				<td class="text-center"> <?php echo builderla_get_creator_display_name($vehiculo->createdBy); ?> </td>
 			</tr>
 			<?php endforeach; ?>
 		</tbody>

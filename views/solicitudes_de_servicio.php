@@ -87,17 +87,16 @@ if ($_POST) {
 			<thead>
 				<tr>
 					<th> Date </th>
-					<th> Source </th>
 					<th> Customer </th>
 					<th> Status </th>
 					<th class="text-center">Options</th>
+					<th> Source </th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php foreach ($solicituds as $solicitud) : ?>
 					<tr data-regid="<?php echo $solicitud->id; ?>">
 						<td data-regid="<?php echo $solicitud->id; ?>"> <?php echo $solicitud->regdate_format; ?> </td>
-						<td class="text-center" data-createdBy="<?php echo $solicitud->createdBy; ?>"> <?php echo builderla_get_creator_display_name($solicitud->createdBy); ?> </td>
 						<td data-vehiculo="<?php echo $solicitud->vehiculo_id; ?>"> <?php if (0 != $solicitud->vehiculo_id) echo Mopar::getTitleVehiculo($solicitud->vehiculo_id) ?> </td>
 						<td data-estado="<?php echo $solicitud->estado; ?>" class="text-center align-middle">
 							<?php if (!is_null($solicitud->fecha)) : ?>
@@ -132,6 +131,7 @@ if ($_POST) {
 							<button class="btn btn-success btnFecha" data-toggle="tooltip" title="Schedule"><i class="fa fa-check"></i></button>
 							<button class="btn btn-danger btnMotivo" data-toggle="tooltip" title="Discard"><i class="fa fa-times"></i></button>
 						</td>
+						<td class="text-center" data-createdBy="<?php echo $solicitud->createdBy; ?>"> <?php echo builderla_get_creator_display_name($solicitud->createdBy); ?> </td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>

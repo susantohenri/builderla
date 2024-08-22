@@ -7,9 +7,9 @@ if ($_POST) {
 	global $wpdb;
 
 	$array_insert = [
-		'titulo' => $_POST['titulo'],
-		'detalle' => json_encode($_POST['detalle']),
-		'valor' => $_POST['valor'],
+		'titulo' => isset($_POST['titulo']) ? $_POST['titulo'] : '',
+		'detalle' => isset($_POST['detalle']) ? json_encode($_POST['detalle']) : [],
+		'valor' => isset($_POST['valor']) ? $_POST['valor'] : '',
 		'estado' => 1,
 		'site_services' => isset($_POST['cb']['site_services']) ? $_POST['site_services'] : '',
 		'customer_to_provide' => isset($_POST['cb']['customer_to_provide']) ? $_POST['customer_to_provide'] : '',
@@ -19,8 +19,16 @@ if ($_POST) {
 	if (isset($_POST['cliente'])) $array_insert['cliente_id'] = $_POST['cliente'];
 	if (isset($_POST['vehiculo'])) $array_insert['vehiculo_id'] = $_POST['vehiculo'];
 
-	if ($_POST['action'] == 'insertar_ot') {
-		if ($wpdb->insert('ot', $array_insert)) {
+	if ($_POST['action'] == 'insertar_cotizaciones') {
+		$create_ot = $wpdb->insert('ot', [
+			'vehiculo_id' => $_POST['vehiculo'],
+			'estado' => 1,
+			'detalle' => '{"item":[""],"precio":["0"], "observaciones":[""]}'
+		]);
+		$create_solicitud = $wpdb->insert('solicitud', [
+			'ot_id' => $wpdb->insert_id
+		]);
+		if ($create_ot) {
 			$inserted = true;
 		}
 	}
@@ -46,6 +54,7 @@ if ($_POST) {
 <div class="box pr-4">
 	<div class="box-header mb-4">
 		<h2 class="font-weight-light text-center text-muted float-left">Estimates </h2>
+		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewCotizaciones">New Estimate</button>
 
 		<div class="clearfix"></div>
 	</div>
@@ -66,7 +75,7 @@ if ($_POST) {
 					<tr data-regid="<?php echo $ot->id; ?>">
 						<td data-regid="<?php echo $ot->id; ?>"> <?php echo $ot->id; ?> </td>
 						<td data-titulo="<?php echo $ot->titulo; ?>"> <?php echo $ot->fecha; ?> </td>
-						<td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getNombreVehiculo($ot->vehiculo_id) ?> </td>
+						<td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getTitleVehiculo($ot->vehiculo_id) ?> </td>
 						<td data-valor="<?php echo $ot->valor; ?>"> $ <?php echo number_format($ot->valor, 0, ',', '.') ?> </td>
 						<td data-estado="<?php echo $ot->estado; ?>" class="text-center align-middle">
 							<?php if (3 == $ot->solicitud_estado) : ?>
@@ -111,6 +120,41 @@ if ($_POST) {
 			</li>
 		</ul>
 	</div>
+</div>
+
+<!-- Nuevo Cotizaciones -->
+<div class="modal fade" id="modalNewCotizaciones" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<form method="post" id="modalNewCotizaciones" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="insertar_cotizaciones">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">New Estimate</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-row">
+						<div class="form-group col-md-12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Address</span>
+								</div>
+								<select name="vehiculo" class="form-control">
+									<option value="">Select property first</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
+					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
+				</div>
+			</div>
+		</div>
+	</form>
 </div>
 
 <!-- EDITAR OT -->
@@ -259,20 +303,16 @@ if ($_POST) {
 					$(".overlay").hide();
 					$('#modalEditOT [name=ot_id]').val(json.ot.id);
 
-					$('[name=vehiculo]').empty();
-					$('[name=vehiculo]').append(new Option('Seleccione Vehiculo', ''));
-					$.each(json.vehiculos, function(k, v) {
-						$('[name=vehiculo]').append(new Option(v.street_address + " - " + v.address_line_2, v.id));
-					})
-					$("[name=vehiculo]").val(json.ot.vehiculo_id);
+					const selected_property = json.vehiculos[0]
+					jQuery(`[name="vehiculo"]`).html(`<option selected value="${selected_property.id}">${selected_property.street_address} ${selected_property.address_line_2} - ${json.cliente.nombres}</option>`)
 
 					$(`[name="site_services"]`).val(json.ot.site_services)
 					$(`[name="cb[site_services]"]`).attr(`checked`, `` != json.ot.site_services).trigger(`change`)
 
-					$(`[name="customer_to_provide"]`).val(json.ot.customer_to_provide).attr(`rows`, json.ot.customer_to_provide.split(`\n`).length)
+					$(`[name="customer_to_provide"]`).val(json.ot.customer_to_provide).attr(`rows`, json.ot.customer_to_provide.split(`\n`).length + 4)
 					$(`[name="cb[customer_to_provide]"]`).attr(`checked`, `` != json.ot.customer_to_provide).trigger(`change`)
 
-					$(`[name="not_included"]`).val(json.ot.not_included).attr(`rows`, json.ot.not_included.split(`\n`).length)
+					$(`[name="not_included"]`).val(json.ot.not_included).attr(`rows`, json.ot.not_included.split(`\n`).length + 4)
 					$(`[name="cb[not_included]"]`).attr(`checked`, `` != json.ot.not_included).trigger(`change`)
 
 					$(`[name="cb[price_breakdown]"]`).attr(`checked`, 1 == json.ot.price_breakdown)
@@ -287,7 +327,7 @@ if ($_POST) {
 						h += '		<input type="text" value="' + detalle.item[k] + '" name="detalle[item][]" class="form-control" required>';
 						h += '	</td>';
 						h += '	<td>';
-						h += '		<input type="text" value="' + detalle.precio[k] + '" name="detalle[precio][]" class="form-control precio text-right" value="0" required>';
+						h += '		<input type="text" value="' + detalle.precio[k] + '" name="detalle[precio][]" class="form-control precio text-right" required>';
 						h += '	</td>';
 						h += '</tr>';
 						h += `
@@ -389,7 +429,7 @@ if ($_POST) {
 			h += '		<input type="text" name="detalle[item][]" class="form-control" required>';
 			h += '	</td>';
 			h += '	<td>';
-			h += '		<input type="text" name="detalle[precio][]" class="form-control precio text-right" value="0" required>';
+			h += '		<input type="text" name="detalle[precio][]" class="form-control precio text-right" value="" required>';
 			h += '	</td>';
 			h += '</tr>';
 			h += `
@@ -638,7 +678,7 @@ if ($_POST) {
 			text = `- ${text}`
 			text = `` == curVal ? text : `\n${text}`
 			textArea.val(curVal + text)
-			textArea.attr(`rows`, curRow + 1)
+			textArea.attr(`rows`, curRow + 3)
 			input.val(``)
 		}
 	})

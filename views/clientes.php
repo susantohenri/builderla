@@ -9,40 +9,36 @@ else:
 
 <div class="box pr-4">
 	<div class="box-header mb-4">
-		<div class="row">
-			<div class="col-xs-12 col-md-10">
-				<h2 class="font-weight-light text-center text-muted float-left"> Customers</h2>
-			</div>
-			<div class="col-xs-12 text-center col-md-2">
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalNewCliente">New Customer</button>
-			</div>
-		</div>
+		<h2 class="font-weight-light text-center text-muted float-left"> Clients</h2>
+		<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalNewCliente">New Client</button>
+
+		<div class="clearfix"></div>
 	</div>
 	<div class="box-body">
 		<table class="table table-striped table-bordered" id="tabla_clientes" width="100%">
 			<thead>
 				<tr>
-					<th> Source </th>
 					<th> Name </th>
 					<th> Email </th>
 					<th> Phone </th>
 					<th class="text-center">Options</th>
+					<th> Source </th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php foreach ($clientes as $cliente): ?>
 				<tr data-regid="<?php echo $cliente->id; ?>">
-					<td class="text-center" data-createdBy="<?php echo $cliente->createdBy; ?>"> <?php echo builderla_get_creator_display_name($cliente->createdBy); ?> </td>
 					<td data-nombres="<?php echo $cliente->nombres; ?>"> <?php echo Mopar::getNombreCliente($cliente->id, false) ?> </td>
 					<td data-email="<?php echo $cliente->email; ?>"> <?php echo $cliente->email; ?> </td>
 					<td data-telefono="<?php echo $cliente->telefono; ?>"> <?php echo $cliente->telefono; ?> </td>
-					<td class="text-center">
+					<td class="text-center" style="white-space: nowrap;">
 						<button class="btn btn-success btnEdit" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
 						<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
 						<!--
 						<a href="admin.php?page=mopar-clientes&cid=<?php echo $cliente->id ?>" class="btn btn-info" data-toggle="tooltip" title="Ver OTs del Cliente"><i class="fa fa-search"></i></a>
 						-->
 					</td>
+					<td class="text-center" data-createdBy="<?php echo $cliente->createdBy; ?>"> <?php echo builderla_get_creator_display_name($cliente->createdBy); ?> </td>
 				</tr>
 				<?php endforeach; ?>
 			</tbody>
@@ -148,7 +144,7 @@ else:
 	      			</div>
       			</div>
 	      		<div class="modal-footer">
-	        		<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Closer</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
 	        		<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
 	      		</div>
 			</div>
@@ -228,7 +224,7 @@ $(document).ready(function(){
 						type: 'green',
 						content: 'Customer Successfully Added',
 						buttons: {
-							volver: {
+							OK: {
 								action: function () {
 									location.reload();
 								}
@@ -284,7 +280,7 @@ $(document).ready(function(){
 							type: 'green',
 							content: 'Customer successfully updated',
 							buttons: {
-								volver: {
+								OK: {
 									action: function () {
 										location.reload();
 									}

@@ -39,13 +39,11 @@ function taller_company_settings()
     foreach ($fields as $field) {
         $value = isset($values[$field['name']]) ? $values[$field['name']] : '';
         $inputs .= "
-            <div class=\"form-group col-md-6\">
-                <div class=\"input-group\">
-                    <div class=\"input-group-prepend\">
-                        <span class=\"input-group-text\">{$field['label']}</span>
-                    </div>
-                    <input type=\"text\" name=\"{$field['name']}\" class=\"form-control\" value=\"{$value}\">
-                </div>
+            <div class=\"form-group col-xs-12 col-md-3\">
+                <label>{$field['label']}</label>
+            </div>
+            <div class=\"form-group col-xs-12 col-md-3\">
+                <input type=\"text\" name=\"{$field['name']}\" class=\"form-control\" value=\"{$value}\">
             </div>
         ";
     }
@@ -62,12 +60,11 @@ function taller_company_settings()
             </div>
             <div class=\"box-body\">
                 <form method=\"POST\">
-                    <div class=\"col-md-12\">
+                    <div class=\"col-xs-12\">
                         <div class=\"form-row\">
 
                             {$inputs}
-                            
-                            <div class=\"form-group col-md-6 text-right\">
+                            <div class=\"form-group col-sm-12 text-right\">
                                 <input name=\"save_mopar_settings\" type=\"submit\" value=\"Save Settings\" class=\"btn btn-primary\">
                             </div>
 
