@@ -13,6 +13,7 @@ use Spipu\Html2Pdf\Html2Pdf;
 
 include('lead-form/lead-form.php');
 include('company-settings/company-settings.php');
+include('personal-settings/personal-settings.php');
 
 function theme_options_panel(){
 	add_menu_page('Project Management', 'Project Management', 'manage_options', 'mopar-taller', 'taller_home_func','dashicons-admin-tools',2);
@@ -32,6 +33,7 @@ function theme_options_panel(){
 //	add_submenu_page( 'mopar-taller', 'Preparación Contable', 'Preparación Contable', 'manage_options', 'preparacion-contable', 'taller_preparacion_contable_func');
 //	add_submenu_page( 'mopar-taller', 'Conciliación Contable', 'Conciliación Contable', 'manage_options', 'conciliacion-contable', 'taller_conciliacion_contable_func');
 	add_submenu_page( 'mopar-taller', 'Company Settings', 'Company Settings', 'manage_options', 'mopar-company-settings', 'taller_company_settings');
+	add_submenu_page( 'mopar-taller', 'Personal Settings', 'Personal Settings', 'manage_options', 'mopar-personal-settings', 'taller_personal_settings');
 }
 add_action('admin_menu', 'theme_options_panel');
  

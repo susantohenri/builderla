@@ -39,10 +39,10 @@ function taller_company_settings()
     foreach ($fields as $field) {
         $value = isset($values[$field['name']]) ? $values[$field['name']] : '';
         $inputs .= "
-            <div class=\"form-group col-xs-12 col-md-3\">
+            <div class=\"form-group col-sm-12 col-md-3\">
                 <label>{$field['label']}</label>
             </div>
-            <div class=\"form-group col-xs-12 col-md-3\">
+            <div class=\"form-group col-sm-12 col-md-3\">
                 <input type=\"text\" name=\"{$field['name']}\" class=\"form-control\" value=\"{$value}\">
             </div>
         ";
@@ -53,14 +53,14 @@ function taller_company_settings()
         <div class=\"box pr-4\">
             <div class=\"box-header mb-4 ml-4 mt-4\">
                 <div class=\"row\">
-                    <div class=\"col-xs-12\">
+                    <div class=\"col-sm-12\">
                         <h2 class=\"font-weight-light text-center text-muted float-left\">Company Settings</h2>
                     </div>
                 </div>
             </div>
             <div class=\"box-body\">
                 <form method=\"POST\">
-                    <div class=\"col-xs-12\">
+                    <div class=\"col-sm-12\">
                         <div class=\"form-row\">
 
                             {$inputs}
