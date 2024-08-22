@@ -46,6 +46,25 @@ if ($_POST) {
 		}));
 		for ($index = 0; $index < count($_FILES['photos']['name']); $index++) {
 			$tmp =  $_FILES['photos']['tmp_name'][$index];
+			if ('' === $tmp) continue;
+
+			// compress
+			$img = imagecreatefromjpeg($tmp);
+			$exif = exif_read_data($tmp);
+			if ($img && $exif && isset($exif['Orientation']))
+			{
+				$ort = $exif['Orientation'];
+				if ($ort == 6 || $ort == 5)
+					$img = imagerotate($img, 270, 0);
+				if ($ort == 3 || $ort == 4)
+					$img = imagerotate($img, 180, 0);
+				if ($ort == 8 || $ort == 7)
+					$img = imagerotate($img, 90, 0);
+				if ($ort == 5 || $ort == 4 || $ort == 7)
+					imageflip($img, IMG_FLIP_HORIZONTAL);
+			}
+			imagejpeg($img, $tmp, 25);
+
 			$name =  $_FILES['photos']['name'][$index];
 			$name = rand() . $name;
 			$location = $upload_dir . $name;

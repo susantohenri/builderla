@@ -131,7 +131,7 @@ if ($_POST) {
 							<button class="btn btn-success btnFecha" data-toggle="tooltip" title="Schedule"><i class="fa fa-check"></i></button>
 							<button class="btn btn-danger btnMotivo" data-toggle="tooltip" title="Discard"><i class="fa fa-times"></i></button>
 						</td>
-						<td class="text-center" data-createdBy="<?php echo $solicitud->createdBy; ?>"> <?php echo builderla_get_creator_display_name($solicitud->createdBy); ?> </td>
+						<td class="text-center" data-createdBy="<?php echo $solicitud->createdBy; ?>"> <?php echo builderla_get_creator_user_login($solicitud->createdBy); ?> </td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>

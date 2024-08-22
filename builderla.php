@@ -189,11 +189,6 @@ function insertar_cliente_callback(){
 	];
 	$wpdb->insert('clientes',$array_insert);
 
-	//Enviar por correo la pass
-	$body = "Hola " . $_POST['nombres'] . "\n\nBienvenido! Has sido creado como cliente en el taller Doctor Mopar, se ha creado un password para acceder a nuestro portal de clientes:\n\n\nTu password es: " . $pass . "\n\n";
-	$body .= "https://www.doctormopar.com/clientes/";
-	// mail($_POST['email'].",j.basso@me.com",'Password para entrar a DoctorMopar',$body); disable mail sending
-
 	$json = [
 		'status' => 'OK'
 	];
@@ -750,10 +745,10 @@ function mopar_taller_select2_clientes () {
 	]);
 }
 
-function builderla_get_creator_display_name ($user_id) {
+function builderla_get_creator_user_login ($user_id) {
 	global $wpdb;
 	if (0 == $user_id) return 'system';
-	else return $wpdb->get_var($wpdb->prepare("SELECT display_name FROM {$wpdb->prefix}users WHERE ID = %d", [$user_id]));
+	else return $wpdb->get_var($wpdb->prepare("SELECT user_login FROM {$wpdb->prefix}users WHERE ID = %d", [$user_id]));
 }
 
 //Clientes

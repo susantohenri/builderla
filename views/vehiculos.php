@@ -44,7 +44,7 @@ if(isset($_GET['vid'])){
 					<a href="admin.php?page=mopar-vehiculos&vid=<?php echo $vehiculo->id ?>" class="btn btn-info" data-toggle="tooltip" title="Ver OTs del Vehiculo"><i class="fa fa-search"></i></a>
 					-->
 				</td>
-				<td class="text-center"> <?php echo builderla_get_creator_display_name($vehiculo->createdBy); ?> </td>
+				<td class="text-center"> <?php echo builderla_get_creator_user_login($vehiculo->createdBy); ?> </td>
 			</tr>
 			<?php endforeach; ?>
 		</tbody>

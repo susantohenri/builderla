@@ -38,7 +38,7 @@ else:
 						<a href="admin.php?page=mopar-clientes&cid=<?php echo $cliente->id ?>" class="btn btn-info" data-toggle="tooltip" title="Ver OTs del Cliente"><i class="fa fa-search"></i></a>
 						-->
 					</td>
-					<td class="text-center" data-createdBy="<?php echo $cliente->createdBy; ?>"> <?php echo builderla_get_creator_display_name($cliente->createdBy); ?> </td>
+					<td class="text-center" data-createdBy="<?php echo $cliente->createdBy; ?>"> <?php echo builderla_get_creator_user_login($cliente->createdBy); ?> </td>
 				</tr>
 				<?php endforeach; ?>
 			</tbody>
