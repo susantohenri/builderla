@@ -49,7 +49,7 @@ function taller_personal_settings()
     // estimate email template
     $default_estimate_email_template = "
 Dear [customer],
-We have prepared your project located at [address1] - [address2] - [city], [state] [zip].
+We have prepared your project located at [address] - [address2] - [city], [zip].
 Please find the attached estimate for your review. If you have any questions or need further information, feel free to reach out to me.
 
 Best regards,
@@ -58,14 +58,19 @@ Best regards,
 FHS Construction INC
     ";
     if (isset($_POST['estimate_email_template'])) {
-        $umeta_id = $wpdb->get_var("SELECT umeta_id FROM {$wpdb->prefix}usermeta WHERE meta_key = 'estimate_email_template' AND user_id = {$user_id}");
-        if ($umeta_id) $wpdb->update("{$wpdb->prefix}usermeta", ['meta_value' => $_POST['estimate_email_template']], ['umeta_id' => $umeta_id]);
-        else $wpdb->insert("{$wpdb->prefix}usermeta", ['meta_key' => 'estimate_email_template', 'meta_value' => $_POST['estimate_email_template'], 'user_id' => $user_id]);
+        $wpdb->update(
+            "{$wpdb->prefix}usermeta",
+            ['meta_value' => $_POST['estimate_email_template']],
+            ['meta_key' => 'estimate_email_template', 'user_id' => $user_id]
+        );
     }
-    $stored_estimate_email_template = $wpdb->get_var("SELECT meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key = 'estimate_email_template' AND user_id = {$user_id}");
-    $estimate_email_template = $stored_estimate_email_template ? $stored_estimate_email_template : $default_estimate_email_template;
+    $estimate_email_template = $wpdb->get_var("SELECT meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key = 'estimate_email_template' AND user_id = {$user_id}");
+    if (!$estimate_email_template) {
+        $wpdb->insert("{$wpdb->prefix}usermeta", ['meta_key' => 'estimate_email_template', 'meta_value' => $default_estimate_email_template, 'user_id' => $user_id]);
+        $estimate_email_template = $default_estimate_email_template;
+    }
     $estimate_email_template_rows = count(explode("\n", $estimate_email_template));
-    $estimate_email_template_rows --;
+    $estimate_email_template_rows--;
 
     echo "
         <link rel=\"stylesheet\" type=\"text/css\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\">
@@ -73,7 +78,7 @@ FHS Construction INC
             <div class=\"box-header mb-4 ml-4 mt-4\">
                 <div class=\"row\">
                     <div class=\"col-sm-12\">
-                        <h2 class=\"font-weight-light text-center text-muted float-left\">personal Settings</h2>
+                        <h2 class=\"font-weight-light text-center text-muted float-left\">Personal Settings</h2>
                     </div>
                 </div>
             </div>

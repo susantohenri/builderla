@@ -32,7 +32,7 @@ $lines[] = "
     </style>
 ";
 
-$lines[] = '<div style="margin: 20px auto;text-align: center; width: 100%; font-size: 20px;" class="bold">FHS CONSTRUCTION INC PROPOSAL</div>';
+$lines[] = '<div style="margin: 20px auto;text-align: center; width: 100%; font-size: 20px;" class="bold">FHS CONSTRUCTION INC PROPOSAL #'.$ot_id.'</div>';
 
 $lines[] = '<br><div>' . $client_name;
 $lines[] = '<br>' . $vehiculo->street_address . ' ' . $vehiculo->address_line_2;

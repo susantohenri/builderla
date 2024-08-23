@@ -211,10 +211,6 @@ function actualizar_cliente_callback(){
 
 	if( $_POST['secret'] != "*********" ){
 		$array_edit['secret'] = md5($_POST['secret']);
-
-		$body = "Hola " . $_POST['nombres'] . "\n\nSe te ha creado una nueva contraseña para poder acceder y ver el historial de tu vehiculo en el taller Doctor Mopar.\n\nTu nueva contraseña es: " . $_POST['secret'] . "\n\n";
-		$body .= "https://www.doctormopar.com/clientes/";
-		mail($_POST['email'].",j.basso@me.com",'Nueva contraseña para entrar a DoctorMopar',$body);
 	}
 
 	$wpdb->update('clientes',$array_edit,['id' => $_POST['regid']]);
@@ -642,6 +638,8 @@ function send_estimation_email_callback() {
 			, clientes.nombres
 			, vehiculos.street_address
 			, vehiculos.address_line_2
+			, vehiculos.city
+			, vehiculos.zip_code
 		FROM ot
 		LEFT JOIN vehiculos ON ot.vehiculo_id = vehiculos.id
 		LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
@@ -1393,6 +1391,21 @@ Doctor Mopar
 					$message = "Here is your new password for Doctormopar client area: {$entity_id['new_password']}";
 				break;
 			case 'send_estimation':
+				global $wpdb;
+				$user_id = get_current_user_id();
+				$user_meta = [];
+				$meta_keys = [
+					'mopar_phone_number',
+					'mopar_first_name',
+					'mopar_last_name',
+					'estimate_email_template'
+				];
+				$meta_keys = implode("','", $meta_keys);
+				$meta_keys = "'{$meta_keys}'";
+				foreach ($wpdb->get_results("SELECT meta_key, meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key IN ({$meta_keys}) AND user_id = {$user_id}") as $record) {
+					$user_meta[$record->meta_key] = $record->meta_value;
+				}
+
 				$ot_id = $entity_id->id;
 				include plugin_dir_path(__FILE__) . 'pdf/estimate.php';
 				$orientation = 'potrait';
@@ -1402,27 +1415,28 @@ Doctor Mopar
 				$html2pdf->output($temporary_file, 'F');
 				$attachments[] = $temporary_file;
 
-				$user_name = get_user_meta(get_current_user_id(), 'nickname', true);
 				$recipient = $entity_id->email;
 				$subject = 'Your Estimate from FHS Construction';
-				$message = "Dear {$entity_id->nombres}
-We have prepared the estimate for your project located at {$entity_id->street_address} - {$entity_id->address_line_2}. Please find the attached estimate for your review.
-If you have any questions or need further information, feel free to contact us. We look forward to working with you to bring your vision to life. Thank you for considering FHS Construction.
 
-Best regards,
-{$user_name} FHS Construction
-				";
+				$message = $user_meta['estimate_email_template'];
+				$message = str_replace('[customer]', $entity_id->nombres, $message);
+				$message = str_replace('[address]', $entity_id->street_address, $message);
+				$message = str_replace('[address2]', $entity_id->address_line_2, $message);
+				$message = str_replace('[city]', $entity_id->city, $message);
+				$message = str_replace('[zip]', $entity_id->zip_code, $message);
+				$message = str_replace('[name]', "{$user_meta['mopar_first_name']} {$user_meta['mopar_last_name']}", $message);
+				$message = str_replace('[phone]', $user_meta['mopar_phone_number'], $message);
 				break;
 			}
-		add_filter( 'wp_mail_from', function () {
-			return 'taller@doctormopar.com';
-		});
-		add_filter( 'wp_mail_from_name', function () {
-			return 'Doctor Mopar';
-		});
 
-		wp_mail($recipient, $subject, $message, $headers, $attachments);
-		if (isset($temporary_file)) unlink($temporary_file);
+			add_filter( 'wp_mail_from', function () {
+				return 'taller@doctormopar.com';
+			});
+			add_filter( 'wp_mail_from_name', function () {
+				return 'Doctor Mopar';
+			});
 
-	}
+			wp_mail($recipient, $subject, $message, $headers, $attachments);
+			if (isset($temporary_file)) unlink($temporary_file);
+		}
 }
