@@ -315,7 +315,7 @@ $(document).ready(function(){
 						type: 'green',
 						content: 'Property Successfully Added',
 						buttons: {
-							volver: {
+							OK: {
 					            action: function () {
 					                location.reload();
 					            }
@@ -380,7 +380,7 @@ $(document).ready(function(){
 						type: 'green',
 						content: 'Vehiculo editado correctamente',
 						buttons: {
-							volver: {
+							OK: {
 					            action: function () {
 					                location.reload();
 					            }

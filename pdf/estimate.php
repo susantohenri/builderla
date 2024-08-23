@@ -32,7 +32,7 @@ $lines[] = "
     </style>
 ";
 
-$lines[] = '<div style="margin: 20px auto;text-align: center; width: 100%; font-size: 20px;" class="bold">FHS CONSTRUCTION INC PROPOSAL #'.$ot_id.'</div>';
+$lines[] = '<div style="margin: 20px auto;text-align: center; width: 100%; font-size: 20px;" class="bold">FHS CONSTRUCTION INC PROPOSAL #' . $ot_id . '</div>';
 
 $lines[] = '<br><div>' . $client_name;
 $lines[] = '<br>' . $vehiculo->street_address . ' ' . $vehiculo->address_line_2;
@@ -52,7 +52,7 @@ for ($index = 0; $index < count($detalle->item); $index++) {
     $price = 0 == $ot->price_breakdown ? '' : '$' . number_format($price);
     $item = $detalle->item[$index];
 
-    $lines[] = "
+    if ('' !== $item) $lines[] = "
         <br><table class='bold' style='margin-left: 45px;'>
             <tr>
                 <td style='width: 525px;'>{$item}:</td>

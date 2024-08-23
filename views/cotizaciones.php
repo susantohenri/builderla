@@ -23,10 +23,11 @@ if ($_POST) {
 		$create_ot = $wpdb->insert('ot', [
 			'vehiculo_id' => $_POST['vehiculo'],
 			'estado' => 1,
-			'detalle' => '{"item":[""],"precio":["0"], "observaciones":[""]}'
+			'detalle' => '{"item":[""],"precio":[""], "observaciones":[""]}'
 		]);
 		$create_solicitud = $wpdb->insert('solicitud', [
-			'ot_id' => $wpdb->insert_id
+			'ot_id' => $wpdb->insert_id,
+			'vehiculo_id' => $_POST['vehiculo']
 		]);
 		if ($create_ot) {
 			$inserted = true;
@@ -64,7 +65,7 @@ if ($_POST) {
 				<tr>
 					<th>#</th>
 					<th> Date </th>
-					<th> Address </th>
+					<th> Customer </th>
 					<th> Total </th>
 					<th> Status </th>
 					<th class="text-center">Options</th>
@@ -74,7 +75,7 @@ if ($_POST) {
 				<?php foreach ($ots as $ot) : ?>
 					<tr data-regid="<?php echo $ot->id; ?>">
 						<td data-regid="<?php echo $ot->id; ?>"> <?php echo $ot->id; ?> </td>
-						<td data-titulo="<?php echo $ot->titulo; ?>"> <?php echo $ot->fecha; ?> </td>
+						<td data-titulo="<?php echo $ot->titulo; ?>"> <?php echo date_format(date_create($ot->regdate),"Y-m-d"); ?> </td>
 						<td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getTitleVehiculo($ot->vehiculo_id) ?> </td>
 						<td data-valor="<?php echo $ot->valor; ?>"> $ <?php echo number_format($ot->valor, 0, ',', '.') ?> </td>
 						<td data-estado="<?php echo $ot->estado; ?>" class="text-center align-middle">
@@ -309,10 +310,10 @@ if ($_POST) {
 					$(`[name="site_services"]`).val(json.ot.site_services)
 					$(`[name="cb[site_services]"]`).attr(`checked`, `` != json.ot.site_services).trigger(`change`)
 
-					$(`[name="customer_to_provide"]`).val(json.ot.customer_to_provide).attr(`rows`, json.ot.customer_to_provide.split(`\n`).length + 4)
+					$(`[name="customer_to_provide"]`).val(json.ot.customer_to_provide).attr(`rows`, json.ot.customer_to_provide.split(`\n`).length + 1)
 					$(`[name="cb[customer_to_provide]"]`).attr(`checked`, `` != json.ot.customer_to_provide).trigger(`change`)
 
-					$(`[name="not_included"]`).val(json.ot.not_included).attr(`rows`, json.ot.not_included.split(`\n`).length + 4)
+					$(`[name="not_included"]`).val(json.ot.not_included).attr(`rows`, json.ot.not_included.split(`\n`).length + 1)
 					$(`[name="cb[not_included]"]`).attr(`checked`, `` != json.ot.not_included).trigger(`change`)
 
 					$(`[name="cb[price_breakdown]"]`).attr(`checked`, 1 == json.ot.price_breakdown)
@@ -586,7 +587,7 @@ if ($_POST) {
 			$.alert({
 				type: 'green',
 				title: false,
-				content: 'OT ingresada correctamente'
+				content: 'Estimate created'
 			})
 		<?php } ?>
 
@@ -678,7 +679,7 @@ if ($_POST) {
 			text = `- ${text}`
 			text = `` == curVal ? text : `\n${text}`
 			textArea.val(curVal + text)
-			textArea.attr(`rows`, curRow + 3)
+			textArea.attr(`rows`, curRow + 2)
 			input.val(``)
 		}
 	})
