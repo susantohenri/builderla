@@ -658,7 +658,7 @@ function send_estimation_email_callback() {
 	exit(json_encode(['status' => 'OK']));
 }
 
-function inititate_contract_callback() {
+function validate_initiate_contract_callback() {
 	global $wpdb;
 	$ot_id = $_POST['regid'];
 	$ot = Mopar::getOneOt($ot_id);
@@ -674,7 +674,6 @@ function inititate_contract_callback() {
 		'message' => 'Sending estimation email is required'
 	]));
 
-	$wpdb->update('solicitud', ['estado' => 6], ['ot_id' => $ot_id]);
 	exit(json_encode(['status' => 'OK']));
 }
 
@@ -785,7 +784,7 @@ add_action('wp_ajax_get_ot','get_ot_callback');
 add_action('wp_ajax_get_solicitud','get_solicitud_callback');
 add_action('rest_api_init', 'mopar_taller_select2_clientes');
 add_action('wp_ajax_send_estimation_email','send_estimation_email_callback');
-add_action('wp_ajax_initiate_contract','inititate_contract_callback');
+add_action('wp_ajax_validate_initiate_contract','validate_initiate_contract_callback');
 
 class Mopar{
 

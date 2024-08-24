@@ -47,6 +47,20 @@ if ($_POST) {
 			$updated = true;
 		}
 	}
+
+	if ($_POST['action'] == 'initiate_contract') {
+		$wpdb->update('solicitud',
+		[
+			'estado' => 6,
+			'owner_over_65' => $_POST['owner_over_65'],
+			'construction_lender_name' => $_POST['construction_lender_name'],
+			'construction_lender_address' => $_POST['construction_lender_address'],
+			'approximate_start_date' => date_format(date_create($_POST['approximate_start_date']), 'Y-m-d'),
+			'approximate_completion_date' => date_format(date_create($_POST['approximate_completion_date']), 'Y-m-d'),
+		],
+		['ot_id' => $_POST['ot_id']]);
+		$contract_initiated = true;
+	}
 }
 ?>
 
@@ -189,7 +203,7 @@ if ($_POST) {
 									<span class="input-group-text">Project Description</span>
 								</div>
 								<!-- <input type="text" name="titulo" class="form-control" required> -->
-								 <textarea name="titulo" class="form-control"></textarea>
+								 <textarea name="titulo" class="form-control" required></textarea>
 							</div>
 						</div>
 						<div class="form-group col-md-12">
@@ -272,12 +286,80 @@ if ($_POST) {
 	</form>
 </div>
 
+<!-- INITIATE CONTRACT -->
+<div class="modal fade" id="modalInitiateContract" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<form method="post" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="initiate_contract">
+		<input type="hidden" name="ot_id">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Initiate Contract</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
 
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-4 col-form-label">Is the owner over 65?</label>
+						<div class="col-sm-12 col-md-8">
+							<select name="owner_over_65" class="form-control">
+								<option value="1">YES</option>
+								<option value="0">NO</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-4 col-form-label">is there a construction lender?</label>
+						<div class="col-sm-12 col-md-8">
+							<select name="construction_lender" class="form-control">
+								<option value="1">YES</option>
+								<option value="0">NO</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-4 col-form-label">NAME:</label>
+						<div class="col-sm-12 col-md-8">
+							<input type="text" name="construction_lender_name" class="form-control">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-4 col-form-label">ADDRESS:</label>
+						<div class="col-sm-12 col-md-8">
+							<input type="text" name="construction_lender_address" class="form-control">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-4 col-form-label">Approximate start date</label>
+						<div class="col-sm-12 col-md-8">
+							<input type="text" name="approximate_start_date" class="form-control">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-4 col-form-label">Approximate completion date</label>
+						<div class="col-sm-12 col-md-8">
+							<input type="text" name="approximate_completion_date" class="form-control">
+						</div>
+					</div>
 
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-success btnGuardar"><i class="fa fa-save"></i> SAVE</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> CANCEL</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap4-datetimepicker@5.2.3/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap4-datetimepicker@5.2.3/build/js/bootstrap-datetimepicker.min.js"></script>
 <script>
 	$(document).ready(function() {
 		$(`[name="vehiculo"]`).css(`display`, `none`).select2({
@@ -286,6 +368,16 @@ if ($_POST) {
 			ajax: {
 				url: `../wp-json/mopar-taller/v1/select2-property-for-leads`
 			}
+		})
+
+		$('[name="approximate_start_date"],[name="approximate_completion_date"]').datetimepicker({
+			format: `MM/DD/YYYY`
+		})
+
+		jQuery(`[name="construction_lender"]`).change(function () {
+			const lender_detail = jQuery(`[name^="construction_lender_"]`).parent().parent()
+			if (1 == jQuery(this).val()) lender_detail.show()
+			else lender_detail.hide()
 		})
 
 		$(".btnEdit").click(function() {
@@ -534,12 +626,11 @@ if ($_POST) {
 		$(".btnContract").click(function() {
 			tr = $(this).closest('tr');
 			regid = tr.data('regid');
-
 			$.ajax({
 				type: 'POST',
 				url: '<?php echo admin_url('admin-ajax.php'); ?>',
 				dataType: 'json',
-				data: 'action=initiate_contract&regid=' + regid,
+				data: 'action=validate_initiate_contract&regid=' + regid,
 				beforeSend: function() {
 					$(".overlay").show();
 				},
@@ -552,20 +643,27 @@ if ($_POST) {
 							content: json.message
 						});
 					} else {
-						$.alert({
-							title: false,
-							type: 'green',
-							content: 'Contract Initiated Successfully',
-							buttons: {
-								ok: () => {
-									location.href = '<?php bloginfo('wpurl') ?>/wp-admin/admin.php?page=mopar-contracts';
-								}
-							}
-						});
+						$('#modalInitiateContract').find(`select`).val(0).change()
+						$('#modalInitiateContract').find(`[type="text"]`).val(``)
+						$('#modalInitiateContract').find(`[name="ot_id"]`).val(regid)
+						$('#modalInitiateContract').modal('show');
 					}
 				}
 			})
 		});
+
+		<?php if (isset($contract_initiated)): ?>
+			$.alert({
+				title: false,
+				type: 'green',
+				content: 'Contract Initiated Successfully',
+				buttons: {
+					OK: () => {
+						location.href = '<?php bloginfo('wpurl') ?>/wp-admin/admin.php?page=mopar-contracts';
+					}
+				}
+			});
+		<?php endif ?>
 
 		$("#formNuevoOT").submit(function(e) {
 			$(".overlay").show();

@@ -96,6 +96,11 @@ CREATE TABLE `solicitud` (
   `gastos` double NOT NULL,
   `utilidad` double NOT NULL,
   `createdBy` int(10) NOT NULL,
+  `owner_over_65` tinyint(1) NOT NULL DEFAULT '0',
+  `construction_lender_name` varchar(255),
+  `construction_lender_address` text,
+  `approximate_start_date` date DEFAULT NULL,
+  `approximate_completion_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
