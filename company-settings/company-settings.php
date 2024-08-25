@@ -1,18 +1,20 @@
 <?php
 
+define('TALLER_COMPANY_SETTINGS_FIELDS', [
+    ['name' => 'mopar_company_name', 'label' => "Direct Contractor's Name"],
+    ['name' => 'mopar_license_number', 'label' => "Direct Contractor's License Number"],
+    ['name' => 'mopar_company_address', 'label' => "Direct Contractor's Address"],
+    ['name' => 'mopar_city_state_zip', 'label' => "City, State & ZIP"],
+    ['name' => 'mopar_company_phone_number', 'label' => "Direct Contractor's Telephone - FAX"],
+    ['name' => 'mopar_company_email', 'label' => "Direct Contractor's Email"],
+    ['name' => 'mopar_insurance_policy', 'label' => 'Insurance Company Name'],
+    ['name' => 'mopar_insurance_phone', 'label' => 'Insurance Company Telephone'],
+]);
+
 function taller_company_settings()
 {
     global $wpdb;
-    $fields = [
-        ['name' => 'mopar_company_name', 'label' => "Direct Contractor's Name"],
-        ['name' => 'mopar_license_number', 'label' => "Direct Contractor's License Number"],
-        ['name' => 'mopar_company_address', 'label' => "Direct Contractor's Address"],
-        ['name' => 'mopar_city_state_zip', 'label' => "City, State & ZIP"],
-        ['name' => 'mopar_company_phone_number', 'label' => "Direct Contractor's Telephone - FAX"],
-        ['name' => 'mopar_company_email', 'label' => "Direct Contractor's Email"],
-        ['name' => 'mopar_insurance_policy', 'label' => 'Insurance Company Name'],
-        ['name' => 'mopar_insurance_phone', 'label' => 'Insurance Company Telephone'],
-    ];
+    $fields = TALLER_COMPANY_SETTINGS_FIELDS;
 
     $field_names = array_map(function ($field) {
         return $field['name'];
@@ -28,16 +30,11 @@ function taller_company_settings()
         }
     }
 
-    $option_names = implode("','", $field_names);
-    $option_names = "'{$option_names}'";
-    $values = [];
-    foreach ($wpdb->get_results("SELECT option_name, option_value FROM {$wpdb->prefix}options WHERE option_name IN ({$option_names})") as $record) {
-        $values[$record->option_name] = $record->option_value;
-    }
+    $values = taller_company_settings_get_items();
 
     $inputs = '';
     foreach ($fields as $field) {
-        $value = isset($values[$field['name']]) ? $values[$field['name']] : '';
+        $value = $values[$field['name']];
         $inputs .= "
             <div class=\"form-group col-sm-12 col-md-3\">
                 <label>{$field['label']}</label>
@@ -74,4 +71,20 @@ function taller_company_settings()
             </div>
         </div>
     ";
+}
+
+function taller_company_settings_get_items()
+{
+    global $wpdb;
+    $field_names = array_map(function ($field) {
+        return $field['name'];
+    }, TALLER_COMPANY_SETTINGS_FIELDS);
+    $option_names = implode("','", $field_names);
+    $option_names = "'{$option_names}'";
+    $values = [];
+    foreach ($wpdb->get_results("SELECT option_name, option_value FROM {$wpdb->prefix}options WHERE option_name IN ({$option_names})") as $record) {
+        $values[$record->option_name] = $record->option_value;
+    }
+    foreach ($field_names as $field) if (!isset($values[$field])) $values[$field] = '';
+    return $values;
 }

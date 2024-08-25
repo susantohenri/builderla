@@ -5,21 +5,78 @@ require __DIR__ . '/vendor/autoload.php';
 use Spipu\Html2Pdf\Html2Pdf;
 
 include '../../../wp-load.php';
+global $wpdb;
 
 $ot_id = $_GET['id'];
+$company_settings = taller_company_settings_get_items();
+
+$clientes = $wpdb->get_results("
+    SELECT nombres, telefono, email
+    FROM clientes
+    RIGHT JOIN vehiculos ON vehiculos.cliente_id = clientes.id OR vehiculos.cliente_id_2 = clientes.id
+    RIGHT JOIN ot ON vehiculos.id = ot.vehiculo_id
+    WHERE ot.id = {$ot_id}
+");
+$client_names = $clientes[0]->nombres;
+$client_emails = $clientes[0]->email;
+if (1 < count($clientes)) {
+    $client_names .= " & {$clientes[1]->nombres}";
+    $client_emails .= " & {$clientes[1]->email}";
+}
+
+$property = $wpdb->get_results("
+    SELECT
+        street_address
+        , address_line_2
+        , city
+        , state
+        , zip_code
+    FROM vehiculos
+    RIGHT JOIN ot ON ot.vehiculo_id = vehiculos.id
+    WHERE ot.id = {$ot_id}
+");
+$property = $property[0];
+
+$estimate = $wpdb->get_results("
+    SELECT
+        ot.titulo
+        , ot.detalle
+        , construction_lender_name
+        , construction_lender_address
+        , approximate_start_date
+        , approximate_completion_date
+    FROM solicitud
+    RIGHT JOIN ot ON solicitud.ot_id = ot.id
+    WHERE ot.id = {$ot_id}
+");
+$estimate = $estimate[0];
+$detalle = json_decode($estimate->detalle);
+$estimate->total_price = 0;
+foreach ($detalle->precio as $price) $estimate->total_price += $price;
+$estimate->down_payment = 10 / 100 * $estimate->total_price;
+$estimate->down_payment = 1000 <= $estimate->down_payment ? 1000 : $estimate->down_payment;
+
+$user_id = get_current_user_id();
+$personal_settings = [];
+$personal_setting_keys = [];
+$personal_setting_keys = implode("','", $personal_setting_keys);
+$personal_setting_keys = "'{$personal_setting_keys}'";
+foreach ($wpdb->get_results("SELECT meta_key, meta_value FROM {$wpdb->prefix}usermeta WHERE user_id = {$user_id} AND meta_key IN ($personal_setting_keys)") as $meta) {
+    $personal_settings[$meta->meta_key] = $meta->meta_value;
+}
 
 $orientation = 'potrait';
 $titulo_pdf = 'Contract';
 $html2pdf = new Html2Pdf($orientation, 'LEGAL', 'es');
 
 $page_1 = "<page backtop='2mm' backbottom='0mm' backleft='3mm' backright='8mm'>
-    <div style='border: 8px solid black; height: 98%; padding-left: 8px;'>
+    <div style='border: 8px solid black; height: 98%; padding: 0 8px;'>
         <div style='text-align: center;'>
-            <h1 style='margin-bottom: 0;'>HOME IMPROVEMENT CONTRACT</h1>
-            <p style='font-size: 18px; margin: 5px 0;'>NOT APPLICABLE TO SWIMMING POOLS OR SPAS</p>
+            <h2 style='margin: 3px auto 0;'>HOME IMPROVEMENT CONTRACT</h2>
+            <p style='font-size: 13px; margin: 0;'>NOT APPLICABLE TO SWIMMING POOLS OR SPAS</p>
             <i>(Complies with Section 7159 of California Business and Professions Code, and Civil Code Section 8170 as amended)</i>
-            <h4 style='margin: 5px 0;'>AGREEMENT BETWEEN DIRECT CONTRACTOR AND PROPERTY OWNER</h4>
-            <p style='font-size: 16px; margin: 0;'>The Notice of Cancellation may be mailed to the address of the direct contractor as shown below:</p>
+            <h4 style='margin: 3px 0 0;'>AGREEMENT BETWEEN DIRECT CONTRACTOR AND PROPERTY OWNER</h4>
+            <b style='font-size: 14px; margin: 0;'>The Notice of Cancellation may be mailed to the address of the direct contractor as shown below:</b>
         </div>
 
         <table style='text-align: center; font-size: 8px;'>
@@ -209,6 +266,81 @@ $page_1 = "<page backtop='2mm' backbottom='0mm' backleft='3mm' backright='8mm'>
             </tr>
         </table>
 
+        <h4 style='margin: 2px 0;'>THE DOWN PAYMENT MAY NOT EXCEED $1,000 OR 10 PERCENT OF THE CONTRACT PRICE, WHICHEVER IS LESS.</h4>
+
+        <table style='width: 79%;'>
+            <tr>
+                <td style='font-size: 14px; font-weight: bold;'>FINANCE CHARGE $</td>
+                <td style='border-bottom: 1px solid black; width: 100%;'></td>
+            </tr>
+            <tr style='font-size: 8px; text-align: center;'>
+                <td></td>
+                <td>(Must be stated separately from the contract amount in dollars and cents; if none, put “none” )</td>
+            </tr>
+        </table>
+
+        <h4 style='text-align: justify; margin: 2px 0;'>&nbsp;&nbsp;SCHEDULE OF PROGRESS PAYMENTS: The schedule of progress payments must specifically describe each phase of work, including the type and amount of work or services scheduled to be supplied in each phase, along with the amount of each proposed progress payment. IT IS AGAINST THE LAW FOR A CONTRACTOR TO COLLECT PAYMENT FOR WORK NOT YET COMPLETED, OR FOR MATERIALS NOT YET DELIVERED. HOWEVER, A CONTRACTOR MAY REQUIRE A DOWN PAYMENT.</h4>
+
+        <table>
+            <tr>
+                <td>
+                    <table>
+                        <tr style='font-size: 8px; text-align: center;'>
+                            <td></td>
+                            <td></td>
+                            <td>(Work or Services to be Performed or Materials to be Supplied)</td>
+                            <td>(Date)</td>
+                        </tr>
+                        <tr style='font-size: 18px; font-weight: lighter; text-align: center;'>
+                            <td>1. $</td>
+                            <td style='xborder-bottom: 1px solid black; width: 60px'>______</td>
+                            <td style='xborder-bottom: 1px solid black; width: 100px'>___________________________________</td>
+                            <td style='xborder-bottom: 1px solid black; width: 60px;'>______</td>
+                        </tr>
+                        <tr style='font-size: 18px; font-weight: lighter; text-align: center;'>
+                            <td>2. $</td>
+                            <td style='xborder-bottom: 1px solid black; width: 60px'>______</td>
+                            <td style='xborder-bottom: 1px solid black; width: 100px'>___________________________________</td>
+                            <td style='xborder-bottom: 1px solid black; width: 60px;'>______</td>
+                        </tr>
+                        <tr style='font-size: 18px; font-weight: lighter; text-align: center;'>
+                            <td>3. $</td>
+                            <td style='xborder-bottom: 1px solid black; width: 60px'>______</td>
+                            <td style='xborder-bottom: 1px solid black; width: 100px'>___________________________________</td>
+                            <td style='xborder-bottom: 1px solid black; width: 60px;'>______</td>
+                        </tr>
+                        <tr style='font-size: 18px; font-weight: lighter; text-align: center;'>
+                            <td>4. $</td>
+                            <td style='xborder-bottom: 1px solid black; width: 60px'>______</td>
+                            <td style='xborder-bottom: 1px solid black; width: 100px'>___________________________________</td>
+                            <td style='xborder-bottom: 1px solid black; width: 60px;'>______</td>
+                        </tr>
+                        <tr style='font-size: 8px; text-align: center;'>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <br>
+                                (If necessary, continue the description of the work on an additional attachment page and describe the<br>
+                                attachment in the section below entitled, “List of Documents to be Incorporated into the Contract.”)
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </td>
+                <td style='text-align: justify; width: 185px; font-size: 11px;'>
+                    <b>Release.</b> Upon satisfactory payment being made for any portion of the work performed, the Contractor shall, prior to any further payment being made, furnish to the person contracting for the home improvement work a full and unconditional release from any claim of mechanic’s lien for any person entitled to make such a claim of lien pursuant to Sections 8400 and 8404 of the Civil Code for that portion of the work for
+which payment has been made.
+                </td>
+            </tr>
+        </table>
+
+        <p style='text-align: justify; margin: 0; font-size: 11px;'>
+            &nbsp;&nbsp;&nbsp;<b>Allowances:</b> The following items or specific prices as indicated are included in the contract price as allowances. The contract price shall be adjusted upward or downward based on actual amounts rather than estimated amounts herein ___________________________________________________
+        </p>
+        <p style='text-align: justify; margin: 3px; font-size: 11px;'>
+            &nbsp;&nbsp;&nbsp;<b>List of Documents to be Incorporated into the Contract:</b> Notice of Cancellation; Arbitration of Disputes; Three-Day Right to Cancel; Five-Day Right to Cancel; Mechanics Lien Warning; Information about Contractor’s State License Board. ___________________________________________
+        </p>
+
     </div>
 </page>";
 $html2pdf->writeHTML($page_1);
@@ -220,59 +352,71 @@ $input = [
     'name' => '',
     'w' => 88.5,
     'h' => 4,
-    'prop' => [],
+    'prop' => [
+        'alignment' => 'center'
+    ],
     'opt' => ['v' => ''],
     'x' => $x_left,
-    'y' => 44.5,
-    'js' => false
+    'y' => 33.5,
+    'js' => false,
 ];
 
 $input['name'] = 'left_name';
 $input['x'] = $x_left;
+$input['opt']['v'] = $company_settings['mopar_company_name'];
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'right_name';
 $input['x'] = $x_right;
+$input['opt']['v'] = $client_names;
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 
 $input['name'] = 'left_license';
 $input['x'] = $x_left;
 $input['y'] = $input['y'] + $y_next_line;
+$input['opt']['v'] = $company_settings['mopar_license_number'];
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'right_address';
 $input['x'] = $x_right;
+$input['opt']['v'] = $property->street_address . ' ' . $property->address_line_2;
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 
 $input['name'] = 'left_address';
 $input['x'] = $x_left;
 $input['y'] = $input['y'] + $y_next_line;
+$input['opt']['v'] = $company_settings['mopar_company_address'];
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'right_zip';
 $input['x'] = $x_right;
+$input['opt']['v'] = $property->city . ' ' . $property->state . ' ' . $property->zip_code;
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 
 $input['name'] = 'left_zip';
 $input['x'] = $x_left;
 $input['y'] = $input['y'] + $y_next_line;
+$input['opt']['v'] = $company_settings['mopar_city_state_zip'];
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'right_phone';
 $input['x'] = $x_right;
+$input['opt']['v'] = $clientes[0]->telefono;
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 
 $input['name'] = 'left_fax';
 $input['x'] = $x_left;
 $input['y'] = $input['y'] + $y_next_line;
+$input['opt']['v'] = $company_settings['mopar_company_phone_number'];
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'right_fax';
 $input['x'] = $x_right;
+$input['opt']['v'] = 'N/A';
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 
@@ -280,42 +424,190 @@ $input['name'] = 'left_email';
 $input['x'] = $x_left + 11;
 $input['y'] = $input['y'] + $y_next_line + 2;
 $input['w'] -= 12;
+$input['opt']['v'] = $company_settings['mopar_company_email'];
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'right_email';
 $input['x'] = $x_right + 11;
+$input['opt']['v'] = $client_emails;
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'work_tobe_performed';
-$input['w'] = 120;
+$input['w'] = 119;
 $input['x'] = 78;
-$input['y'] = 91.5;
+$input['y'] = 79.5;
+$input['opt']['v'] = "{$property->street_address} {$property->address_line_2} {$property->city} {$property->state} {$property->zip_code} ";
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'construction_lender';
-$input['w'] = 130;
+$input['w'] = 129;
 $input['x'] = 68;
-$input['y'] = 100.5;
+$input['y'] = 90;
+$input['opt']['v'] = '' !== $estimate->construction_lender_name ? $estimate->construction_lender_name . ' ' . $estimate->construction_lender_address : 'N/A';
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$titulo = "{$estimate->titulo} AS DESCRIBED IN ESTIMATE #{$ot_id}";
+$last_cut = 40;
+$long_line_max = 115;
+function cutMultilineAnswer($value, $start, $end = null)
+{
+    $end = null === $end || $end >= strlen($value) ? strlen($value) : $end;
+    $value = substr($value, $start);
+    $value = substr($value, 0, $end);
+    return $value;
+}
 
 $input['name'] = 'manner';
 $input['x'] = 130;
-$input['y'] = 122;
+$input['y'] = 110;
 $input['w'] = 74;
+$input['prop'] = ['alignment' => 'justify'];
+$input['opt']['v'] = cutMultilineAnswer($titulo, 0, $last_cut);
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
-$input['x'] = 14;
-$input['w'] = 190;
+$input['x'] = 13;
+$input['w'] = 191;
 for ($line = 1; $line <= 6; $line++) {
     $input['name'] = 'manner' . $line;
     $input['y'] += $y_next_line - 2;
+    $input['opt']['v'] = cutMultilineAnswer($titulo, $last_cut, $long_line_max);
+    $last_cut += $long_line_max;
     $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 }
 
 $input['name'] = 'described_as';
-$input['x'] = 125;
-$input['y'] = 165;
-$input['w'] = 78;
+$input['x'] = 126;
+$input['y'] = 153;
+$input['w'] = 77;
+$input['opt']['v'] = date_format(date_create($estimate->approximate_start_date), 'm/d/Y');
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'approx_start_date';
+$input['x'] = 55;
+$input['y'] = 159;
+$input['w'] = 45;
+$input['opt']['v'] = date_format(date_create($estimate->approximate_start_date), 'm/d/Y');
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'approximate_completion_date';
+$input['x'] = 159;
+$input['y'] = 159;
+$input['w'] = 44.5;
+$input['opt']['v'] = date_format(date_create($estimate->approximate_completion_date), 'm/d/Y');
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'contract_price';
+$input['x'] = 50;
+$input['y'] = 167;
+$input['w'] = 49;
+$input['opt']['v'] = number_format($estimate->total_price, 0);
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'down_payment';
+$input['x'] = 141;
+$input['y'] = 167;
+$input['w'] = 63;
+$input['opt']['v'] = number_format($estimate->down_payment, 0);
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'finance_charge';
+$input['x'] = 51;
+$input['y'] = 186;
+$input['w'] = 152;
+$input['opt']['v'] = number_format($estimate->total_price - $estimate->down_payment, 0);
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+// schedules
+$input['name'] = 'schedule_1_1';
+$input['x'] = 23;
+$input['y'] = 229;
+$input['w'] = 16;
+$input['opt']['v'] = '';
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'schedule_1_2';
+$input['x'] = 42;
+$input['y'] = 229;
+$input['w'] = 92;
+$input['opt']['v'] = 'payment schedule will be sent by mail';
+$input['prop']['alignment'] = 'center';
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'schedule_1_3';
+$input['x'] = 136;
+$input['y'] = 229;
+$input['w'] = 16;
+$input['opt']['v'] = '';
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'schedule_2_1';
+$input['x'] = 23;
+$input['y'] = 235;
+$input['w'] = 16;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'schedule_2_2';
+$input['x'] = 42;
+$input['y'] = 235;
+$input['w'] = 92;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'schedule_2_3';
+$input['x'] = 136;
+$input['y'] = 235;
+$input['w'] = 16;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'schedule_3_1';
+$input['x'] = 23;
+$input['y'] = 241;
+$input['w'] = 16;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'schedule_3_2';
+$input['x'] = 42;
+$input['y'] = 241;
+$input['w'] = 92;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'schedule_3_3';
+$input['x'] = 136;
+$input['y'] = 241;
+$input['w'] = 16;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'schedule_4_1';
+$input['x'] = 23;
+$input['y'] = 247;
+$input['w'] = 16;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'schedule_4_2';
+$input['x'] = 42;
+$input['y'] = 247;
+$input['w'] = 92;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'schedule_4_3';
+$input['x'] = 136;
+$input['y'] = 255;
+$input['w'] = 16;
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'allowances';
+$input['x'] = 123;
+$input['y'] = 271;
+$input['w'] = 82;
+$input['opt']['v'] = 'N/A';
+$input['prop']['alignment'] = 'left';
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'list_of_documents';
+$input['x'] = 136;
+$input['y'] = 278;
+$input['w'] = 69;
+$input['opt']['v'] = '';
+$input['prop']['alignment'] = 'left';
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $page_2 = "<page backtop='2mm' backbottom='0mm' backleft='3mm' backright='4mm'>
@@ -551,5 +843,4 @@ $html2pdf->writeHTML($page_2);
 //     </div>
 // </page>";
 // $html2pdf->writeHTML($page_5);
-
 $html2pdf->output($titulo_pdf . '_000' . $ot_id . '.pdf');
