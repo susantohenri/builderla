@@ -334,12 +334,85 @@ which payment has been made.
             </tr>
         </table>
 
-        <p style='text-align: justify; margin: 0; font-size: 11px;'>
-            &nbsp;&nbsp;&nbsp;<b>Allowances:</b> The following items or specific prices as indicated are included in the contract price as allowances. The contract price shall be adjusted upward or downward based on actual amounts rather than estimated amounts herein ___________________________________________________
+        <p style='text-align: justify; margin: 0; font-size: 12px;'>
+            &nbsp;&nbsp;&nbsp;<b>Allowances:</b> The following items or specific prices as indicated are included in the contract price as allowances. The contract price shall be adjusted upward or downward based on actual amounts rather than estimated amounts herein ________________________________
         </p>
-        <p style='text-align: justify; margin: 3px; font-size: 11px;'>
-            &nbsp;&nbsp;&nbsp;<b>List of Documents to be Incorporated into the Contract:</b> Notice of Cancellation; Arbitration of Disputes; Three-Day Right to Cancel; Five-Day Right to Cancel; Mechanics Lien Warning; Information about Contractor’s State License Board. ___________________________________________
+        <p style='text-align: justify; margin: 3px 0; font-size: 12px;'>
+            &nbsp;&nbsp;&nbsp;<b>List of Documents to be Incorporated into the Contract:</b> Notice of Cancellation; Arbitration of Disputes; Three-Day Right to Cancel; Five-Day Right to Cancel; Mechanics Lien Warning; Information about Contractor’s State License Board. __________________________
         </p>
+        <p style='text-align: justify; margin: 3px 0 0; font-size: 12px; font-weight: bold;'>
+            A notice concerning commercial general liability insurance and workers’ compensation insurance is attached to this contract. Owner acknowledges receipt of a fully completed copy of this agreement and all documents listed above: ___________________
+        </p>
+        <p style='text-align: right; font-size: 8px; margin: 1px 25px 0 auto;'>
+            (Property Owner’s Initials)
+        </p>
+
+        <table style='font-size: 12px; margin: 0 0 0 20px;'>
+            <tr>
+                <td>Owner affirms their age(s) is/are: ______________________;</td>
+                <td>______________________</td>
+                <td style='color: #8B0000; vertical-align: middle; font-size: 13px; padding-left: 10px; font-weight: bold;' rowspan='2'>Initial the appropriate box below:</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style='font-size: 8px; text-align: center;'>(Property Owner’s Initials)</td>
+            </tr>
+        </table>
+
+        <table style='font-size: 11px;'>
+            <tr>
+                <td>
+                    <table style='border: 1px solid black; font-weight: bold; '>
+                        <tr>
+                            <td style='width: 20px; border-bottom: 1px solid black; border-right: 1px solid black;'></td>
+                            <td style='text-align: center;'>NOTICE OF RIGHT<br>TO CANCEL 3-DAY</td>
+                        </tr>
+                        <tr>
+                            <td colspan='2'>
+                                The law requires that the contractor give you a<br>
+                                notice explaining your right to cancel.<br>
+                                <b style='color: #8B0000;'>Initial the checkbox</b> if the contractor has given<br>
+                                you a “Notice of the Three-Day Right to Cancel.”
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table style='border: 1px solid black; font-weight: bold; '>
+                        <tr>
+                            <td style='width: 30px; border-bottom: 1px solid black; border-right: 1px solid black;'></td>
+                            <td style='text-align: center;'>NOTICE OF RIGHT TO CANCEL<br>5-DAY <b style='color: #8B0000;'>(owners 65 and over)</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan='2'>
+                                The law requires that the contractor give you<br>
+                                a notice explaining your right to cancel.<br>
+                                <b style='color: #8B0000;'>Initial the checkbox</b> if the contractor has<br>
+                                given you a “Notice of the Five-Day Right to Cancel.”
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table style='border: 1px solid black; font-weight: bold; '>
+                        <tr>
+                            <td style='width: 20px; border-bottom: 1px solid black; border-right: 1px solid black;'></td>
+                            <td style='text-align: center;'>ARBITRATION OF<br>DISPUTES</td>
+                        </tr>
+                        <tr>
+                            <td colspan='2' style='font-weight: lighter;'>
+                                <b>OWNER:</b> Initial this box<br>
+                                <b style='color: #8B0000;'>if you agree to arbitration.</b><br>
+                                Review the “Arbitration of Disputes”<br>
+                                section attached.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <div style='font-weight: bold; font-size: 12px;'>&nbsp;&nbsp;&nbsp;You are entitled to a completely filled in copy of this agreement, signed by both you and the contractor, before any work<br>may be started.</div>
 
     </div>
 </page>";
@@ -590,24 +663,30 @@ $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop
 
 $input['name'] = 'schedule_4_3';
 $input['x'] = 136;
-$input['y'] = 255;
+$input['y'] = 248;
 $input['w'] = 16;
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'allowances';
-$input['x'] = 123;
-$input['y'] = 271;
-$input['w'] = 82;
+$input['x'] = 151;
+$input['y'] = 272;
+$input['w'] = 55;
 $input['opt']['v'] = 'N/A';
 $input['prop']['alignment'] = 'left';
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $input['name'] = 'list_of_documents';
-$input['x'] = 136;
-$input['y'] = 278;
-$input['w'] = 69;
+$input['x'] = 160;
+$input['y'] = 279;
+$input['w'] = 45;
 $input['opt']['v'] = '';
-$input['prop']['alignment'] = 'left';
+$html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
+
+$input['name'] = 'listed_above';
+$input['x'] = 172;
+$input['y'] = 288;
+$input['w'] = 34;
+$input['opt']['v'] = '';
 $html2pdf->pdf->TextField($input['name'], $input['w'], $input['h'], $input['prop'], $input['opt'], $input['x'], $input['y'], $input['js']);
 
 $page_2 = "<page backtop='2mm' backbottom='0mm' backleft='3mm' backright='4mm'>
