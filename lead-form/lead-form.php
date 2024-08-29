@@ -43,7 +43,7 @@ add_shortcode('builderla-lead-form', function () {
                         <p>
                             <span class=\"wpcf7-form-control-wrap\" data-name=\"state\">
                                 <select class=\"wpcf7-form-control wpcf7-select\" aria-invalid=\"false\" name=\"state\">
-                                    <option value=\"California (CA)\">California (CA)</option>
+                                    <option value=\"CA\">California (CA)</option>
                                 </select>
                             </span>
 				        </p>

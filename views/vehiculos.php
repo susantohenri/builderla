@@ -96,7 +96,7 @@ if(isset($_GET['vid'])){
 					          		<span class="input-group-text">State</span>
 						        </div>
 								<select name="state" class="form-control" required>
-									<option value="California (CA)">California (CA)</option>
+									<option value="CA">California (CA)</option>
 								</select>
 					      	</div>
 				    	</div>
@@ -194,7 +194,7 @@ if(isset($_GET['vid'])){
 					          		<span class="input-group-text">State</span>
 						        </div>
 								<select name="state" class="form-control" required>
-									<option value="California (CA)">California (CA)</option>
+									<option value="CA">California (CA)</option>
 								</select>
 					      	</div>
 				    	</div>
