@@ -669,10 +669,10 @@ function validate_initiate_contract_callback() {
 		'message' => 'Contract already initiated'
 	]));
 
-	else if (2 != $ot->estado || 5 != $solicitud->estado) exit(json_encode([
-		'status' => 'ERROR',
-		'message' => 'Sending estimation email is required'
-	]));
+	// else if (2 != $ot->estado || 5 != $solicitud->estado) exit(json_encode([
+	// 	'status' => 'ERROR',
+	// 	'message' => 'Sending estimation email is required'
+	// ]));
 
 	exit(json_encode(['status' => 'OK']));
 }

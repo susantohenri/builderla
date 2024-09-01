@@ -80,6 +80,7 @@ if ($_POST) {
 					<th>#</th>
 					<th> Date </th>
 					<th> Customer </th>
+                    <th> Project Description </th>
 					<th> Total </th>
 					<th> Status </th>
 					<th class="text-center">Options</th>
@@ -91,6 +92,7 @@ if ($_POST) {
 						<td data-regid="<?php echo $ot->id; ?>"> <?php echo $ot->id; ?> </td>
 						<td data-titulo="<?php echo $ot->titulo; ?>"> <?php echo date_format(date_create($ot->regdate),"Y-m-d"); ?> </td>
 						<td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getTitleVehiculo($ot->vehiculo_id) ?> </td>
+                        <td> <?php echo $ot->titulo; ?> </td>
 						<td data-valor="<?php echo $ot->valor; ?>"> $ <?php echo number_format($ot->valor, 0, ',', '.') ?> </td>
 						<td data-estado="<?php echo $ot->estado; ?>" class="text-center align-middle">
 							<?php if (3 == $ot->solicitud_estado) : ?>

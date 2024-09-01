@@ -8,18 +8,20 @@
         <table class="table table-striped table-bordered" id="tabla_contracts" width="100%">
             <thead>
                 <tr>
-                    <th>#</th>
                     <th> Date </th>
-                    <th> Address </th>
+                    <th> Customer </th>
+                    <th> Project Description </th>
+                    <th class="text-center"> Total </th>
                     <th class="text-center">Options</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($contracts as $ot) : ?>
                     <tr data-regid="<?php echo $ot->id; ?>">
-                        <td data-regid="<?php echo $ot->id; ?>"> <?php echo $ot->id; ?> </td>
-                        <td data-titulo="<?php echo $ot->titulo; ?>"> <?php echo $ot->fecha; ?> </td>
-                        <td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getNombreVehiculo($ot->vehiculo_id) ?> </td>
+                        <td> <?php echo $ot->fecha; ?> </td>
+                        <td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getTitleVehiculo($ot->vehiculo_id) ?> </td>
+                        <td> <?php echo $ot->titulo; ?> </td>
+                        <td class="text-right"><?php echo '$ ' . number_format($ot->valor, 0); ?></td>
                         <td class="text-center" style="white-space: nowrap;">
                             <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/contract-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
                         </td>
