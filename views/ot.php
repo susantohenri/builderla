@@ -9,7 +9,7 @@ if( $_POST ){
 	$array_insert = [
 		'cliente_id' => $_POST['cliente'],
 		'vehiculo_id' => $_POST['vehiculo'],
-		'titulo' => $_POST['titulo'],
+		'titulo' => ucfirst($_POST['titulo']),
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
 		'estado' => $_POST['estado'],

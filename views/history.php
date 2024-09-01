@@ -33,7 +33,7 @@ if( $_POST ){
 
     $array_insert = [
         'vehiculo_id' => $_GET['vid'],
-        'titulo' => $_POST['titulo'],
+        'titulo' => ucfirst($_POST['titulo']),
         'contenido' => $_POST['contenido'],
         'uploads' => json_encode($uploads)
     ];

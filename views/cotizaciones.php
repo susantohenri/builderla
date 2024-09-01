@@ -7,7 +7,7 @@ if ($_POST) {
 	global $wpdb;
 
 	$array_insert = [
-		'titulo' => isset($_POST['titulo']) ? $_POST['titulo'] : '',
+		'titulo' => isset($_POST['titulo']) ? ucfirst($_POST['titulo']) : '',
 		'detalle' => isset($_POST['detalle']) ? json_encode($_POST['detalle']) : [],
 		'valor' => isset($_POST['valor']) ? $_POST['valor'] : '',
 		'estado' => 1,
@@ -52,7 +52,7 @@ if ($_POST) {
 		$wpdb->update('solicitud',
 		[
 			'estado' => 6,
-			'owner_over_65' => $_POST['owner_over_65'],
+			// 'owner_over_65' => $_POST['owner_over_65'],
 			'construction_lender_name' => $_POST['construction_lender_name'],
 			'construction_lender_address' => $_POST['construction_lender_address'],
 			'approximate_start_date' => date_format(date_create($_POST['approximate_start_date']), 'Y-m-d'),
@@ -303,7 +303,7 @@ if ($_POST) {
 				</div>
 				<div class="modal-body">
 
-					<div class="form-group row">
+					<!-- <div class="form-group row">
 						<label class="col-sm-12 col-md-4 col-form-label">Is the owner over 65?</label>
 						<div class="col-sm-12 col-md-8">
 							<select name="owner_over_65" class="form-control">
@@ -311,7 +311,7 @@ if ($_POST) {
 								<option value="0">NO</option>
 							</select>
 						</div>
-					</div>
+					</div> -->
 					<div class="form-group row">
 						<label class="col-sm-12 col-md-4 col-form-label">is there a construction lender?</label>
 						<div class="col-sm-12 col-md-8">

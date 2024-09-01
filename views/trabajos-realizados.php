@@ -7,7 +7,7 @@ if( $_POST ){
 	global $wpdb;
 
 	$array_insert = [
-		'titulo' => $_POST['titulo'],
+		'titulo' => ucfirst($_POST['titulo']),
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
 	];
