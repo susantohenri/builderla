@@ -3,6 +3,7 @@
 define('TALLER_COMPANY_SETTINGS_FIELDS', [
     ['name' => 'mopar_company_name', 'label' => "Direct Contractor's Name"],
     ['name' => 'mopar_license_number', 'label' => "Direct Contractor's License Number"],
+    ['name' => 'mopar_contractor_initial', 'label' => "Direct Contractor's Initial"],
     ['name' => 'mopar_company_address', 'label' => "Direct Contractor's Address"],
     ['name' => 'mopar_city_state_zip', 'label' => "City, State & ZIP"],
     ['name' => 'mopar_company_phone_number', 'label' => "Direct Contractor's Telephone - FAX"],
