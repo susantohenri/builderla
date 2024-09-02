@@ -10,6 +10,8 @@ define('TALLER_COMPANY_SETTINGS_FIELDS', [
     ['name' => 'mopar_company_email', 'label' => "Direct Contractor's Email"],
     ['name' => 'mopar_insurance_policy', 'label' => 'Insurance Company Name'],
     ['name' => 'mopar_insurance_phone', 'label' => 'Insurance Company Telephone'],
+    ['name' => 'mopar_company_signature', 'label' => 'Company Signature'],
+    ['name' => 'mopar_company_initials', 'label' => 'Company Initials'],
 ]);
 
 function taller_company_settings()
@@ -35,6 +37,7 @@ function taller_company_settings()
 
     $inputs = '';
     foreach ($fields as $field) {
+        if (in_array($field['name'], ['mopar_company_signature', 'mopar_company_initials'])) continue;
         $value = $values[$field['name']];
         $inputs .= "
             <div class=\"form-group col-sm-12 col-md-3\">
@@ -46,8 +49,12 @@ function taller_company_settings()
         ";
     }
 
+    wp_register_script('mopar-company-settings', plugin_dir_url(__FILE__) . 'company-settings.js', array('jquery'));
+    wp_enqueue_script('mopar-company-settings');
+
     echo "
         <link rel=\"stylesheet\" type=\"text/css\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\">
+        <script src=\"https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js\"></script>
         <div class=\"box pr-4\">
             <div class=\"box-header mb-4 ml-4 mt-4\">
                 <div class=\"row\">
@@ -57,16 +64,34 @@ function taller_company_settings()
                 </div>
             </div>
             <div class=\"box-body\">
-                <form method=\"POST\">
+                <form method=\"POST\" name=\"mopar_company_settings\">
                     <div class=\"col-sm-12\">
-                        <div class=\"form-row\">
 
+                        <div class=\"form-row\">
                             {$inputs}
+                        </div>
+
+                        <div class=\"form-row\">
+                            <div class=\"form-group col-sm-12 col-md-6\">
+                                <label>Signature</label>
+                                <canvas id=\"signature\" style=\"border: 1px solid #ccc; border-radius: 5px; width: 100%; height: 260px;\"></canvas>
+                                <textarea class=\"d-none\" name=\"mopar_company_signature\">{$values['mopar_company_signature']}</textarea>
+                                <a class=\"btn btn-warning text-white\" name=\"clear_signature\">Clear</a>
+                            </div>
+                            <div class=\"form-group col-sm-12 col-md-6\">
+                                <label>Initials</label>
+                                <canvas id=\"initials\" style=\"border: 1px solid #ccc; border-radius: 5px; width: 100%; height: 260px;\"></canvas>
+                                <textarea class=\"d-none\" name=\"mopar_company_initials\">{$values['mopar_company_initials']}</textarea>
+                                <a class=\"btn btn-warning text-white\" name=\"clear_initials\">Clear</a>
+                            </div>
+                        </div>
+
+                        <div class=\"form-row\">
                             <div class=\"form-group col-sm-12 text-right\">
                                 <input name=\"save_mopar_settings\" type=\"submit\" value=\"Save Settings\" class=\"btn btn-primary\">
                             </div>
-
                         </div>
+
                     </div>
                 </form>
             </div>
