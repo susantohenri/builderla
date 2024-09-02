@@ -182,7 +182,7 @@ function insertar_cliente_callback(){
 	global $wpdb;
 	$pass = Mopar::randomPassword();
 	$array_insert = [
-		'nombres' => ucwords($_POST['nombres']),
+		'nombres' => strtoupper($_POST['nombres']),
 		'email' => strtolower($_POST['email']),
 		'telefono' => $_POST['telefono'],
 		'secret' => md5($pass),
@@ -204,7 +204,7 @@ function actualizar_cliente_callback(){
 	
 
 	$array_edit = [
-		'nombres' => $_POST['nombres'],
+		'nombres' => strtoupper($_POST['nombres']),
 		'email' => $_POST['email'],
 		'telefono' => $_POST['telefono']
 	];
@@ -522,7 +522,7 @@ function insertar_ot_callback(){
 	$array_insert = [
 		'cliente_id' => $_POST['cliente'],
 		'vehiculo_id' => $_POST['vehiculo'],
-		'titulo' => ucfirst($_POST['titulo']),
+		'titulo' => strtoupper($_POST['titulo']),
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
 		'estado' => $_POST['estado'],
@@ -562,7 +562,7 @@ function editar_ot(){
     $array_update = [
 		'cliente_id' => $_POST['cliente'],
 		'vehiculo_id' => $_POST['vehiculo'],
-		'titulo' => ucfirst($_POST['titulo']),
+		'titulo' => strtoupper($_POST['titulo']),
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
 		'estado' => $_POST['estado'],
@@ -612,7 +612,7 @@ function editar_ot_callback(){
 	$array_update = [
 		'cliente_id' => $_POST['cliente'],
 		'vehiculo_id' => $_POST['vehiculo'],
-		'titulo' => ucfirst($_POST['titulo']),
+		'titulo' => strtoupper($_POST['titulo']),
 		'detalle' => json_encode($_POST['detalle']),
 		'valor' => $_POST['valor'],
 		'estado' => $_POST['estado'],

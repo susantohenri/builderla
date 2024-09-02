@@ -82,7 +82,7 @@ add_action('wp_ajax_nopriv_builderla_lead_form', function () {
     switch ($_POST['step']) {
         case 1:
             $wpdb->insert('clientes', [
-                'nombres' => ucwords($_POST['nombres']),
+                'nombres' => strtoupper($_POST['nombres']),
                 'email' => strtolower($_POST['email']),
                 'telefono' => $_POST['telefono']
             ]);
