@@ -676,6 +676,34 @@ function validate_initiate_contract_callback() {
 	exit(json_encode(['status' => 'OK']));
 }
 
+function send_unsigned_contract_callback()
+{
+	global $wpdb;
+	$ot_id = $_POST['regid'];
+	$recipient = $wpdb->get_row("
+		SELECT
+			ot.id
+			, clientes.email
+			, clientes.nombres
+			, vehiculos.street_address
+			, vehiculos.address_line_2
+			, vehiculos.city
+			, vehiculos.zip_code
+		FROM ot
+		LEFT JOIN vehiculos ON ot.vehiculo_id = vehiculos.id
+		LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
+		WHERE ot.id = {$ot_id}
+	");
+
+	if (!$recipient->email) exit(json_encode([
+		'status' => 'ERROR',
+		'message' => 'Please add the email to this customer first'
+	]));
+
+	Mopar::sendMail($recipient, 'send_unsigned_contract');
+	exit(json_encode(['status' => 'OK']));
+}
+
 function get_vehiculos_by_cliente_callback(){
 	$cliente_id = $_POST['cliente_id'];
 	$vehiculos = Mopar::getVehiculosByCliente($cliente_id);
@@ -783,6 +811,7 @@ add_action('wp_ajax_get_ot','get_ot_callback');
 add_action('wp_ajax_get_solicitud','get_solicitud_callback');
 add_action('rest_api_init', 'mopar_taller_select2_clientes');
 add_action('wp_ajax_send_estimation_email','send_estimation_email_callback');
+add_action('wp_ajax_send_unsigned_contract','send_unsigned_contract_callback');
 add_action('wp_ajax_validate_initiate_contract','validate_initiate_contract_callback');
 
 class Mopar{
@@ -1417,6 +1446,80 @@ Doctor Mopar
 				$subject = 'Your Estimate from FHS Construction';
 
 				$message = $user_meta['estimate_email_template'];
+				$message = str_replace('[customer]', $entity_id->nombres, $message);
+				$message = str_replace('[address]', $entity_id->street_address, $message);
+				$message = str_replace('[address2]', $entity_id->address_line_2, $message);
+				$message = str_replace('[city]', $entity_id->city, $message);
+				$message = str_replace('[zip]', $entity_id->zip_code, $message);
+				$message = str_replace('[name]', "{$user_meta['mopar_first_name']} {$user_meta['mopar_last_name']}", $message);
+				$message = str_replace('[phone]', $user_meta['mopar_phone_number'], $message);
+				break;
+			case 'send_unsigned_contract':
+				$ot_id = $entity_id->id;
+
+				global $wpdb;
+				$user_id = get_current_user_id();
+				$user_meta = [];
+				$meta_keys = [
+					'mopar_phone_number',
+					'mopar_first_name',
+					'mopar_last_name',
+				];
+				$meta_keys = implode("','", $meta_keys);
+				$meta_keys = "'{$meta_keys}'";
+				foreach ($wpdb->get_results("SELECT meta_key, meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key IN ({$meta_keys}) AND user_id = {$user_id}") as $record) {
+					$user_meta[$record->meta_key] = $record->meta_value;
+				}
+
+				include plugin_dir_path(__FILE__) . 'pdf/contract.php';
+				$html2pdf = mopar_generate_contract_pdf($ot_id);
+				$temporary_file = plugin_dir_path(__FILE__) . 'tmp/' . rand() . '.pdf';
+				$html2pdf->output($temporary_file, 'F');
+				$attachments[] = $temporary_file;
+
+				$recipient = $entity_id->email;
+				$subject = 'Your Unsigned Contract from FHS Construction';
+				$code = time();
+				$sign_link = site_url("wp-content/plugins/builderla/contract-pdf.php?sign_contract={$code}&id={$ot_id}");
+				$message = "
+Dear {$entity_id->nombres},
+
+We have prepared a contract for your project located at {$entity_id->street_address} - {$entity_id->address_line_2} - {$entity_id->city}, {$entity_id->zip_code}.
+Please find the attached file for your review. If all the information seems correct click here to sign it {$sign_link}
+
+Best regards,
+{$user_meta['mopar_first_name']} {$user_meta['mopar_last_name']}
+{$user_meta['mopar_phone_number']}
+FHS Construction INC
+				";
+				break;
+			case 'send_signed_contract':
+				global $wpdb;
+				$user_id = get_current_user_id();
+				$user_meta = [];
+				$meta_keys = [
+					'mopar_phone_number',
+					'mopar_first_name',
+					'mopar_last_name',
+					'contract_email_template'
+				];
+				$meta_keys = implode("','", $meta_keys);
+				$meta_keys = "'{$meta_keys}'";
+				foreach ($wpdb->get_results("SELECT meta_key, meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key IN ({$meta_keys}) AND user_id = {$user_id}") as $record) {
+					$user_meta[$record->meta_key] = $record->meta_value;
+				}
+				
+				$ot_id = $entity_id->id;
+				include plugin_dir_path(__FILE__) . 'pdf/contract.php';
+				$html2pdf = mopar_generate_contract_pdf($ot_id, true);
+				$temporary_file = plugin_dir_path(__FILE__) . 'tmp/' . rand() . '.pdf';
+				$html2pdf->output($temporary_file, 'F');
+				$attachments[] = $temporary_file;
+				
+				$recipient = $entity_id->email;
+				$subject = 'Your signed contract from FHS Construction';
+				
+				$message = $user_meta['contract_email_template'];
 				$message = str_replace('[customer]', $entity_id->nombres, $message);
 				$message = str_replace('[address]', $entity_id->street_address, $message);
 				$message = str_replace('[address2]', $entity_id->address_line_2, $message);

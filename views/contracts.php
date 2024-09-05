@@ -24,6 +24,7 @@
                         <td class="text-right"><?php echo '$ ' . number_format($ot->valor, 0); ?></td>
                         <td class="text-center" style="white-space: nowrap;">
                             <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/contract-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
+                            <button class="btn btn-warning btnSendUnsignedContract" data-toggle="tooltip" title="Send Unsigned Contract"><i class="fa fa-envelope"></i></button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -37,6 +38,41 @@
         jQuery(`#tabla_contracts`).DataTable({
             "scrollX": true,
             "ordering": false
+        })
+
+        jQuery(".btnSendUnsignedContract").click(function() {
+            tr = jQuery(this).closest('tr')
+            regid = tr.data('regid')
+
+            jQuery.ajax({
+                type: 'POST',
+                url: '<?php echo admin_url('admin-ajax.php') ?>',
+                dataType: 'json',
+                data: 'action=send_unsigned_contract&regid=' + regid,
+                beforeSend: function() {
+                    jQuery(".overlay").show()
+                },
+                success: function(json) {
+                    jQuery(".overlay").hide()
+                    if (`ERROR` === json.status) {
+                        jQuery.alert({
+                            title: false,
+                            type: 'red',
+                            content: json.message
+                        })
+                    } else {
+                        jQuery.alert({
+                            title: false,
+                            type: 'green',
+                            content: 'Email sent successfully',
+                            buttons: {
+                                ok: () => {
+                                }
+                            }
+                        })
+                    }
+                }
+            })
         })
     })
 </script>

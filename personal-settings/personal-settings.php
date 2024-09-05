@@ -72,6 +72,33 @@ FHS Construction INC
     $estimate_email_template_rows = count(explode("\n", $estimate_email_template));
     $estimate_email_template_rows--;
 
+    // contract email template
+    $default_contract_email_template = "
+Dear [customer],
+
+We’re excited to inform you that the contract for your project at [address], [city], [zip] has been signed! We will be in touch shortly to discuss the next steps.
+Please find the attached file for your review. If you have any questions, feel free to reach out.
+
+Best regards,
+[name]
+[phone]
+FHS Construction Inc.
+    ";
+    if (isset($_POST['contract_email_template'])) {
+        $wpdb->update(
+            "{$wpdb->prefix}usermeta",
+            ['meta_value' => $_POST['contract_email_template']],
+            ['meta_key' => 'contract_email_template', 'user_id' => $user_id]
+        );
+    }
+    $contract_email_template = $wpdb->get_var("SELECT meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key = 'contract_email_template' AND user_id = {$user_id}");
+    if (!$contract_email_template) {
+        $wpdb->insert("{$wpdb->prefix}usermeta", ['meta_key' => 'contract_email_template', 'meta_value' => $default_contract_email_template, 'user_id' => $user_id]);
+        $contract_email_template = $default_contract_email_template;
+    }
+    $contract_email_template_rows = count(explode("\n", $contract_email_template));
+    $contract_email_template_rows--;
+
     echo "
         <link rel=\"stylesheet\" type=\"text/css\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\">
         <div class=\"box pr-4\">
@@ -86,6 +113,11 @@ FHS Construction INC
                 <form method=\"POST\">
                     <div class=\"col-sm-12 col-sm-12\">
                         {$inputs}
+
+                        <br>
+                        <br>
+                        <h4> Email Template for Estimation </h4>
+                        <hr>
                         <div class=\"form-row\">
                             <div class=\"col-sm-12\">
                                 When sending estimates via email, you can use specific tags in the subject and message fields to automatically fill in customer and user details. These tags are placeholders that will be replaced with the actual information when the email is generated. Here are the available tags:
@@ -105,6 +137,31 @@ FHS Construction INC
                                 <textarea rows=\"{$estimate_email_template_rows}\" style=\"width: 100%\" name=\"estimate_email_template\">{$estimate_email_template}</textarea>
                             </div>
                         </div>
+
+                        <br>
+                        <br>
+                        <h4> Email Template for signed contract </h4>
+                        <hr>
+                        <div class=\"form-row\">
+                            <div class=\"col-sm-12\">
+                                When sending signed contracts via email, you can use specific tags in the subject and message fields to automatically fill in customer and user details. These tags are placeholders that will be replaced with the actual information when the email is generated. Here are the available tags:
+                                <ol>
+                                    <li>[customer]: Inserts the customer's name.</li>
+                                    <li>[address]: Inserts the customer's primary address line.</li>
+                                    <li>[address2]: Inserts the customer's secondary address line (e.g., apartment or suite number).</li>
+                                    <li>[city]: Inserts the customer's city.</li>
+                                    <li>[zip]: Inserts the customer's ZIP code.</li>
+                                    <li>[name]: Inserts your full name.</li>
+                                    <li>[phone]: Inserts your phone number.</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class=\"form-row\">
+                            <div class=\"col-sm-12\">
+                                <textarea rows=\"{$contract_email_template_rows}\" style=\"width: 100%\" name=\"contract_email_template\">{$contract_email_template}</textarea>
+                            </div>
+                        </div>
+
                         <div class=\"form-row\">
                             <div class=\"form-group col-sm-12 text-right\">
                                 <input name=\"save_mopar_personal_settings\" type=\"submit\" value=\"Save Settings\" class=\"btn btn-primary\">

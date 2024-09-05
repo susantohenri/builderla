@@ -70,6 +70,10 @@ CREATE TABLE `ot` (
   `customer_to_provide` text NOT NULL,
   `not_included` text NOT NULL,
   `price_breakdown` tinyint(1) NOT NULL DEFAULT '0',
+  `client_signature` text,
+  `client_initial` text,
+  `client_dob` date DEFAULT NULL,
+  `signed_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
