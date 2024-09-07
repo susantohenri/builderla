@@ -1473,6 +1473,7 @@ Doctor Mopar
 					'mopar_phone_number',
 					'mopar_first_name',
 					'mopar_last_name',
+					'unsigned_contract_email_template'
 				];
 				$meta_keys = implode("','", $meta_keys);
 				$meta_keys = "'{$meta_keys}'";
@@ -1490,27 +1491,33 @@ Doctor Mopar
 				$subject = 'Your Unsigned Contract from FHS Construction';
 				$code = time();
 				$sign_link = site_url("wp-content/plugins/builderla/contract-pdf.php?sign_contract={$code}&id={$ot_id}");
-				$message = "
-Dear {$entity_id->nombres},
 
-We have prepared a contract for your project located at {$entity_id->street_address} - {$entity_id->address_line_2} - {$entity_id->city}, {$entity_id->zip_code}.
-Please find the attached file for your review. If all the information seems correct click here to sign it {$sign_link}
-
-Best regards,
-{$user_meta['mopar_first_name']} {$user_meta['mopar_last_name']}
-{$user_meta['mopar_phone_number']}
-FHS Construction INC
-				";
+				$message = $user_meta['unsigned_contract_email_template'];
+				$message = str_replace('[customer]', $entity_id->nombres, $message);
+				$message = str_replace('[address]', $entity_id->street_address, $message);
+				$message = str_replace('[address2]', $entity_id->address_line_2, $message);
+				$message = str_replace('[city]', $entity_id->city, $message);
+				$message = str_replace('[zip]', $entity_id->zip_code, $message);
+				$message = str_replace('[sign_link]', $sign_link, $message);
+				$message = str_replace('[name]', "{$user_meta['mopar_first_name']} {$user_meta['mopar_last_name']}", $message);
+				$message = str_replace('[phone]', $user_meta['mopar_phone_number'], $message);
 				break;
 			case 'send_signed_contract':
 				global $wpdb;
-				$user_id = get_current_user_id();
+				$ot_id = $entity_id->id;
+				$user_id = $wpdb->get_var("
+					SELECT clientes.createdBy
+					FROM ot
+					LEFT JOIN vehiculos ON ot.vehiculo_id = vehiculos.id
+					LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
+					WHERE ot.id = {$ot_id}
+				");
 				$user_meta = [];
 				$meta_keys = [
 					'mopar_phone_number',
 					'mopar_first_name',
 					'mopar_last_name',
-					'contract_email_template'
+					'signed_contract_email_template'
 				];
 				$meta_keys = implode("','", $meta_keys);
 				$meta_keys = "'{$meta_keys}'";
@@ -1518,7 +1525,6 @@ FHS Construction INC
 					$user_meta[$record->meta_key] = $record->meta_value;
 				}
 				
-				$ot_id = $entity_id->id;
 				include plugin_dir_path(__FILE__) . 'pdf/contract.php';
 				$html2pdf = mopar_generate_contract_pdf($ot_id, true);
 				$temporary_file = plugin_dir_path(__FILE__) . 'tmp/' . rand() . '.pdf';
@@ -1528,7 +1534,7 @@ FHS Construction INC
 				$recipient = $entity_id->email;
 				$subject = 'Your signed contract from FHS Construction';
 				
-				$message = $user_meta['contract_email_template'];
+				$message = $user_meta['signed_contract_email_template'];
 				$message = str_replace('[customer]', $entity_id->nombres, $message);
 				$message = str_replace('[address]', $entity_id->street_address, $message);
 				$message = str_replace('[address2]', $entity_id->address_line_2, $message);

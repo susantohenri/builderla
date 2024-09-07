@@ -2,6 +2,7 @@
 $folder = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/builderla/uploads/';
 $inserted = false;
 $updated = false;
+$error_message = false;
 
 if ($_POST) {
 	global $wpdb;
@@ -20,17 +21,26 @@ if ($_POST) {
 	if (isset($_POST['vehiculo'])) $array_insert['vehiculo_id'] = $_POST['vehiculo'];
 
 	if ($_POST['action'] == 'insertar_cotizaciones') {
-		$create_ot = $wpdb->insert('ot', [
-			'vehiculo_id' => $_POST['vehiculo'],
-			'estado' => 1,
-			'detalle' => '{"item":[""],"precio":[""], "observaciones":[""]}'
-		]);
-		$create_solicitud = $wpdb->insert('solicitud', [
-			'ot_id' => $wpdb->insert_id,
-			'vehiculo_id' => $_POST['vehiculo']
-		]);
-		if ($create_ot) {
-			$inserted = true;
+		$client_createdBy = $wpdb->get_var("
+			SELECT clientes.createdBy
+			FROM vehiculos
+			LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
+			WHERE vehiculos.id = {$_POST['vehiculo']}
+		");
+		if (0 == $client_createdBy) $error_message = 'Error: customer must be claimed first';
+		else {
+			$create_ot = $wpdb->insert('ot', [
+				'vehiculo_id' => $_POST['vehiculo'],
+				'estado' => 1,
+				'detalle' => '{"item":[""],"precio":[""], "observaciones":[""]}'
+			]);
+			$create_solicitud = $wpdb->insert('solicitud', [
+				'ot_id' => $wpdb->insert_id,
+				'vehiculo_id' => $_POST['vehiculo']
+			]);
+			if ($create_ot) {
+				$inserted = true;
+			}
 		}
 	}
 
@@ -704,6 +714,13 @@ if ($_POST) {
 			location.href = '<?php bloginfo('wpurl') ?>/wp-admin/admin.php?page=mopar-cotizaciones';
 		<?php } ?>
 
+		<?php if ('' != $error_message) { ?>
+			$.alert({
+				type: 'red',
+				title: false,
+				content: '<?= $error_message ?>'
+			})
+		<?php } ?>
 
 		$('#tabla_ots').DataTable({
 			"scrollX": true,

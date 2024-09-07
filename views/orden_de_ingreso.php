@@ -51,11 +51,11 @@ if ($_POST) {
 						<td data-regid="<?php echo $solicitud->id; ?>"> <?php echo $solicitud->id; ?> </td>
 						<td data-cliente="<?php echo $solicitud->cliente_id; ?>"> <?php echo Mopar::getNombreCliente($solicitud->cliente_id, false) ?> </td>
 						<td data-vehiculo="<?php echo $solicitud->vehiculo_id; ?>"> <?php echo Mopar::getNombreVehiculo($solicitud->vehiculo_id) ?> </td>
-						<td class="text-center align-middle">
+						<!-- <td class="text-center align-middle">
 							<a>
 								<i class="fa fa-circle text-<?= 2 == $solicitud->ot_estado ? 'success':'danger' ?>"></i>
 							</a>
-						</td>
+						</td> -->
 						<td class="text-center" style="white-space: nowrap;">
 							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $solicitud->id; ?>" data-toggle="tooltip" title="Editar"><i class="fa fa-pencil"></i></button>
 							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/solicitud-pdf.php?id=<?php echo $solicitud->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="Ver"><i class="fa fa-search"></i></a>
