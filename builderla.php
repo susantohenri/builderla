@@ -223,7 +223,15 @@ function actualizar_cliente_callback(){
 	exit(); 
 }
 
-
+function claim_lead_callback(){
+	global $wpdb;
+	$wpdb->update('clientes', [
+		'createdBy' => get_current_user_id()
+	], ['id' => $_POST['regid']]);
+	exit(json_encode([
+		'status' => 'OK'
+	]));
+}
 
 /*********** VEHICULOS ************/
 
@@ -781,6 +789,7 @@ function builderla_get_creator_user_login ($user_id) {
 add_action('wp_ajax_validate_cliente','validate_cliente_callback');
 add_action('wp_ajax_insertar_cliente','insertar_cliente_callback');
 add_action('wp_ajax_actualizar_cliente','actualizar_cliente_callback');
+add_action('wp_ajax_claim_lead','claim_lead_callback');
 add_action('wp_ajax_eliminar_cliente','eliminar_cliente_callback');
 
 //Vehiculos

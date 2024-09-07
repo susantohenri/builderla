@@ -203,7 +203,51 @@ $(document).ready(function(){
 		});
 	});
 
-
+	jQuery(`td[data-createdBy]:contains('system')`).click(function () {
+		tr = jQuery(this).closest(`tr`)
+		regid = tr.data(`regid`)
+		jQuery.confirm({
+			title: `Claim Lead`,
+			content: `Claim this lead?`,
+			type: `green`,
+			icon: `fa fa-warning`,
+			buttons: {
+				NO: {
+					text: `No`,
+					btnClass: `btn-red`,
+				},
+				YES: {
+					text: `Yes`,
+					btnClass: `btn-green`,
+					action: function () {
+						$.ajax({
+							type: `POST`,
+							url: `<?= admin_url('admin-ajax.php') ?>`,
+							dataType: `json`,
+							data: `action=claim_lead&regid=${regid}`,
+							beforeSend: function () {
+								jQuery(`.overlay`).show()
+							},
+							success: function (json) {
+								jQuery.alert({
+									title: false,
+									type: `green`,
+									content: `Lead claimed successfully`,
+									buttons: {
+										OK: {
+											action: () => {
+												location.reload()
+											}
+										}
+									}
+								});
+							}
+						})
+					}
+				}
+			}
+		})
+	})
 
 	$("#formNuevoCliente").submit(function(e){
 		e.preventDefault();
