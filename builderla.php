@@ -1488,7 +1488,7 @@ Doctor Mopar
 				$attachments[] = $temporary_file;
 
 				$recipient = $entity_id->email;
-				$subject = 'Your Unsigned Contract from FHS Construction';
+				$subject = 'Your unsigned contract from FHS Construction';
 				$code = time();
 				$sign_link = site_url("wp-content/plugins/builderla/contract-pdf.php?sign_contract={$code}&id={$ot_id}");
 
