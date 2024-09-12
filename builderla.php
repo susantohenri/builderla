@@ -44,6 +44,7 @@ function theme_options_panel(){
 	add_menu_page($page_title, $menu_title, $capability, $menu_slug, $callback, $icon_url, $position);
 	add_submenu_page($menu_slug, 'Estimates', 'Estimates', 'manage_options', 'mopar-cotizaciones', 'taller_cotizaciones_func');
 	add_submenu_page($menu_slug, 'Contracts', 'Contracts', 'manage_options', 'mopar-contracts', 'taller_contracts_func');
+	add_submenu_page($menu_slug, 'Agreements', 'Agreements', 'manage_options', 'mopar-agreement', 'taller_agreements_func');
 	remove_submenu_page($menu_slug, $menu_slug);
 	
 	$page_title = $menu_title = 'Settings';
@@ -97,6 +98,11 @@ function taller_cotizaciones_func(){
 function taller_contracts_func(){
 	$contracts = Mopar::getContracts();
 	include('views/contracts.php');
+}
+
+function taller_agreements_func(){
+	$agreements = Mopar::getAgreements();
+	include('views/agreements.php');
 }
 
 function taller_trabajos_realizado_func(){
@@ -738,6 +744,12 @@ function send_unsigned_contract_callback()
 	exit(json_encode(['status' => 'OK']));
 }
 
+function delete_agreement_callback() {
+	global $wpdb;
+	$wpdb->update('ot', ['client_signature' => ''], ['id' => $_POST['regid']]);
+	exit(json_encode(['status' => 'OK']));
+}
+
 function get_vehiculos_by_cliente_callback(){
 	$cliente_id = $_POST['cliente_id'];
 	$vehiculos = Mopar::getVehiculosByCliente($cliente_id);
@@ -847,6 +859,7 @@ add_action('wp_ajax_get_solicitud','get_solicitud_callback');
 add_action('rest_api_init', 'mopar_taller_select2_clientes');
 add_action('wp_ajax_send_estimation_email','send_estimation_email_callback');
 add_action('wp_ajax_send_unsigned_contract','send_unsigned_contract_callback');
+add_action('wp_ajax_delete_agreement','delete_agreement_callback');
 add_action('wp_ajax_validate_initiate_contract','validate_initiate_contract_callback');
 
 class Mopar{
@@ -1194,14 +1207,28 @@ class Mopar{
 			SELECT
 				ot.*
 				, solicitud.estado solicitud_estado
-				, solicitud.fecha
 			FROM ot
 			LEFT JOIN solicitud ON ot.id = solicitud.ot_id
 			WHERE solicitud.estado = 6
+			AND ot.client_signature = ''
 			ORDER BY id DESC
 		");
 
 		return $ots;
+	}
+
+	public static function getAgreements(){
+		global $wpdb;
+		return $wpdb->get_results("
+			SELECT
+				ot.*
+				, solicitud.estado solicitud_estado
+			FROM ot
+			LEFT JOIN solicitud ON ot.id = solicitud.ot_id
+			WHERE solicitud.estado = 6
+			AND ot.client_signature <> ''
+			ORDER BY id DESC
+		");
 	}
 
 	public static function getTrabajosRealizado(){

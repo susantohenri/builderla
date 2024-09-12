@@ -18,7 +18,7 @@
             <tbody>
                 <?php foreach ($contracts as $ot) : ?>
                     <tr data-regid="<?php echo $ot->id; ?>">
-                        <td> <?php echo $ot->fecha; ?> </td>
+                        <td> <?= date_format(date_create($ot->regdate),'Y-m-d') ?> </td>
                         <td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getTitleVehiculo($ot->vehiculo_id) ?> </td>
                         <td> <?php echo $ot->titulo; ?> </td>
                         <td class="text-right"><?php echo '$ ' . number_format($ot->valor, 0); ?></td>
