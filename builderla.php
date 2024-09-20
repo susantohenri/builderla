@@ -668,10 +668,10 @@ function editar_ot_callback(){
 	exit();  
 }
 
-function send_estimation_email_callback() {
+function get_estimation_email_body_callback() {
 	global $wpdb;
-	$ot_id = $_POST['regid'];
-	$recipient = $wpdb->get_row("
+	$ot_id = $_GET['ot_id'];
+	$customer = $wpdb->get_row("
 		SELECT
 			ot.id
 			, clientes.email
@@ -685,17 +685,39 @@ function send_estimation_email_callback() {
 		LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
 		WHERE ot.id = {$ot_id}
 	");
-
-	if (!$recipient->email) exit(json_encode([
+	if (!$customer->email) exit(json_encode([
 		'status' => 'ERROR',
 		'message' => 'Please add the email to this customer first'
 	]));
 
-	Mopar::sendMail($recipient, 'send_estimation');
-	$wpdb->update('ot', ['estado' => 2], ['id' => $ot_id]);
-	$wpdb->update('solicitud', ['estado' => 5], ['ot_id' => $ot_id]);
+	$user_id = get_current_user_id();
+	$user_meta = [];
+	$meta_keys = [
+		'mopar_phone_number',
+		'mopar_first_name',
+		'mopar_last_name',
+		'estimate_email_template'
+	];
+	$meta_keys = implode("','", $meta_keys);
+	$meta_keys = "'{$meta_keys}'";
+	foreach ($wpdb->get_results("SELECT meta_key, meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key IN ({$meta_keys}) AND user_id = {$user_id}") as $record) {
+		$user_meta[$record->meta_key] = $record->meta_value;
+	}
 
-	exit(json_encode(['status' => 'OK']));
+	if (!isset($user_meta['estimate_email_template'])) $user_meta['estimate_email_template'] = taller_get_default_email_template('estimate');
+	$message = $user_meta['estimate_email_template'];
+	$message = str_replace('[customer]', $customer->nombres, $message);
+	$message = str_replace('[address]', $customer->street_address, $message);
+	$message = str_replace('[address2]', $customer->address_line_2, $message);
+	$message = str_replace('[city]', $customer->city, $message);
+	$message = str_replace('[zip]', $customer->zip_code, $message);
+	$message = str_replace('[name]', "{$user_meta['mopar_first_name']} {$user_meta['mopar_last_name']}", $message);
+	$message = str_replace('[phone]', $user_meta['mopar_phone_number'], $message);
+	exit(json_encode([
+		'status' => 'SUCCESS',
+		'message' => $message,
+		'recipient' => $customer->email
+	]));
 }
 
 function validate_initiate_contract_callback() {
@@ -857,7 +879,7 @@ add_action('wp_ajax_get_vehiculos_by_cliente','get_vehiculos_by_cliente_callback
 add_action('wp_ajax_get_ot','get_ot_callback');
 add_action('wp_ajax_get_solicitud','get_solicitud_callback');
 add_action('rest_api_init', 'mopar_taller_select2_clientes');
-add_action('wp_ajax_send_estimation_email','send_estimation_email_callback');
+add_action('wp_ajax_get_estimation_email_body','get_estimation_email_body_callback');
 add_action('wp_ajax_send_unsigned_contract','send_unsigned_contract_callback');
 add_action('wp_ajax_delete_agreement','delete_agreement_callback');
 add_action('wp_ajax_validate_initiate_contract','validate_initiate_contract_callback');
@@ -1480,22 +1502,8 @@ Doctor Mopar
 					$message = "Here is your new password for Doctormopar client area: {$entity_id['new_password']}";
 				break;
 			case 'send_estimation':
-				global $wpdb;
-				$user_id = get_current_user_id();
-				$user_meta = [];
-				$meta_keys = [
-					'mopar_phone_number',
-					'mopar_first_name',
-					'mopar_last_name',
-					'estimate_email_template'
-				];
-				$meta_keys = implode("','", $meta_keys);
-				$meta_keys = "'{$meta_keys}'";
-				foreach ($wpdb->get_results("SELECT meta_key, meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key IN ({$meta_keys}) AND user_id = {$user_id}") as $record) {
-					$user_meta[$record->meta_key] = $record->meta_value;
-				}
 
-				$ot_id = $entity_id->id;
+				$ot_id = $entity_id['ot_id'];
 				include plugin_dir_path(__FILE__) . 'pdf/estimate.php';
 				$orientation = 'potrait';
 				$html2pdf = new Html2Pdf($orientation,'LETTER','es');
@@ -1504,17 +1512,10 @@ Doctor Mopar
 				$html2pdf->output($temporary_file, 'F');
 				$attachments[] = $temporary_file;
 
-				$recipient = $entity_id->email;
+				$recipient = $entity_id['email'];
 				$subject = 'Your Estimate from FHS Construction';
 
-				$message = $user_meta['estimate_email_template'];
-				$message = str_replace('[customer]', $entity_id->nombres, $message);
-				$message = str_replace('[address]', $entity_id->street_address, $message);
-				$message = str_replace('[address2]', $entity_id->address_line_2, $message);
-				$message = str_replace('[city]', $entity_id->city, $message);
-				$message = str_replace('[zip]', $entity_id->zip_code, $message);
-				$message = str_replace('[name]', "{$user_meta['mopar_first_name']} {$user_meta['mopar_last_name']}", $message);
-				$message = str_replace('[phone]', $user_meta['mopar_phone_number'], $message);
+				$message = $entity_id['email_body'];
 				break;
 			case 'send_unsigned_contract':
 				$ot_id = $entity_id->id;

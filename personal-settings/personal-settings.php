@@ -47,16 +47,7 @@ function taller_personal_settings()
     }
 
     // estimate email template
-    $default_estimate_email_template = "
-Dear [customer],
-We have prepared your project located at [address] - [address2] - [city], [zip].
-Please find the attached estimate for your review. If you have any questions or need further information, feel free to reach out to me.
-
-Best regards,
-[name]
-[phone]
-FHS Construction INC
-    ";
+    $default_estimate_email_template = taller_get_default_email_template('estimate');
     if (isset($_POST['estimate_email_template'])) {
         $wpdb->update(
             "{$wpdb->prefix}usermeta",
@@ -73,17 +64,7 @@ FHS Construction INC
     $estimate_email_template_rows--;
 
     // unsigned contract email template
-    $default_unsigned_contract_email_template = "
-Dear [customer],
-
-We have prepared a contract for your project located at [address], [city], [zip].
-Please find the attached file for your review. If all the information seems correct click here to sign it [sign_link]
-
-Best regards,
-[name]
-[phone]
-FHS Construction INC
-    ";
+    $default_unsigned_contract_email_template = taller_get_default_email_template('unsigned_contract');
     if (isset($_POST['unsigned_contract_email_template'])) {
         $wpdb->update(
             "{$wpdb->prefix}usermeta",
@@ -100,17 +81,7 @@ FHS Construction INC
     $unsigned_contract_email_template_rows--;
 
     // signed contract email template
-    $default_signed_contract_email_template = "
-Dear [customer],
-
-We’re excited to inform you that the contract for your project at [address], [city], [zip] has been signed! We will be in touch shortly to discuss the next steps.
-Please find the attached file for your review. If you have any questions, feel free to reach out.
-
-Best regards,
-[name]
-[phone]
-FHS Construction Inc.
-        ";
+    $default_signed_contract_email_template = taller_get_default_email_template('signed_contract');
     if (isset($_POST['signed_contract_email_template'])) {
         $wpdb->update(
             "{$wpdb->prefix}usermeta",
@@ -224,4 +195,48 @@ FHS Construction Inc.
             </div>
         </div>
     ";
+}
+
+function taller_get_default_email_template($purpose)
+{
+    switch ($purpose) {
+        case 'estimate':
+            return "
+Dear [customer],
+We have prepared your project located at [address] - [address2] - [city], [zip].
+Please find the attached estimate for your review. If you have any questions or need further information, feel free to reach out to me.
+
+Best regards,
+[name]
+[phone]
+FHS Construction INC
+            ";
+            break;
+        case 'unsigned_contract':
+            return "
+Dear [customer],
+
+We have prepared a contract for your project located at [address], [city], [zip].
+Please find the attached file for your review. If all the information seems correct click here to sign it [sign_link]
+
+Best regards,
+[name]
+[phone]
+FHS Construction INC
+            ";
+            break;
+        case 'signed_contract':
+            return "
+Dear [customer],
+
+We’re excited to inform you that the contract for your project at [address], [city], [zip] has been signed! We will be in touch shortly to discuss the next steps.
+Please find the attached file for your review. If you have any questions, feel free to reach out.
+
+Best regards,
+[name]
+[phone]
+FHS Construction Inc.
+            ";
+            break;
+    }
 }

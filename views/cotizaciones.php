@@ -58,6 +58,24 @@ if ($_POST) {
 		}
 	}
 
+	if ($_POST['action'] == 'send_estimation_email_body') {
+		$ot_id = $_POST['ot_id'];
+	
+		add_action('async_send_estimation_email', function ($recipient) {
+			Mopar::sendMail($recipient, 'send_estimation');
+		});
+
+		wp_schedule_single_event(time() + 1, 'async_send_estimation_email', [[
+			'ot_id' => $ot_id,
+			'email' => $_POST['recipient'],
+			'email_body' => $_POST['email_body']
+		]]);
+
+		$wpdb->update('ot', ['estado' => 2], ['id' => $ot_id]);
+		$wpdb->update('solicitud', ['estado' => 5], ['ot_id' => $ot_id]);
+		$estimation_email_body_sent = true;
+	}
+
 	if ($_POST['action'] == 'initiate_contract') {
 		$wpdb->update('solicitud',
 		[
@@ -127,7 +145,7 @@ if ($_POST) {
 							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $ot->id; ?>" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
 							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/estimate-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
 							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
-							<button class="btn btn-warning btnComplete" data-toggle="tooltip" title="Send Estimate"><i class="fa fa-envelope"></i></button>
+							<button class="btn btn-warning btnSendEstimationEmail" data-toggle="tooltip" title="Send Estimate"><i class="fa fa-envelope"></i></button>
 							<button class="btn btn-primary btnContract" data-toggle="tooltip" title="Initiate Contract"><i class="fa fa-check"></i></button>
 						</td>
 					</tr>
@@ -292,6 +310,43 @@ if ($_POST) {
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-times"></i> Close</button>
 					<button type="submit" class="btn btn-success btnGuardar">Save <i class="fa fa-save"></i> </button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!-- SEND ESTIMATION EMAIL -->
+<div class="modal fade" id="modalSendEstimationEmail" tabindex="-1" role="dialog"
+	aria-labelledby="modalSendEstimationEmail" aria-hidden="true">
+	<form method="post" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="send_estimation_email_body">
+		<input type="hidden" name="ot_id">
+		<input type="hidden" name="recipient">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Send Estimation Email</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group row">
+						<div class="col-12">
+							<textarea name="email_body" class="form-control"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-success btnGuardar">
+						<i class="fa fa-envelope"></i>
+						SEND
+					</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						<i class="fa fa-times"></i>
+						CANCEL
+					</button>
 				</div>
 			</div>
 		</div>
@@ -599,20 +654,19 @@ if ($_POST) {
 			});
 		});
 
-		$(".btnComplete").click(function() {
-			tr = $(this).closest('tr');
-			regid = tr.data('regid');
-
-			$.ajax({
-				type: 'POST',
-				url: '<?php echo admin_url('admin-ajax.php'); ?>',
+		jQuery(`.btnSendEstimationEmail`).click(function() {
+			tr = $(this).closest('tr')
+			regid = tr.data('regid')
+			jQuery.ajax({
+				type: `GET`,
 				dataType: 'json',
-				data: 'action=send_estimation_email&regid=' + regid,
+				url: `<?= admin_url('admin-ajax.php') ?>`,
+				data: `action=get_estimation_email_body&ot_id=${regid}`,
 				beforeSend: function() {
-					$(".overlay").show();
+					jQuery(`.overlay`).show()
 				},
 				success: function(json) {
-					$(".overlay").hide();
+					jQuery(`.overlay`).hide()
 					if (`ERROR` === json.status) {
 						$.alert({
 							title: false,
@@ -620,20 +674,28 @@ if ($_POST) {
 							content: json.message
 						});
 					} else {
-						$.alert({
-							title: false,
-							type: 'green',
-							content: 'Email sent successfully',
-							buttons: {
-								ok: () => {
-									window.location.reload()
-								}
-							}
-						});
+						jQuery(`[name="recipient"]`).val(json.recipient)
+						jQuery(`[name="email_body"]`)
+							.val(json.message)
+							.attr(`rows`, json.message.split(`\n`).length)
+						$(`#modalSendEstimationEmail`).modal(`show`)
 					}
 				}
 			})
-		});
+		})
+
+		<?php if (isset($estimation_email_body_sent)): ?>
+			$.alert({
+				title: false,
+				type: 'green',
+				content: 'Estimation email sent successfully',
+				buttons: {
+					OK: () => {
+						location.reload()
+					}
+				}
+			});
+		<?php endif ?>
 
 		$(".btnContract").click(function() {
 			tr = $(this).closest('tr');
