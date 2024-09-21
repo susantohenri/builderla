@@ -60,16 +60,17 @@ if ($_POST) {
 
 	if ($_POST['action'] == 'send_estimation_email_body') {
 		$ot_id = $_POST['ot_id'];
-	
-		add_action('async_send_estimation_email', function ($recipient) {
-			Mopar::sendMail($recipient, 'send_estimation');
-		});
 
-		wp_schedule_single_event(time() + 1, 'async_send_estimation_email', [[
-			'ot_id' => $ot_id,
-			'email' => $_POST['recipient'],
-			'email_body' => $_POST['email_body']
-		]]);
+		wp_schedule_single_event(time(), 'mopar_async', [
+			[
+				'action' => 'send_estimation_email',
+				'recipient' => [
+					'ot_id' => $ot_id,
+					'email' => $_POST['recipient'],
+					'email_body' => $_POST['email_body']
+				]
+			]
+		]);
 
 		$wpdb->update('ot', ['estado' => 2], ['id' => $ot_id]);
 		$wpdb->update('solicitud', ['estado' => 5], ['ot_id' => $ot_id]);
@@ -657,6 +658,7 @@ if ($_POST) {
 		jQuery(`.btnSendEstimationEmail`).click(function() {
 			tr = $(this).closest('tr')
 			regid = tr.data('regid')
+			jQuery(`div#modalSendEstimationEmail [name="ot_id"]`).val(regid)
 			jQuery.ajax({
 				type: `GET`,
 				dataType: 'json',

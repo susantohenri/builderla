@@ -63,7 +63,18 @@ function theme_options_panel(){
 	// add_submenu_page( 'mopar-taller', 'Conciliación Contable', 'Conciliación Contable', 'manage_options', 'conciliacion-contable', 'taller_conciliacion_contable_func');
 }
 add_action('admin_menu', 'theme_options_panel');
- 
+
+add_action('mopar_async', function ($params) {
+	switch ($params['action']) {
+		case 'send_estimation_email':
+			Mopar::sendMail($params['recipient'], 'send_estimation');
+			break;
+		case 'send_signed_contract_email':
+			Mopar::sendMail($params['recipient'], 'send_signed_contract');
+			break;
+	}
+});
+
 function taller_home_func(){
 	$events = Mopar::getCalendarEvents();
 	include('views/home.php');	
@@ -690,29 +701,15 @@ function get_estimation_email_body_callback() {
 		'message' => 'Please add the email to this customer first'
 	]));
 
-	$user_id = get_current_user_id();
-	$user_meta = [];
-	$meta_keys = [
-		'mopar_phone_number',
-		'mopar_first_name',
-		'mopar_last_name',
-		'estimate_email_template'
-	];
-	$meta_keys = implode("','", $meta_keys);
-	$meta_keys = "'{$meta_keys}'";
-	foreach ($wpdb->get_results("SELECT meta_key, meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key IN ({$meta_keys}) AND user_id = {$user_id}") as $record) {
-		$user_meta[$record->meta_key] = $record->meta_value;
-	}
+	$personal_settings = taller_get_personal_settings();
+	$message = $personal_settings['estimate_email_template'];
 
-	if (!isset($user_meta['estimate_email_template'])) $user_meta['estimate_email_template'] = taller_get_default_email_template('estimate');
-	$message = $user_meta['estimate_email_template'];
 	$message = str_replace('[customer]', $customer->nombres, $message);
 	$message = str_replace('[address]', $customer->street_address, $message);
 	$message = str_replace('[address2]', $customer->address_line_2, $message);
 	$message = str_replace('[city]', $customer->city, $message);
 	$message = str_replace('[zip]', $customer->zip_code, $message);
-	$message = str_replace('[name]', "{$user_meta['mopar_first_name']} {$user_meta['mopar_last_name']}", $message);
-	$message = str_replace('[phone]', $user_meta['mopar_phone_number'], $message);
+
 	exit(json_encode([
 		'status' => 'SUCCESS',
 		'message' => $message,
@@ -1502,7 +1499,6 @@ Doctor Mopar
 					$message = "Here is your new password for Doctormopar client area: {$entity_id['new_password']}";
 				break;
 			case 'send_estimation':
-
 				$ot_id = $entity_id['ot_id'];
 				include plugin_dir_path(__FILE__) . 'pdf/estimate.php';
 				$orientation = 'potrait';
@@ -1566,18 +1562,6 @@ Doctor Mopar
 					LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
 					WHERE ot.id = {$ot_id}
 				");
-				$user_meta = [];
-				$meta_keys = [
-					'mopar_phone_number',
-					'mopar_first_name',
-					'mopar_last_name',
-					'signed_contract_email_template'
-				];
-				$meta_keys = implode("','", $meta_keys);
-				$meta_keys = "'{$meta_keys}'";
-				foreach ($wpdb->get_results("SELECT meta_key, meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key IN ({$meta_keys}) AND user_id = {$user_id}") as $record) {
-					$user_meta[$record->meta_key] = $record->meta_value;
-				}
 				
 				include plugin_dir_path(__FILE__) . 'pdf/contract.php';
 				$html2pdf = mopar_generate_contract_pdf($ot_id, true);
@@ -1587,15 +1571,15 @@ Doctor Mopar
 				
 				$recipient = $entity_id->email;
 				$subject = 'Your signed contract from FHS Construction';
-				
-				$message = $user_meta['signed_contract_email_template'];
+
+				$personal_settings = taller_get_personal_settings(true, $user_id);
+				$message = $personal_settings['signed_contract_email_template'];
+
 				$message = str_replace('[customer]', $entity_id->nombres, $message);
 				$message = str_replace('[address]', $entity_id->street_address, $message);
 				$message = str_replace('[address2]', $entity_id->address_line_2, $message);
 				$message = str_replace('[city]', $entity_id->city, $message);
 				$message = str_replace('[zip]', $entity_id->zip_code, $message);
-				$message = str_replace('[name]', "{$user_meta['mopar_first_name']} {$user_meta['mopar_last_name']}", $message);
-				$message = str_replace('[phone]', $user_meta['mopar_phone_number'], $message);
 				break;
 			}
 

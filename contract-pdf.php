@@ -31,7 +31,10 @@ else if (isset($_GET['sign_contract'])) {
 			LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
 			WHERE ot.id = {$ot_id}
 		");
-		wp_schedule_single_event(time() + 1, 'async_send_signed_contract', [$recipient]);
+		wp_schedule_single_event(time() + 1, 'mopar_async', [[
+			'action' => 'send_estimation_email',
+			'recipient' => $recipient
+		]]);
 		mopar_contract_pdf_show_message('success', 'Success: signed contract sent');
 	} else include plugin_dir_path(__FILE__) . 'sign-contract/sign-contract.php';
 } else if (user_can($current_user, 'administrator')) {
@@ -50,7 +53,3 @@ function mopar_contract_pdf_show_message($type, $message)
 		<div class=\"alert alert-{$type} text-center m-5\" role=\"alert\">{$message}</div>
 	");
 }
-
-add_action('async_send_signed_contract', function ($recipient) {
-	Mopar::sendMail($recipient, 'send_signed_contract');
-});
