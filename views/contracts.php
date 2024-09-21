@@ -1,4 +1,31 @@
 <?php include 'header.php'; ?>
+
+<?php
+if (isset($_POST['action'])) {
+    switch ($_POST['action']) {
+        case 'send_unsigned_contract_email_body':
+            $ot_id = $_POST['ot_id'];
+
+            wp_schedule_single_event(time(), 'mopar_async', [
+                [
+                    'action' => 'send_unsigned_contract_body',
+                    'recipient' => [
+                        'ot_id' => $ot_id,
+                        'email' => $_POST['recipient'],
+                        'email_body' => $_POST['email_body']
+                    ]
+                ]
+            ]);
+
+            global $wpdb;
+            $wpdb->update('ot', ['estado' => 2], ['id' => $ot_id]);
+            $wpdb->update('solicitud', ['estado' => 5], ['ot_id' => $ot_id]);
+            $unsigned_contract_email_body_sent = true;
+            break;
+    }
+}
+?>
+
 <div class="box pr-4">
     <div class="box-header mb-4">
         <h2 class="font-weight-light text-center text-muted float-left">Contracts </h2>
@@ -18,7 +45,7 @@
             <tbody>
                 <?php foreach ($contracts as $ot) : ?>
                     <tr data-regid="<?php echo $ot->id; ?>">
-                        <td> <?= date_format(date_create($ot->regdate),'Y-m-d') ?> </td>
+                        <td> <?= date_format(date_create($ot->regdate), 'Y-m-d') ?> </td>
                         <td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getTitleVehiculo($ot->vehiculo_id) ?> </td>
                         <td> <?php echo $ot->titulo; ?> </td>
                         <td class="text-right"><?php echo '$ ' . number_format($ot->valor, 0); ?></td>
@@ -33,6 +60,43 @@
     </div>
 </div>
 
+<!-- SEND UNSIGNED CONTRACT EMAIL -->
+<div class="modal fade" id="modalUnsignedContractEmail" tabindex="-1" role="dialog"
+    aria-labelledby="modalUnsignedContractEmail" aria-hidden="true">
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="send_unsigned_contract_email_body">
+        <input type="hidden" name="ot_id">
+        <input type="hidden" name="recipient">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Send Unsigned Contract Email</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <textarea name="email_body" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btnGuardar">
+                        <i class="fa fa-envelope"></i>
+                        SEND
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-times"></i>
+                        CANCEL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 <script type="text/javascript">
     jQuery(document).ready(function() {
         jQuery(`#tabla_contracts`).DataTable({
@@ -44,36 +108,47 @@
             tr = jQuery(this).closest('tr')
             regid = tr.data('regid')
 
+            jQuery(`div#modalUnsignedContractEmail [name="ot_id"]`).val(regid)
             jQuery.ajax({
-                type: 'POST',
-                url: '<?php echo admin_url('admin-ajax.php') ?>',
+                type: `GET`,
                 dataType: 'json',
-                data: 'action=send_unsigned_contract&regid=' + regid,
+                url: `<?= admin_url('admin-ajax.php') ?>`,
+                data: `action=get_unsigned_contract_body&ot_id=${regid}`,
                 beforeSend: function() {
-                    jQuery(".overlay").show()
+                    jQuery(`.overlay`).show()
                 },
                 success: function(json) {
-                    jQuery(".overlay").hide()
+                    jQuery(`.overlay`).hide()
                     if (`ERROR` === json.status) {
-                        jQuery.alert({
+                        $.alert({
                             title: false,
                             type: 'red',
                             content: json.message
-                        })
+                        });
                     } else {
-                        jQuery.alert({
-                            title: false,
-                            type: 'green',
-                            content: 'Email sent successfully',
-                            buttons: {
-                                ok: () => {
-                                }
-                            }
-                        })
+                        jQuery(`[name="recipient"]`).val(json.recipient)
+                        jQuery(`[name="email_body"]`)
+                            .val(json.message)
+                            .attr(`rows`, json.message.split(`\n`).length)
+                        $(`#modalUnsignedContractEmail`).modal(`show`)
                     }
                 }
             })
         })
+
+        <?php if (isset($unsigned_contract_email_body_sent)): ?>
+            $.alert({
+                title: false,
+                type: 'green',
+                content: 'Usigned contract email sent successfully',
+                buttons: {
+                    OK: () => {
+                        location.reload()
+                    }
+                }
+            });
+        <?php endif ?>
+
     })
 </script>
 <?php include 'footer.php'; ?>

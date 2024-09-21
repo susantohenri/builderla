@@ -69,6 +69,9 @@ add_action('mopar_async', function ($params) {
 		case 'send_estimation_email':
 			Mopar::sendMail($params['recipient'], 'send_estimation');
 			break;
+		case 'send_unsigned_contract_body':
+			Mopar::sendMail($params['recipient'], 'send_unsigned_contract');
+			break;
 		case 'send_signed_contract_email':
 			Mopar::sendMail($params['recipient'], 'send_signed_contract');
 			break;
@@ -735,10 +738,10 @@ function validate_initiate_contract_callback() {
 	exit(json_encode(['status' => 'OK']));
 }
 
-function send_unsigned_contract_callback()
+function get_unsigned_contract_body_callback()
 {
 	global $wpdb;
-	$ot_id = $_POST['regid'];
+	$ot_id = $_GET['ot_id'];
 	$recipient = $wpdb->get_row("
 		SELECT
 			ot.id
@@ -759,8 +762,25 @@ function send_unsigned_contract_callback()
 		'message' => 'Please add the email to this customer first'
 	]));
 
-	Mopar::sendMail($recipient, 'send_unsigned_contract');
-	exit(json_encode(['status' => 'OK']));
+	$personal_settings = taller_get_personal_settings();
+	$message = $personal_settings['unsigned_contract_email_template'];
+
+	$code = time();
+	$sign_link = site_url("wp-content/plugins/builderla/contract-pdf.php?sign_contract={$code}&id={$ot_id}");
+
+	$message = $personal_settings['unsigned_contract_email_template'];
+	$message = str_replace('[customer]', $recipient->nombres, $message);
+	$message = str_replace('[address]', $recipient->street_address, $message);
+	$message = str_replace('[address2]', $recipient->address_line_2, $message);
+	$message = str_replace('[city]', $recipient->city, $message);
+	$message = str_replace('[zip]', $recipient->zip_code, $message);
+	$message = str_replace('[sign_link]', $sign_link, $message);
+
+	exit(json_encode([
+		'status' => 'OK',
+		'message' => $message,
+		'recipient' => $recipient->email
+	]));
 }
 
 function delete_agreement_callback() {
@@ -877,7 +897,7 @@ add_action('wp_ajax_get_ot','get_ot_callback');
 add_action('wp_ajax_get_solicitud','get_solicitud_callback');
 add_action('rest_api_init', 'mopar_taller_select2_clientes');
 add_action('wp_ajax_get_estimation_email_body','get_estimation_email_body_callback');
-add_action('wp_ajax_send_unsigned_contract','send_unsigned_contract_callback');
+add_action('wp_ajax_get_unsigned_contract_body','get_unsigned_contract_body_callback');
 add_action('wp_ajax_delete_agreement','delete_agreement_callback');
 add_action('wp_ajax_validate_initiate_contract','validate_initiate_contract_callback');
 
@@ -1510,47 +1530,22 @@ Doctor Mopar
 
 				$recipient = $entity_id['email'];
 				$subject = 'Your Estimate from FHS Construction';
-
 				$message = $entity_id['email_body'];
+
 				break;
 			case 'send_unsigned_contract':
-				$ot_id = $entity_id->id;
-
-				global $wpdb;
-				$user_id = get_current_user_id();
-				$user_meta = [];
-				$meta_keys = [
-					'mopar_phone_number',
-					'mopar_first_name',
-					'mopar_last_name',
-					'unsigned_contract_email_template'
-				];
-				$meta_keys = implode("','", $meta_keys);
-				$meta_keys = "'{$meta_keys}'";
-				foreach ($wpdb->get_results("SELECT meta_key, meta_value FROM {$wpdb->prefix}usermeta WHERE meta_key IN ({$meta_keys}) AND user_id = {$user_id}") as $record) {
-					$user_meta[$record->meta_key] = $record->meta_value;
-				}
-
+				$ot_id = $entity_id['ot_id'];
+			
 				include plugin_dir_path(__FILE__) . 'pdf/contract.php';
 				$html2pdf = mopar_generate_contract_pdf($ot_id);
 				$temporary_file = plugin_dir_path(__FILE__) . 'tmp/' . rand() . '.pdf';
 				$html2pdf->output($temporary_file, 'F');
 				$attachments[] = $temporary_file;
-
-				$recipient = $entity_id->email;
+			
+				$recipient = $entity_id['email'];
 				$subject = 'Your unsigned contract from FHS Construction';
-				$code = time();
-				$sign_link = site_url("wp-content/plugins/builderla/contract-pdf.php?sign_contract={$code}&id={$ot_id}");
+				$message = $entity_id['email_body'];
 
-				$message = $user_meta['unsigned_contract_email_template'];
-				$message = str_replace('[customer]', $entity_id->nombres, $message);
-				$message = str_replace('[address]', $entity_id->street_address, $message);
-				$message = str_replace('[address2]', $entity_id->address_line_2, $message);
-				$message = str_replace('[city]', $entity_id->city, $message);
-				$message = str_replace('[zip]', $entity_id->zip_code, $message);
-				$message = str_replace('[sign_link]', $sign_link, $message);
-				$message = str_replace('[name]', "{$user_meta['mopar_first_name']} {$user_meta['mopar_last_name']}", $message);
-				$message = str_replace('[phone]', $user_meta['mopar_phone_number'], $message);
 				break;
 			case 'send_signed_contract':
 				global $wpdb;
