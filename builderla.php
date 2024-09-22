@@ -783,9 +783,18 @@ function get_unsigned_contract_body_callback()
 	]));
 }
 
+function delete_contract_callback() {
+	global $wpdb;
+	$wpdb->update('ot', [
+		'contract_status' => null,
+		'estimate_status' => 'NEWLY_CREATED'
+	], ['id' => $_POST['regid']]);
+	exit(json_encode(['status' => 'OK']));
+}
+
 function delete_agreement_callback() {
 	global $wpdb;
-	$wpdb->update('ot', ['client_signature' => ''], ['id' => $_POST['regid']]);
+	$wpdb->update('ot', ['contract_status' => 'NEWLY_CREATED'], ['id' => $_POST['regid']]);
 	exit(json_encode(['status' => 'OK']));
 }
 
@@ -898,6 +907,7 @@ add_action('wp_ajax_get_solicitud','get_solicitud_callback');
 add_action('rest_api_init', 'mopar_taller_select2_clientes');
 add_action('wp_ajax_get_estimation_email_body','get_estimation_email_body_callback');
 add_action('wp_ajax_get_unsigned_contract_body','get_unsigned_contract_body_callback');
+add_action('wp_ajax_delete_contract','delete_contract_callback');
 add_action('wp_ajax_delete_agreement','delete_agreement_callback');
 add_action('wp_ajax_validate_initiate_contract','validate_initiate_contract_callback');
 
@@ -1248,8 +1258,7 @@ class Mopar{
 				, solicitud.estado solicitud_estado
 			FROM ot
 			LEFT JOIN solicitud ON ot.id = solicitud.ot_id
-			WHERE solicitud.estado = 6
-			AND ot.client_signature = ''
+			WHERE ot.contract_status IS NOT NULL
 			ORDER BY id DESC
 		");
 
@@ -1264,8 +1273,7 @@ class Mopar{
 				, solicitud.estado solicitud_estado
 			FROM ot
 			LEFT JOIN solicitud ON ot.id = solicitud.ot_id
-			WHERE solicitud.estado = 6
-			AND ot.client_signature <> ''
+			WHERE ot.contract_status = 'SIGNED'
 			ORDER BY id DESC
 		");
 	}

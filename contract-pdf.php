@@ -6,7 +6,7 @@ $ot = Mopar::getOneOt($ot_id);
 
 if (!$ot) mopar_contract_pdf_show_message('danger', 'Error: contract not found');
 else if (isset($_GET['sign_contract'])) {
-	if ('' != $ot->client_signature) mopar_contract_pdf_show_message('danger', 'Error: contract already signed');
+	if ('SIGNED' == $ot->contract_status) mopar_contract_pdf_show_message('danger', 'Error: contract already signed');
 	else if (isset($_POST['sign_contract'])) {
 		global $wpdb;
 		$wpdb->update('ot', [
@@ -14,6 +14,7 @@ else if (isset($_GET['sign_contract'])) {
 			'client_initial' => $_POST['client_initial'],
 			'signed_date' => date_format(date_create($_POST['signed_date']), 'Y-m-d'),
 			'client_dob' => date_format(date_create($_POST['client_dob']), 'Y-m-d'),
+			'contract_status' => 'SIGNED'
 		], [
 			'id' => $ot_id
 		]);

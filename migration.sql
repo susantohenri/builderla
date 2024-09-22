@@ -74,6 +74,8 @@ CREATE TABLE `ot` (
   `client_initial` text,
   `client_dob` date DEFAULT NULL,
   `signed_date` date DEFAULT NULL,
+  `estimate_status` varchar(50),
+  `contract_status` varchar(50),
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;

@@ -1,6 +1,11 @@
-<?php include 'header.php'; ?>
-
 <?php
+
+include 'header.php';
+$contract_status_map = [
+    'NEWLY_CREATED' => 'danger',
+    'SIGNED' => 'success',
+];
+
 if (isset($_POST['action'])) {
     switch ($_POST['action']) {
         case 'send_unsigned_contract_email_body':
@@ -39,6 +44,7 @@ if (isset($_POST['action'])) {
                     <th> Customer </th>
                     <th> Project Description </th>
                     <th class="text-center"> Total </th>
+                    <th> Status </th>
                     <th class="text-center">Options</th>
                 </tr>
             </thead>
@@ -49,14 +55,31 @@ if (isset($_POST['action'])) {
                         <td data-vehiculo="<?php echo $ot->vehiculo_id; ?>"> <?php echo Mopar::getTitleVehiculo($ot->vehiculo_id) ?> </td>
                         <td> <?php echo $ot->titulo; ?> </td>
                         <td class="text-right"><?php echo '$ ' . number_format($ot->valor, 0); ?></td>
+                        <td class="text-center">
+                            <a>
+                                <i class="fa fa-circle text-<?= $contract_status_map[$ot->contract_status] ?>"></i>
+                            </a>
+                        </td>
                         <td class="text-center" style="white-space: nowrap;">
                             <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/contract-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
                             <button class="btn btn-warning btnSendUnsignedContract" data-toggle="tooltip" title="Send Unsigned Contract"><i class="fa fa-envelope"></i></button>
+                            <?php if ('SIGNED' != $ot->contract_status): ?>
+                                <button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <br>
+        <ul>
+            <li>
+                <i class="fa fa-circle text-success"></i> This contract was signed
+            </li>
+            <li>
+                <i class="fa fa-circle text-danger"></i> There are no actions for this contract
+            </li>
+        </ul>
     </div>
 </div>
 
@@ -149,6 +172,47 @@ if (isset($_POST['action'])) {
             });
         <?php endif ?>
 
+        jQuery(`.btnDelete`).click(function() {
+            tr = jQuery(this).closest(`tr`)
+            regid = tr.data(`regid`)
+
+            jQuery.confirm({
+                title: `Delete Contract!`,
+                content: `Do you want to delete the selected contract?`,
+                type: `red`,
+                icon: `fa fa-warning`,
+                buttons: {
+                    NO: {
+                        text: `No`,
+                        btnClass: `btn-red`,
+                    },
+                    SI: {
+                        text: `Yes`,
+                        btnClass: `btn-green`,
+                        action: function() {
+                            jQuery.ajax({
+                                type: `POST`,
+                                url: `<?= admin_url('admin-ajax.php') ?>`,
+                                dataType: `json`,
+                                data: `action=delete_contract&regid=${regid}`,
+                                beforeSend: function() {
+                                    jQuery(`.overlay`).show()
+                                },
+                                success: function(json) {
+                                    jQuery(`.overlay`).hide()
+                                    jQuery.alert({
+                                        title: false,
+                                        type: `green`,
+                                        content: `Contract deleted`
+                                    })
+                                    tr.fadeOut(400)
+                                }
+                            })
+                        }
+                    }
+                }
+            })
+        })
     })
 </script>
 <?php include 'footer.php'; ?>

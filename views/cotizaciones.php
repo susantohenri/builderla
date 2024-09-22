@@ -4,6 +4,13 @@ $inserted = false;
 $updated = false;
 $error_message = false;
 
+$estimate_status_map = [
+	'NEWLY_CREATED' => 'danger',
+	'UPDATED' => 'warning',
+	'ESTIMATE_EMAIL_SENT' => 'success',
+	'CONTRACT_INITIATED' => 'primary'
+];
+
 if ($_POST) {
 	global $wpdb;
 
@@ -11,11 +18,10 @@ if ($_POST) {
 		'titulo' => isset($_POST['titulo']) ? strtoupper($_POST['titulo']) : '',
 		'detalle' => isset($_POST['detalle']) ? json_encode($_POST['detalle']) : [],
 		'valor' => isset($_POST['valor']) ? $_POST['valor'] : '',
-		'estado' => 1,
 		'site_services' => isset($_POST['cb']['site_services']) ? $_POST['site_services'] : '',
 		'customer_to_provide' => isset($_POST['cb']['customer_to_provide']) ? $_POST['customer_to_provide'] : '',
 		'not_included' => isset($_POST['cb']['not_included']) ? $_POST['not_included'] : '',
-		'price_breakdown' => isset($_POST['cb']['price_breakdown']) ? 1 : 0
+		'price_breakdown' => isset($_POST['cb']['price_breakdown']) ? '1' : '0'
 	];
 	if (isset($_POST['cliente'])) $array_insert['cliente_id'] = $_POST['cliente'];
 	if (isset($_POST['vehiculo'])) $array_insert['vehiculo_id'] = $_POST['vehiculo'];
@@ -32,6 +38,7 @@ if ($_POST) {
 			$create_ot = $wpdb->insert('ot', [
 				'vehiculo_id' => $_POST['vehiculo'],
 				'estado' => 1,
+				'estimate_status' => 'NEWLY_CREATED',
 				'detalle' => '{"item":[""],"precio":[""], "observaciones":[""]}'
 			]);
 			$create_solicitud = $wpdb->insert('solicitud', [
@@ -50,7 +57,10 @@ if ($_POST) {
 		$before_update = array_filter($before_update, function ($value, $attr) use ($posted_attr) {
 			return in_array($attr, $posted_attr);
 		}, ARRAY_FILTER_USE_BOTH);
-		if ($before_update !== $array_insert) $array_insert['upddate'] = date('Y-m-d H:i:s');
+		if ($before_update !== $array_insert) {
+			$array_insert['upddate'] = date('Y-m-d H:i:s');
+			$array_insert['estimate_status'] = 'UPDATED';
+		}
 
 		if ($wpdb->update('ot', $array_insert, ['id' => $_POST['ot_id']])) {
 			Mopar::solicitudCalculateSelling($_POST['ot_id']);
@@ -72,22 +82,24 @@ if ($_POST) {
 			]
 		]);
 
-		$wpdb->update('ot', ['estado' => 2], ['id' => $ot_id]);
+		$wpdb->update('ot', ['estado' => 2, 'estimate_status' => 'ESTIMATE_EMAIL_SENT'], ['id' => $ot_id]);
 		$wpdb->update('solicitud', ['estado' => 5], ['ot_id' => $ot_id]);
 		$estimation_email_body_sent = true;
 	}
 
 	if ($_POST['action'] == 'initiate_contract') {
 		$wpdb->update('solicitud',
-		[
-			'estado' => 6,
-			// 'owner_over_65' => $_POST['owner_over_65'],
-			'construction_lender_name' => $_POST['construction_lender_name'],
-			'construction_lender_address' => $_POST['construction_lender_address'],
-			'approximate_start_date' => date_format(date_create($_POST['approximate_start_date']), 'Y-m-d'),
-			'approximate_completion_date' => date_format(date_create($_POST['approximate_completion_date']), 'Y-m-d'),
-		],
-		['ot_id' => $_POST['ot_id']]);
+			[
+				'estado' => 6,
+				// 'owner_over_65' => $_POST['owner_over_65'],
+				'construction_lender_name' => $_POST['construction_lender_name'],
+				'construction_lender_address' => $_POST['construction_lender_address'],
+				'approximate_start_date' => date_format(date_create($_POST['approximate_start_date']), 'Y-m-d'),
+				'approximate_completion_date' => date_format(date_create($_POST['approximate_completion_date']), 'Y-m-d'),
+			],
+			['ot_id' => $_POST['ot_id']]
+		);
+		$wpdb->update('ot', ['estimate_status' => 'CONTRACT_INITIATED', 'contract_status' => 'NEWLY_CREATED'], ['id' => $_POST['ot_id']]);
 		$contract_initiated = true;
 	}
 }
@@ -124,28 +136,16 @@ if ($_POST) {
                         <td> <?php echo $ot->titulo; ?> </td>
 						<td data-valor="<?php echo $ot->valor; ?>"> $ <?php echo number_format($ot->valor, 0, ',', '.') ?> </td>
 						<td data-estado="<?php echo $ot->estado; ?>" class="text-center align-middle">
-							<?php if (3 == $ot->solicitud_estado) : ?>
-								<a>
-									<i class="fa fa-circle text-warning"></i>
-								</a>
-							<?php elseif (4 == $ot->solicitud_estado) : ?>
-								<a>
-									<i class="fa fa-circle text-danger"></i>
-								</a>
-							<?php elseif (1 == $ot->estado) : ?>
-								<a>
-									<i class="fa fa-circle text-danger"></i>
-								</a>
-							<?php elseif (2 == $ot->estado) : ?>
-								<a>
-									<i class="fa fa-circle text-success"></i>
-								</a>
-							<?php endif; ?>
+							<a>
+								<i class="fa fa-circle text-<?= $estimate_status_map[$ot->estimate_status] ?>"></i>
+							</a>
 						</td>
 						<td class="text-center" style="white-space: nowrap;">
 							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $ot->id; ?>" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
 							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/estimate-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
-							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
+							<?php if(!in_array($ot->estimate_status, ['ESTIMATE_EMAIL_SENT', 'CONTRACT_INITIATED'])): ?>
+								<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
+							<?php endif; ?>
 							<button class="btn btn-warning btnSendEstimationEmail" data-toggle="tooltip" title="Send Estimate"><i class="fa fa-envelope"></i></button>
 							<button class="btn btn-primary btnContract" data-toggle="tooltip" title="Initiate Contract"><i class="fa fa-check"></i></button>
 						</td>
@@ -156,10 +156,13 @@ if ($_POST) {
 		<br>
 		<ul>
 			<li>
+				<i class="fa fa-circle text-primary"></i> Contract was initiated for this estimate.
+			</li>
+			<li>
 				<i class="fa fa-circle text-success"></i> This estimate was sent to the customer.
 			</li>
 			<li>
-					<i class="fa fa-circle text-warning"></i> This estimate is currently being prepared.
+				<i class="fa fa-circle text-warning"></i> This estimate is currently being prepared.
 			</li>
 			<li>
 				<i class="fa fa-circle text-danger"></i> There are no actions for this estimate
