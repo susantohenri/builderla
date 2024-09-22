@@ -863,6 +863,13 @@ function mopar_taller_select2_clientes () {
 			return Mopar::getSelect2Properties();
 		}
 	]);
+	register_rest_route('mopar-taller/v1', '/select2-estimation-template', [
+        'methods' => 'GET',
+        'permission_callback' => '__return_true',
+        'callback' => function () {
+			return Mopar::getSelect2EstimationTemplate();
+		}
+	]);
 }
 
 function builderla_get_creator_user_login ($user_id) {
@@ -965,6 +972,26 @@ class Mopar{
 			LIMIT 10
 		");
 		return ['results' => $vehiculos];
+	}
+
+	public static function getSelect2EstimationTemplate(){
+		global $wpdb;
+		$default_detalle = '{"item":[""],"precio":[""], "observaciones":[""]}';
+		$like = isset($_GET['q']) ? "ot.titulo LIKE '%{$_GET['q']}%'" : 'true';
+		$titulos = $wpdb->get_results("
+			SELECT
+				(ot.id) as id,
+				(ot.titulo) as text
+			FROM ot
+			WHERE ot.detalle <> '{$default_detalle}' AND {$like}
+			ORDER BY ot.id DESC
+			LIMIT 10
+		");
+		$titulos = array_merge([[
+			'id' => '',
+			'text' => 'NEW TEMPLATE'
+		]], $titulos);
+		return ['results' => $titulos];
 	}
 
 	public static function getOneCliente($cliente_id){

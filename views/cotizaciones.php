@@ -35,12 +35,19 @@ if ($_POST) {
 		");
 		if (0 == $client_createdBy) $error_message = 'Error: customer must be claimed first';
 		else {
-			$create_ot = $wpdb->insert('ot', [
+			$ot_to_insert = [
 				'vehiculo_id' => $_POST['vehiculo'],
 				'estado' => 1,
 				'estimate_status' => 'NEWLY_CREATED',
-				'detalle' => '{"item":[""],"precio":[""], "observaciones":[""]}'
-			]);
+				'detalle' => '{"item":[""],"precio":[""], "observaciones":[""]}',
+			];
+			if ('' != $_POST['template']) {
+				$template = $wpdb->get_row("SELECT titulo, detalle, valor FROM ot WHERE ot.id = {$_POST['template']}");
+				$ot_to_insert['titulo'] = $template->titulo;
+				$ot_to_insert['detalle'] = $template->detalle;
+				$ot_to_insert['valor'] = $template->valor;
+			}
+			$create_ot = $wpdb->insert('ot', $ot_to_insert);
 			$create_solicitud = $wpdb->insert('solicitud', [
 				'ot_id' => $wpdb->insert_id,
 				'vehiculo_id' => $_POST['vehiculo']
@@ -184,6 +191,18 @@ if ($_POST) {
 					</button>
 				</div>
 				<div class="modal-body">
+					<div class="form-row">
+						<div class="form-group col-md-12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Template</span>
+								</div>
+								<select name="template" class="form-control">
+									<option value="">NEW TEMPLATE</option>
+								</select>
+							</div>
+						</div>
+					</div>
 					<div class="form-row">
 						<div class="form-group col-md-12">
 							<div class="input-group">
@@ -438,6 +457,12 @@ if ($_POST) {
 			minimumInputLength: 3,
 			ajax: {
 				url: `../wp-json/mopar-taller/v1/select2-property-for-leads`
+			}
+		})
+		$(`[name="template"]`).css(`display`, `none`).select2({
+			theme: `bootstrap4`,
+			ajax: {
+				url: `../wp-json/mopar-taller/v1/select2-estimation-template`
 			}
 		})
 
