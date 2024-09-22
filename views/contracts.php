@@ -62,7 +62,7 @@ if (isset($_POST['action'])) {
                         </td>
                         <td class="text-center" style="white-space: nowrap;">
                             <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/contract-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
-                            <button class="btn btn-warning btnSendUnsignedContract" data-toggle="tooltip" title="Send Unsigned Contract"><i class="fa fa-envelope"></i></button>
+                            <button class="btn btn-warning btnSendUnsignedContract" data-toggle="tooltip" title="Send Contract"><i class="fa fa-envelope"></i></button>
                             <?php if ('SIGNED' != $ot->contract_status): ?>
                                 <button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
                             <?php endif; ?>
@@ -93,7 +93,7 @@ if (isset($_POST['action'])) {
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Send Unsigned Contract Email</h5>
+                    <h5 class="modal-title">Send Contract Email</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
