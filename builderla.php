@@ -1614,10 +1614,10 @@ Doctor Mopar
 			}
 
 			add_filter( 'wp_mail_from', function () {
-				return 'taller@doctormopar.com';
+				return 'contact@fhsconstructioninc.com';
 			});
 			add_filter( 'wp_mail_from_name', function () {
-				return 'Doctor Mopar';
+				return 'FHS Construction Inc';
 			});
 
 			wp_mail($recipient, $subject, $message, $headers, $attachments);
