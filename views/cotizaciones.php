@@ -2,6 +2,7 @@
 $folder = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/builderla/uploads/';
 $inserted = false;
 $updated = false;
+$deleted = false;
 $error_message = false;
 
 $estimate_status_map = [
@@ -72,6 +73,17 @@ if ($_POST) {
 		if ($wpdb->update('ot', $array_insert, ['id' => $_POST['ot_id']])) {
 			Mopar::solicitudCalculateSelling($_POST['ot_id']);
 			$updated = true;
+		}
+	}
+
+	if ($_POST['action'] == 'delete_estimation') {
+		$ot_to_delete = $_POST['ot_id'];
+		$estimate_status = $wpdb->get_var("SELECT estimate_status FROM ot WHERE id = {$ot_to_delete}");
+		if ('CONTRACT_INITIATED' == $estimate_status) $error_message = 'There is an existing contract for this estimate';
+		else {
+			$wpdb->delete('ot', ['id' => $ot_to_delete]);
+			$wpdb->delete('solicitud', ['ot_id' => $ot_to_delete]);
+			$deleted = true;
 		}
 	}
 
@@ -150,9 +162,7 @@ if ($_POST) {
 						<td class="text-center" style="white-space: nowrap;">
 							<button type="button" class="btn btn-success btnEdit" data-regid="<?php echo $ot->id; ?>" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></button>
 							<a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/estimate-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
-							<?php if(!in_array($ot->estimate_status, ['ESTIMATE_EMAIL_SENT', 'CONTRACT_INITIATED'])): ?>
-								<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
-							<?php endif; ?>
+							<button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
 							<button class="btn btn-warning btnSendEstimationEmail" data-toggle="tooltip" title="Send Estimate"><i class="fa fa-envelope"></i></button>
 							<button class="btn btn-primary btnContract" data-toggle="tooltip" title="Initiate Contract"><i class="fa fa-check"></i></button>
 						</td>
@@ -662,21 +672,13 @@ if ($_POST) {
 						text: 'Yes',
 						btnClass: 'btn-green',
 						action: function() {
-							$.ajax({
-								type: 'POST',
-								url: '<?php echo admin_url('admin-ajax.php'); ?>',
-								dataType: 'json',
-								data: 'action=eliminar_ot&regid=' + regid,
-								beforeSend: function() {},
-								success: function(json) {
-									$.alert({
-										title: false,
-										type: 'green',
-										content: 'Estimate deleted'
-									});
-									tr.fadeOut(400);
-								}
-							})
+							jQuery(`body`).append(`
+								<form method="POST" name="form-delete-estimate">
+									<input type="hidden" name="action" value="delete_estimation">
+									<input type="hidden" name="ot_id" value="${regid}">
+								</form>
+							`)
+							jQuery(`[name="form-delete-estimate"]`).submit()
 						}
 					}
 				}
@@ -804,6 +806,19 @@ if ($_POST) {
 
 		<?php if ($inserted || $updated) { ?>
 			location.href = '<?php bloginfo('wpurl') ?>/wp-admin/admin.php?page=mopar-cotizaciones';
+		<?php } ?>
+
+		<?php if ($deleted) { ?>
+			$.alert({
+				title: false,
+				type: 'green',
+				content: 'Estimate deleted',
+				buttons: {
+					OK: () => {
+						location.reload()
+					}
+				}
+			});
 		<?php } ?>
 
 		<?php if ('' != $error_message) { ?>
