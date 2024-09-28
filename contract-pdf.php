@@ -38,7 +38,7 @@ else if (isset($_GET['sign_contract'])) {
 		]]);
 		mopar_contract_pdf_show_message('success', 'Success: signed contract sent');
 	} else include plugin_dir_path(__FILE__) . 'sign-contract/sign-contract.php';
-} else if (user_can($current_user, 'administrator')) {
+} else if (user_can($current_user, 'use_builderla')) {
 	$current_user = wp_get_current_user();
 	include plugin_dir_path(__FILE__) . 'pdf/contract.php';
 

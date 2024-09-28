@@ -15,16 +15,21 @@ include('lead-form/lead-form.php');
 include('company-settings/company-settings.php');
 include('personal-settings/personal-settings.php');
 
+foreach (['administrator', 'manager'] as $role_name) {
+	$role = get_role($role_name);
+	if (null != $role) $role->add_cap('use_builderla');
+}
+
 function theme_options_panel(){
 	$page_title = $menu_title = 'Database';
-	$capability = 'manage_options';
+	$capability = 'use_builderla';
 	$menu_slug = 'mopar-database';
 	$callback = '';
 	$icon_url = 'dashicons-database';
 	$position = 2;
 	add_menu_page($page_title, $menu_title, $capability, $menu_slug, $callback, $icon_url, $position);
-	add_submenu_page($menu_slug, 'Clients', 'Clients', 'manage_options', 'mopar-clientes', 'taller_clientes_func');
-	add_submenu_page($menu_slug, 'Properties', 'Properties', 'manage_options', 'mopar-vehiculos', 'taller_vehiculos_func');
+	add_submenu_page($menu_slug, 'Clients', 'Clients', 'use_builderla', 'mopar-clientes', 'taller_clientes_func');
+	add_submenu_page($menu_slug, 'Properties', 'Properties', 'use_builderla', 'mopar-vehiculos', 'taller_vehiculos_func');
 	remove_submenu_page($menu_slug, $menu_slug);
 	
 	$page_title = $menu_title = 'Sales';
@@ -32,9 +37,9 @@ function theme_options_panel(){
 	$icon_url = 'dashicons-money-alt';
 	$position = 3;
 	add_menu_page($page_title, $menu_title, $capability, $menu_slug, $callback, $icon_url, $position);
-	add_submenu_page($menu_slug, 'Leads', 'Leads', 'manage_options', 'mopar-solicitudes-de-servicio', 'taller_solicitudes_de_servicio_func');
-	add_submenu_page($menu_slug, 'Lost Leads', 'Lost Leads', 'manage_options', 'mopar-perdidas', 'taller_perdidas_func');
-	add_submenu_page($menu_slug, 'Converted Leads', 'Converted Leads', 'manage_options', 'mopar-agendadas', 'taller_agendadas_func');
+	add_submenu_page($menu_slug, 'Leads', 'Leads', 'use_builderla', 'mopar-solicitudes-de-servicio', 'taller_solicitudes_de_servicio_func');
+	add_submenu_page($menu_slug, 'Lost Leads', 'Lost Leads', 'use_builderla', 'mopar-perdidas', 'taller_perdidas_func');
+	add_submenu_page($menu_slug, 'Converted Leads', 'Converted Leads', 'use_builderla', 'mopar-agendadas', 'taller_agendadas_func');
 	remove_submenu_page($menu_slug, $menu_slug);
 
 	$page_title = $menu_title = 'Estimating';
@@ -42,9 +47,9 @@ function theme_options_panel(){
 	$icon_url = 'dashicons-cart';
 	$position = 4;
 	add_menu_page($page_title, $menu_title, $capability, $menu_slug, $callback, $icon_url, $position);
-	add_submenu_page($menu_slug, 'Estimates', 'Estimates', 'manage_options', 'mopar-cotizaciones', 'taller_cotizaciones_func');
-	add_submenu_page($menu_slug, 'Contracts', 'Contracts', 'manage_options', 'mopar-contracts', 'taller_contracts_func');
-	add_submenu_page($menu_slug, 'Agreements', 'Agreements', 'manage_options', 'mopar-agreement', 'taller_agreements_func');
+	add_submenu_page($menu_slug, 'Estimates', 'Estimates', 'use_builderla', 'mopar-cotizaciones', 'taller_cotizaciones_func');
+	add_submenu_page($menu_slug, 'Contracts', 'Contracts', 'use_builderla', 'mopar-contracts', 'taller_contracts_func');
+	add_submenu_page($menu_slug, 'Agreements', 'Agreements', 'use_builderla', 'mopar-agreement', 'taller_agreements_func');
 	remove_submenu_page($menu_slug, $menu_slug);
 	
 	$page_title = $menu_title = 'Settings';
@@ -52,15 +57,15 @@ function theme_options_panel(){
 	$icon_url = 'dashicons-admin-generic';
 	$position = 5;
 	add_menu_page($page_title, $menu_title, $capability, $menu_slug, $callback, $icon_url, $position);
-	add_submenu_page($menu_slug, 'Company Settings', 'Company Settings', 'manage_options', 'mopar-company-settings', 'taller_company_settings');
-	add_submenu_page($menu_slug, 'Personal Settings', 'Personal Settings', 'manage_options', 'mopar-personal-settings', 'taller_personal_settings');
+	add_submenu_page($menu_slug, 'Company Settings', 'Company Settings', 'use_builderla', 'mopar-company-settings', 'taller_company_settings');
+	add_submenu_page($menu_slug, 'Personal Settings', 'Personal Settings', 'use_builderla', 'mopar-personal-settings', 'taller_personal_settings');
 	remove_submenu_page($menu_slug, $menu_slug);
 
-	// add_submenu_page( 'mopar-taller', 'Active Projects', 'Active Projects', 'manage_options', 'mopar-orden-de-ingreso', 'taller_orden_de_ingreso_func');
-	// add_submenu_page( 'mopar-taller', 'Active Projects', 'Active Projects', 'manage_options', 'mopar-orden-de-ingreso', 'taller_orden_de_ingreso_func');
-	// add_submenu_page( 'mopar-taller', 'Completed Projects', 'Completed Projects', 'manage_options', 'mopar-trabajos-realizado', 'taller_trabajos_realizado_func');
-	// add_submenu_page( 'mopar-taller', 'Preparación Contable', 'Preparación Contable', 'manage_options', 'preparacion-contable', 'taller_preparacion_contable_func');
-	// add_submenu_page( 'mopar-taller', 'Conciliación Contable', 'Conciliación Contable', 'manage_options', 'conciliacion-contable', 'taller_conciliacion_contable_func');
+	// add_submenu_page( 'mopar-taller', 'Active Projects', 'Active Projects', 'use_builderla', 'mopar-orden-de-ingreso', 'taller_orden_de_ingreso_func');
+	// add_submenu_page( 'mopar-taller', 'Active Projects', 'Active Projects', 'use_builderla', 'mopar-orden-de-ingreso', 'taller_orden_de_ingreso_func');
+	// add_submenu_page( 'mopar-taller', 'Completed Projects', 'Completed Projects', 'use_builderla', 'mopar-trabajos-realizado', 'taller_trabajos_realizado_func');
+	// add_submenu_page( 'mopar-taller', 'Preparación Contable', 'Preparación Contable', 'use_builderla', 'preparacion-contable', 'taller_preparacion_contable_func');
+	// add_submenu_page( 'mopar-taller', 'Conciliación Contable', 'Conciliación Contable', 'use_builderla', 'conciliacion-contable', 'taller_conciliacion_contable_func');
 }
 add_action('admin_menu', 'theme_options_panel');
 
