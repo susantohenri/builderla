@@ -23,7 +23,7 @@
                         <td> <?php echo $ot->titulo; ?> </td>
                         <td class="text-right"><?php echo '$ ' . number_format($ot->valor, 0); ?></td>
                         <td class="text-center" style="white-space: nowrap;">
-                            <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/agreement-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
+                            <a href="<?= site_url("agreement/{$ot->id}") ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
                             <button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete Agreement"><i class="fa fa-trash"></i></button>
                         </td>
                     </tr>

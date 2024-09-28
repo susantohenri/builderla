@@ -14,6 +14,7 @@ use Spipu\Html2Pdf\Html2Pdf;
 include('lead-form/lead-form.php');
 include('company-settings/company-settings.php');
 include('personal-settings/personal-settings.php');
+include('contract-pdf.php');
 
 foreach (['administrator', 'manager'] as $role_name) {
 	$role = get_role($role_name);
@@ -771,7 +772,7 @@ function get_unsigned_contract_body_callback()
 	$message = $personal_settings['unsigned_contract_email_template'];
 
 	$code = time();
-	$sign_link = site_url("wp-content/plugins/builderla/contract-pdf.php?sign_contract={$code}&id={$ot_id}");
+	$sign_link = site_url("sign/{$ot_id}");
 
 	$message = $personal_settings['unsigned_contract_email_template'];
 	$message = str_replace('[customer]', $recipient->nombres, $message);

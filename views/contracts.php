@@ -61,7 +61,7 @@ if (isset($_POST['action'])) {
                             </a>
                         </td>
                         <td class="text-center" style="white-space: nowrap;">
-                            <a href="<?php bloginfo('wpurl') ?>/wp-content/plugins/builderla/contract-pdf.php?id=<?php echo $ot->id; ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
+                            <a href="<?= site_url("contract/{$ot->id}")  ?>" target="_blank" class="btn btn-info" data-toggle="tooltip" title="View"><i class="fa fa-search"></i></a>
                             <button class="btn btn-warning btnSendUnsignedContract" data-toggle="tooltip" title="Send Contract"><i class="fa fa-envelope"></i></button>
                             <?php if ('SIGNED' != $ot->contract_status): ?>
                                 <button class="btn btn-danger btnDelete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
