@@ -1,11 +1,23 @@
 <?php
 
+// production Fhsconstructioninc.com
+// define('TALLER_GRECAPTCHA_PUBLIC', '6Le3lVMqAAAAAFN8V8eh9id-tasai4pGgupezVZC');
+// define('TALLER_GRECAPTCHA_PRIVATE', '6Le3lVMqAAAAAAa_x5ywKwYokVJHU_lVhRhNFUlW');
+
+// staging builderla.com
+define('TALLER_GRECAPTCHA_PUBLIC', '6LfbcFQqAAAAANRSEJGXk9vjbu85hQvt2BaH7hi2');
+define('TALLER_GRECAPTCHA_PRIVATE', '6LfbcFQqAAAAACHD8qLwQi6hMmwnaWxkgH7o3XTW');
+
 add_shortcode('builderla-lead-form', function () {
 
-    wp_register_script('builderla-lead-form', plugin_dir_url(__FILE__) . 'lead-form.js', array('jquery'));
+    wp_register_script('google-recaptcha', 'https://www.google.com/recaptcha/api.js?render=' . TALLER_GRECAPTCHA_PUBLIC);
+    wp_enqueue_script('google-recaptcha');
+
+    wp_register_script('builderla-lead-form', plugin_dir_url(__FILE__) . 'lead-form.js', ['jquery'], '1.0.0');
     wp_localize_script('builderla-lead-form', 'builderla_lead_form_obj', [
         'url' => site_url() . '/wp-admin/admin-ajax.php',
-        'action' => 'builderla_lead_form'
+        'action' => 'builderla_lead_form',
+        'grecaptcha_public' => TALLER_GRECAPTCHA_PUBLIC
     ]);
     wp_enqueue_script('builderla-lead-form');
 
@@ -78,35 +90,60 @@ add_shortcode('builderla-lead-form', function () {
 });
 
 add_action('wp_ajax_nopriv_builderla_lead_form', function () {
-    global $wpdb;
-    switch ($_POST['step']) {
-        case 1:
-            $wpdb->insert('clientes', [
-                'nombres' => strtoupper($_POST['nombres']),
-                'email' => strtolower($_POST['email']),
-                'telefono' => $_POST['telefono']
-            ]);
-            exit('' . $wpdb->insert_id);
-            break;
-        case 2:
-            $wpdb->insert('vehiculos', [
-                'street_address' => $_POST['street_address'],
-                'address_line_2' => $_POST['address_line_2'],
-                'city' => $_POST['city'],
-                'state' => $_POST['state'],
-                'zip_code' => $_POST['zip_code'],
-                'cliente_id' => $_POST['cliente_id']
-            ]);
-            exit('' . $wpdb->insert_id);
-            break;
-        case 3:
-            $wpdb->insert('solicitud', [
-                'vehiculo_id' => $_POST['vehiculo_id'],
-                'solicitud' => $_POST['solicitud'],
-                'estado' => 1,
-                'photos' => '[]',
-            ]);
-            exit('' . $wpdb->insert_id);
-            break;
+    if (!taller_validate_grecaptcha($_POST['token'])) exit(0);
+    else {
+        global $wpdb;
+        switch ($_POST['step']) {
+            case 1:
+                $wpdb->insert('clientes', [
+                    'nombres' => strtoupper($_POST['nombres']),
+                    'email' => strtolower($_POST['email']),
+                    'telefono' => $_POST['telefono']
+                ]);
+                exit('' . $wpdb->insert_id);
+                break;
+            case 2:
+                $wpdb->insert('vehiculos', [
+                    'street_address' => $_POST['street_address'],
+                    'address_line_2' => $_POST['address_line_2'],
+                    'city' => $_POST['city'],
+                    'state' => $_POST['state'],
+                    'zip_code' => $_POST['zip_code'],
+                    'cliente_id' => $_POST['cliente_id']
+                ]);
+                exit('' . $wpdb->insert_id);
+                break;
+            case 3:
+                $wpdb->insert('solicitud', [
+                    'vehiculo_id' => $_POST['vehiculo_id'],
+                    'solicitud' => $_POST['solicitud'],
+                    'estado' => 1,
+                    'photos' => '[]',
+                ]);
+                exit('' . $wpdb->insert_id);
+                break;
+        }
     }
 });
+
+function taller_validate_grecaptcha($token)
+{
+    try {
+        $context  = stream_context_create([
+            'http' => [
+                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method'  => 'POST',
+                'content' => http_build_query([
+                    'secret'   => TALLER_GRECAPTCHA_PRIVATE,
+                    'response' => $token,
+                    'remoteip' => $_SERVER['REMOTE_ADDR']
+                ])
+            ]
+        ]);
+        $result = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
+        $result = json_decode($result);
+        return $result->success;
+    } catch (Exception $e) {
+        return false;
+    }
+}

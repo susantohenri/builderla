@@ -33,27 +33,40 @@ submit_btn.click(e => {
     if (valid) {
         answers.step = current_step
         answers.action = builderla_lead_form_obj.action
-        jQuery.post(builderla_lead_form_obj.url, answers, resp => {
+        taller_grecaptcha_get_token(token => {
+            answers.token = token
+            jQuery.post(builderla_lead_form_obj.url, answers, resp => {
+                if (0 == resp) message.html(`Submission failed, please try again later.`).css(`color`, `red`).parent().show()
+                else {
+                    switch (current_step) {
+                        case 1: builderla_lead_form.find(`[name="cliente_id"]`).val(resp); break
+                        case 2: builderla_lead_form.find(`[name="vehiculo_id"]`).val(resp); break
+                    }
 
-            switch (current_step) {
-                case 1: builderla_lead_form.find(`[name="cliente_id"]`).val(resp); break
-                case 2: builderla_lead_form.find(`[name="vehiculo_id"]`).val(resp); break
-            }
+                    if (0 < jQuery(`[builderla-lead-form-step="${next_step}"]`).length) {
+                        message.html(``).parent().hide()
 
-            if (0 < jQuery(`[builderla-lead-form-step="${next_step}"]`).length) {
-                message.html(``).parent().hide()
+                        builderla_lead_form.find(`[builderla-lead-form-step="${current_step}"]`).hide()
+                        builderla_lead_form.find(`[builderla-lead-form-step="${next_step}"]`).show()
 
-                builderla_lead_form.find(`[builderla-lead-form-step="${current_step}"]`).hide()
-                builderla_lead_form.find(`[builderla-lead-form-step="${next_step}"]`).show()
-
-                next_step++
-                if (1 > jQuery(`[builderla-lead-form-step="${next_step}"]`).length) submit_btn.val(`Finish`)
-            } else {
-                message.html(`Thank you for your message. It has been sent.`).css(`color`, `inherit`).parent().show()
-                builderla_lead_form.find(`[builderla-lead-form-step]`).hide()
-                submit_btn.hide()
-            }
+                        next_step++
+                        if (1 > jQuery(`[builderla-lead-form-step="${next_step}"]`).length) submit_btn.val(`Finish`)
+                    } else {
+                        message.html(`Thank you for your message. It has been sent.`).css(`color`, `inherit`).parent().show()
+                        builderla_lead_form.find(`[builderla-lead-form-step]`).hide()
+                        submit_btn.hide()
+                    }
+                }
+            })
         })
     }
-
 })
+
+function taller_grecaptcha_get_token(cb) {
+    grecaptcha.ready(() => {
+        grecaptcha.execute(builderla_lead_form_obj.grecaptcha_public, { action: `submit` })
+            .then(token => {
+                cb(token)
+            })
+    })
+}
