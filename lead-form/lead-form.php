@@ -1,12 +1,7 @@
 <?php
 
-// production Fhsconstructioninc.com
-// define('TALLER_GRECAPTCHA_PUBLIC', '6Le3lVMqAAAAAFN8V8eh9id-tasai4pGgupezVZC');
-// define('TALLER_GRECAPTCHA_PRIVATE', '6Le3lVMqAAAAAAa_x5ywKwYokVJHU_lVhRhNFUlW');
-
-// staging builderla.com
-define('TALLER_GRECAPTCHA_PUBLIC', '6LfbcFQqAAAAANRSEJGXk9vjbu85hQvt2BaH7hi2');
-define('TALLER_GRECAPTCHA_PRIVATE', '6LfbcFQqAAAAACHD8qLwQi6hMmwnaWxkgH7o3XTW');
+define('TALLER_GRECAPTCHA_PUBLIC', '');
+define('TALLER_GRECAPTCHA_PRIVATE', '');
 
 add_shortcode('builderla-lead-form', function () {
 
