@@ -41,6 +41,7 @@ function theme_options_panel(){
 	add_submenu_page($menu_slug, 'Leads', 'Leads', 'use_builderla', 'mopar-solicitudes-de-servicio', 'taller_solicitudes_de_servicio_func');
 	add_submenu_page($menu_slug, 'Lost Leads', 'Lost Leads', 'use_builderla', 'mopar-perdidas', 'taller_perdidas_func');
 	add_submenu_page($menu_slug, 'Converted Leads', 'Converted Leads', 'use_builderla', 'mopar-agendadas', 'taller_agendadas_func');
+	add_submenu_page($menu_slug, 'Appointment Calendar', 'Appointment Calendar', 'use_builderla', 'appointment-calendar', 'taller_home_func');
 	remove_submenu_page($menu_slug, $menu_slug);
 
 	$page_title = $menu_title = 'Estimating';
