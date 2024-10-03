@@ -17,6 +17,9 @@ add_shortcode('builderla-lead-form', function () {
     wp_enqueue_script('builderla-lead-form');
 
     return "
+		<style type=\"text/css\">
+			.grecaptcha-badge { display: none !important; }
+		</style>
         <div class=\"contact-form\" id=\"builderla_lead_form\">
             <div class=\"contact-form-inner\">
 
