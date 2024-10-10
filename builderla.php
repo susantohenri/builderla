@@ -174,6 +174,25 @@ function taller_solicitudes_de_servicio_func(){
 	include('views/solicitudes_de_servicio.php');	
 }
 
+add_action('admin_enqueue_scripts', 'fix_datepicker_under_modal', 999);
+function fix_datepicker_under_modal () {
+	if (isset($_GET['page'])) {
+		if (in_array($_GET['page'], ['mopar-solicitudes-de-servicio', 'mopar-agendadas'])) {
+			foreach ([
+				'jquery-ui-datepicker',
+				'wppm-dtp-js',
+				'wppm-report-js'
+			] as $js) wp_deregister_script($js);
+
+			foreach ([
+				'wppm-dtp-css',
+				'wppm-report-css'
+			] as $css) wp_deregister_style($css);
+		}
+	}
+}
+
+
 function taller_orden_de_ingreso_func(){
 	$vehiculos = Mopar::getVehiculos();
 	$clientes = Mopar::getClientes();
