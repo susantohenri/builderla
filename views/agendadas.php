@@ -494,7 +494,7 @@ if ($_POST) {
 										$.alert({
 											title: false,
 											type: 'green',
-											content: 'Solicitud borrado correctamente'
+											content: 'Estimate succesfully created'
 										});
 										window.location = `<?= site_url('wp-admin/admin.php?page=mopar-cotizaciones') ?>`
 									}
