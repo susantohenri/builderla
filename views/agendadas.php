@@ -379,14 +379,28 @@ if ($_POST) {
 			input_file.click()
 		})
 
-		$(`[name="photos[]"]`).change(function (e) {
-			const input = $(this)
-			const preview_placeholder = input.siblings(`.preview-uploaded`)
-			preview_placeholder.html(``)
-			for (let img of event.target.files) {
-				const src = URL.createObjectURL(img)
-				preview_placeholder.append(`<img src="${src}" class="m-2 img-thumbnail">`)
+		$(`[name="photos[]"]`).change(async e => {
+			const { files } = e.target
+			const dataTransfer = new DataTransfer()
+			for (const file of files) {
+				const imageBitmap = await createImageBitmap(file)
+				const canvas = document.createElement(`canvas`)
+				canvas.width = imageBitmap.width
+				canvas.height = imageBitmap.height
+				const ctx = canvas.getContext(`2d`)
+				ctx.drawImage(imageBitmap, 0, 0)
+				const compressedBlob = await new Promise(resolve => {
+					const type = file.type
+					const quality = 0.1
+					canvas.toBlob(resolve, type, quality)
+				})
+				const compressedFile = new File([compressedBlob], file.name)
+				dataTransfer.items.add(compressedFile)
+
+				const src = URL.createObjectURL(compressedFile)
+				jQuery(`.preview-uploaded`).append(`<img src="${src}" class="m-2 img-thumbnail">`)
 			}
+			e.target.files = dataTransfer.files
 		})
 
 		$(".btnComplete").click(function() {
