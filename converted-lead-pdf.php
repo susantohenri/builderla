@@ -114,13 +114,6 @@ if (user_can( $current_user, 'administrator' )) {
 
 	$html .= '<br>
 	<table border="0" style="width: 590px">
-		<tr>
-			<td>
-				<strong>Created:</strong> '.date_format(date_create($solicitud->regdate), 'm/d/Y - H:i').'
-				<br>
-				<strong>Modified:</strong> '. $lastupdated .'
-			</td>
-		</tr>
 		'.$motivo.'
 		'.$fecha.'
 	</table>
