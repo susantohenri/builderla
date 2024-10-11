@@ -7,8 +7,16 @@ if ($_POST) {
 
 	if ($_POST['action'] == 'editar_fecha') {
 
+		$hora = explode(' ', $_POST['hora']);
+		$am_pm = $hora[1];
+		$time = explode(':', $hora[0]);
+		$hour = $time[0];
+		$minute = $time[1];
+		if ('PM' == $am_pm) $hour += 12;
+		$mysql_time = "{$hour}:{$minute}";
 		$array_insert = [
 			'fecha' => $_POST['fecha'],
+			'hora' => $mysql_time,
 		];
 
 		$before_update = (array) Mopar::getOneSolicitud($_POST['solicitud_id']);
@@ -163,12 +171,20 @@ if ($_POST) {
 				</div>
 				<div class="modal-body">
 					<div class="form-row">
-						<div class="form-group col-12">
+						<div class="form-group col-md-6">
 							<div class="input-group">
 								<div class="input-group-prepend">
 									<span class="input-group-text">Date</span>
 								</div>
 								<input type="text" class="form-control" name="fecha" required>
+							</div>
+						</div>
+						<div class="form-group col-md-6">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Time</span>
+								</div>
+								<input type="text" class="form-control" name="hora" required>
 							</div>
 						</div>
 					</div>
@@ -249,7 +265,9 @@ if ($_POST) {
 		$('[name="fecha"]').datetimepicker({
 			format: `YYYY-MM-DD`
 		})
-
+		$('[name="hora"]').datetimepicker({
+			format: `LT`
+		})
 		$(`.btnFecha`).click(function() {
 			tr = $(this).closest('tr');
 			regid = tr.data('regid');
