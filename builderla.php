@@ -1165,10 +1165,10 @@ class Mopar{
 			SELECT
 				solicitud.id
 				, clientes.nombres 'title'
-				, CONCAT(fecha, ' ', hora) 'start'
+				, fecha 'start'
 			FROM solicitud
-				LEFT JOIN clientes ON solicitud.cliente_id = clientes.id
 				LEFT JOIN vehiculos ON solicitud.vehiculo_id = vehiculos.id
+				LEFT JOIN clientes ON vehiculos.cliente_id = clientes.id
 			WHERE solicitud.fecha IS NOT NULL
 		"));
 	}
@@ -1489,15 +1489,13 @@ class Mopar{
 				$cliente = Mopar::getOneCliente($vehiculo->cliente_id);
 				$recipient = $cliente->email;
 				$subject = 'Su hora al taller ha sido agendada!';
-				$fecha = date_create("{$solicitud->fecha} {$solicitud->hora}");
+				$fecha = date_create("{$solicitud->fecha}");
 				$day = date_format($fecha, 'd');
 				$month = Mopar::getNombreMes(date_format($fecha, 'm'));
 				$year = date_format($fecha, 'Y');
-				$hour = date_format($fecha, 'H');
-				$minute = date_format($fecha, 'i');
 				$message = "{$cliente->nombres}:
 
-Gracias por agendar una hora con Doctor Mopar. Tu cita está programada para el día {$day} de {$month} de {$year} a las {$hour}:{$minute}! Si necesitas cambiar tu hora, no dudes en contactarnos.
+Gracias por agendar una hora con Doctor Mopar. Tu cita está programada para el día {$day} de {$month} de {$year}! Si necesitas cambiar tu hora, no dudes en contactarnos.
 Te esperamos!
 
 Atentamente,
