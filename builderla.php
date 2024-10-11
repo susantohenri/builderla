@@ -1620,6 +1620,7 @@ Doctor Mopar
 				$message = str_replace('[address2]', $entity_id->address_line_2, $message);
 				$message = str_replace('[city]', $entity_id->city, $message);
 				$message = str_replace('[zip]', $entity_id->zip_code, $message);
+				$message = str_replace('[agreement_link]', site_url("agreement/{$ot_id}"), $message);
 				break;
 			}
 

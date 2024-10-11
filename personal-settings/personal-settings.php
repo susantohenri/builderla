@@ -224,7 +224,10 @@ FHS Construction INC
         'signed_contract_email_template' => "Dear [customer],
 
 We’re excited to inform you that the contract for your project at [address], [city], [zip] has been signed! We will be in touch shortly to discuss the next steps.
-Please find the attached file for your review. If you have any questions, feel free to reach out.
+To view your signed contract follow this link: [agreement_link]
+If you have any questions, feel free to reach out.
+
+
 
 Best regards,
 [name]
