@@ -738,6 +738,7 @@ function get_estimation_email_body_callback() {
 	$message = str_replace('[address2]', $customer->address_line_2, $message);
 	$message = str_replace('[city]', $customer->city, $message);
 	$message = str_replace('[zip]', $customer->zip_code, $message);
+	$message = str_replace('[estimate_link]', site_url("wp-content/plugins/builderla/estimate-pdf.php?id={$ot_id}"), $message);
 
 	exit(json_encode([
 		'status' => 'SUCCESS',
@@ -791,16 +792,14 @@ function get_unsigned_contract_body_callback()
 	$personal_settings = taller_get_personal_settings();
 	$message = $personal_settings['unsigned_contract_email_template'];
 
-	$code = time();
-	$sign_link = site_url("sign/{$ot_id}");
-
 	$message = $personal_settings['unsigned_contract_email_template'];
 	$message = str_replace('[customer]', $recipient->nombres, $message);
 	$message = str_replace('[address]', $recipient->street_address, $message);
 	$message = str_replace('[address2]', $recipient->address_line_2, $message);
 	$message = str_replace('[city]', $recipient->city, $message);
 	$message = str_replace('[zip]', $recipient->zip_code, $message);
-	$message = str_replace('[sign_link]', $sign_link, $message);
+	$message = str_replace('[contract_link]', site_url("contract/{$ot_id}"), $message);
+	$message = str_replace('[sign_link]', site_url("sign/{$ot_id}"), $message);
 
 	exit(json_encode([
 		'status' => 'OK',
@@ -1581,13 +1580,6 @@ Doctor Mopar
 				break;
 			case 'send_estimation':
 				$ot_id = $entity_id['ot_id'];
-				include plugin_dir_path(__FILE__) . 'pdf/estimate.php';
-				$orientation = 'potrait';
-				$html2pdf = new Html2Pdf($orientation,'LETTER','es');
-				$html2pdf->writeHTML($html);
-				$temporary_file = plugin_dir_path(__FILE__) . 'tmp/' . rand() . '.pdf';
-				$html2pdf->output($temporary_file, 'F');
-				$attachments[] = $temporary_file;
 
 				$recipient = $entity_id['email'];
 				$subject = 'Your Estimate from FHS Construction';
@@ -1596,12 +1588,6 @@ Doctor Mopar
 				break;
 			case 'send_unsigned_contract':
 				$ot_id = $entity_id['ot_id'];
-			
-				include plugin_dir_path(__FILE__) . 'pdf/contract.php';
-				$html2pdf = mopar_generate_contract_pdf($ot_id);
-				$temporary_file = plugin_dir_path(__FILE__) . 'tmp/' . rand() . '.pdf';
-				$html2pdf->output($temporary_file, 'F');
-				$attachments[] = $temporary_file;
 			
 				$recipient = $entity_id['email'];
 				$subject = 'Your unsigned contract from FHS Construction';

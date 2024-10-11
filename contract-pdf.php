@@ -50,7 +50,7 @@ add_action('init', function () {
 		}
 	}
 
-	if (!user_can(wp_get_current_user(), 'use_builderla')) mopar_pdf_show_message('danger', 'error: unauthorized access');
+	// if (!user_can(wp_get_current_user(), 'use_builderla')) mopar_pdf_show_message('danger', 'error: unauthorized access');
 
 	include plugin_dir_path(__FILE__) . 'pdf/contract.php';
 

@@ -195,8 +195,11 @@ function taller_get_personal_settings($compile_email_template = true, $user_id =
         'mopar_first_name' => '',
         'mopar_last_name' => '',
         'estimate_email_template' => "Dear [customer],
-We have prepared your project located at [address] - [address2] - [city], [zip].
-Please find the attached estimate for your review. If you have any questions or need further information, feel free to reach out to me.
+We have prepared an estimate for your project located at [address] [address2] - [city], [zip].
+Please follow this link to view your estimate: [estimate_link]
+If you have any questions or need further information, feel free to reach out to me.
+
+
 
 Best regards,
 [name]
@@ -205,8 +208,13 @@ FHS Construction INC
         ",
         'unsigned_contract_email_template' => "Dear [customer],
 
+
+
 We have prepared a contract for your project located at [address], [city], [zip].
-Please find the attached file for your review. If all the information seems correct click here to sign it [sign_link]
+To view the contract please follow this link [contract_link]
+If all the information seems correct click here to sign it [sign_link]
+
+
 
 Best regards,
 [name]
