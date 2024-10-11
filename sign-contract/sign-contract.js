@@ -1,8 +1,8 @@
 jQuery(document).ready(() => {
-    jQuery('[name="signed_date"]').datetimepicker({
+    jQuery('[name="signed_date"]').datepicker({
         format: `MM/DD/YYYY`
     })
-    jQuery('[name="client_dob"]').datetimepicker({
+    jQuery('[name="client_dob"]').datepicker({
         format: `MM/DD/YYYY`
     })
 

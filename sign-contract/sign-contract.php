@@ -1,10 +1,9 @@
 <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap4-datetimepicker@5.2.3/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="<?= plugin_dir_url(__FILE__) . 'sign-contract.css' ?>">
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap4-datetimepicker@5.2.3/build/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 <script type="text/javascript" src="<?= plugin_dir_url(__FILE__) . 'sign-contract.js' ?>"></script>
 
@@ -17,7 +16,7 @@
             <div class="col-12">
                 <div class="form-group">
                     <label>Sign Date</label>
-                    <input type="text" name="signed_date" class="form-control" placeholder="MM/DD/YYYY" required>
+                    <input type="text" name="signed_date" class="form-control" placeholder="MM/DD/YYYY" required autocomplete="off">
                 </div>
             </div>
             <div class="col-12">
@@ -39,7 +38,7 @@
             <div class="col-12">
                 <div class="form-group">
                     <label>Date of Birth</label>
-                    <input type="text" name="client_dob" class="form-control" placeholder="MM/DD/YYYY" required>
+                    <input type="text" name="client_dob" class="form-control" placeholder="MM/DD/YYYY" required autocomplete="off">
                 </div>
             </div>
         </div>
