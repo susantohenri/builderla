@@ -434,13 +434,13 @@ if ($_POST) {
 					<div class="form-group row">
 						<label class="col-sm-12 col-md-4 col-form-label">Approximate start date</label>
 						<div class="col-sm-12 col-md-8">
-							<input type="text" name="approximate_start_date" class="form-control">
+							<input type="text" name="approximate_start_date" class="form-control" autocomplete="off">
 						</div>
 					</div>
 					<div class="form-group row">
 						<label class="col-sm-12 col-md-4 col-form-label">Approximate completion date</label>
 						<div class="col-sm-12 col-md-8">
-							<input type="text" name="approximate_completion_date" class="form-control">
+							<input type="text" name="approximate_completion_date" class="form-control" autocomplete="off">
 						</div>
 					</div>
 
@@ -476,8 +476,9 @@ if ($_POST) {
 			}
 		})
 
-		$('[name="approximate_start_date"],[name="approximate_completion_date"]').datetimepicker({
-			format: `MM/DD/YYYY`
+		$('[name="approximate_start_date"],[name="approximate_completion_date"]')
+		.datepicker({
+			format: `MM/DD/YYYY`,
 		})
 
 		jQuery(`[name="construction_lender"]`).change(function () {
