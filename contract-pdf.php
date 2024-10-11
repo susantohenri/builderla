@@ -40,7 +40,7 @@ add_action('init', function () {
 			");
 
 			wp_schedule_single_event(time() + 1, 'mopar_async', [[
-				'action' => 'send_estimation_email',
+				'action' => 'send_signed_contract_email',
 				'recipient' => $recipient
 			]]);
 			mopar_pdf_show_message('success', 'Success: signed contract sent');
