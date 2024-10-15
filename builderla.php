@@ -41,7 +41,7 @@ function theme_options_panel(){
 	add_submenu_page($menu_slug, 'Leads', 'Leads', 'use_builderla', 'mopar-solicitudes-de-servicio', 'taller_solicitudes_de_servicio_func');
 	add_submenu_page($menu_slug, 'Lost Leads', 'Lost Leads', 'use_builderla', 'mopar-perdidas', 'taller_perdidas_func');
 	add_submenu_page($menu_slug, 'Converted Leads', 'Converted Leads', 'use_builderla', 'mopar-agendadas', 'taller_agendadas_func');
-	add_submenu_page($menu_slug, 'Appointment Calendar', 'Appointment Calendar', 'use_builderla', 'appointment-calendar', 'taller_home_func');
+	add_submenu_page($menu_slug, 'Appointments', 'Appointments', 'use_builderla', 'appointment-calendar', 'taller_home_func');
 	remove_submenu_page($menu_slug, $menu_slug);
 
 	$page_title = $menu_title = 'Estimating';
@@ -1442,18 +1442,18 @@ class Mopar{
 	public static function getNombreMes($num, $acortar = false){
 	    $strMes = '';
 	    switch( $num ){
-	        case 1: $strMes = 'Enero'; break;
-	        case 2: $strMes = 'Febrero'; break;
-	        case 3: $strMes = 'Marzo'; break;
-	        case 4: $strMes = 'Abril'; break;
-	        case 5: $strMes = 'Mayo'; break;
-	        case 6: $strMes = 'Junio'; break;
-	        case 7: $strMes = 'Julio'; break;
-	        case 8: $strMes = 'Agosto'; break;
-	        case 9: $strMes = 'Septiembre'; break;
-	        case 10: $strMes = 'Octubre'; break;
-	        case 11: $strMes = 'Noviembre'; break;
-	        case 12: $strMes = 'Diciembre'; break;
+	        case 1: $strMes = 'January'; break;
+	        case 2: $strMes = 'February'; break;
+	        case 3: $strMes = 'Mach'; break;
+	        case 4: $strMes = 'April'; break;
+	        case 5: $strMes = 'May'; break;
+	        case 6: $strMes = 'June'; break;
+	        case 7: $strMes = 'July'; break;
+	        case 8: $strMes = 'August'; break;
+	        case 9: $strMes = 'September'; break;
+	        case 10: $strMes = 'October'; break;
+	        case 11: $strMes = 'November'; break;
+	        case 12: $strMes = 'December'; break;
 	        default: $strMes = ''; break;
 	    }
 	    
@@ -1488,7 +1488,7 @@ class Mopar{
 				$vehiculo = Mopar::getOneVehiculo($solicitud->vehiculo_id);
 				$cliente = Mopar::getOneCliente($vehiculo->cliente_id);
 				$recipient = $cliente->email;
-				$subject = 'Su hora al taller ha sido agendada!';
+				$subject = 'Your Appointment with FHS Construction';
 				$fecha = date_create("{$solicitud->fecha} {$solicitud->hora}");
 				$day = date_format($fecha, 'd');
 				$month = Mopar::getNombreMes(date_format($fecha, 'm'));
@@ -1497,13 +1497,11 @@ class Mopar{
 				$minute = date_format($fecha, 'i');
 				$message = "{$cliente->nombres}:
 
-Gracias por agendar una hora con Doctor Mopar. Tu cita está programada para el día {$day} de {$month} de {$year} a las {$hour}:{$minute}! Si necesitas cambiar tu hora, no dudes en contactarnos.
-Te esperamos!
+Thank you for scheduling an appointment with FHS Construction: Your appointment is set for {$month} {$day} {$year} at {$hour}:{$minute}. If you need to change your appointment time, don't hesitate to contact us.
 
-Atentamente,
-Catalina Heckmann
-Servicio al cliente
-+56985991053";
+Sincerely,
+Ferdy Hernandez
+(310) 403-7284";
 				break;
 			case 'ingreso_created':
 				$solicitud = Mopar::getOneSolicitud($entity_id);

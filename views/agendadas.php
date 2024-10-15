@@ -378,7 +378,9 @@ if ($_POST) {
 		})
 
 		$(`[name="photos[]"]`).change(async e => {
+			jQuery(`.overlay`).show()
 			const { files } = e.target
+			let uncompressed_files = files.length
 			const dataTransfer = new DataTransfer()
 			for (const file of files) {
 				const imageBitmap = await createImageBitmap(file)
@@ -389,7 +391,7 @@ if ($_POST) {
 				ctx.drawImage(imageBitmap, 0, 0)
 				const compressedBlob = await new Promise(resolve => {
 					const type = file.type
-					const quality = 0.1
+					const quality = 0.05
 					canvas.toBlob(resolve, type, quality)
 				})
 				const compressedFile = new File([compressedBlob], file.name)
@@ -397,6 +399,8 @@ if ($_POST) {
 
 				const src = URL.createObjectURL(compressedFile)
 				jQuery(`.preview-uploaded`).append(`<img src="${src}" class="m-2 img-thumbnail">`)
+				uncompressed_files--;
+				if (1 > uncompressed_files) jQuery(`.overlay`).hide()
 			}
 			e.target.files = dataTransfer.files
 		})
