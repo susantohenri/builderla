@@ -15,6 +15,7 @@ include('lead-form/lead-form.php');
 include('company-settings/company-settings.php');
 include('personal-settings/personal-settings.php');
 include('contract-pdf.php');
+include('estimate-pdf.php');
 
 foreach (['administrator', 'manager'] as $role_name) {
 	$role = get_role($role_name);
@@ -738,7 +739,7 @@ function get_estimation_email_body_callback() {
 	$message = str_replace('[address2]', $customer->address_line_2, $message);
 	$message = str_replace('[city]', $customer->city, $message);
 	$message = str_replace('[zip]', $customer->zip_code, $message);
-	$message = str_replace('[estimate_link]', site_url("wp-content/plugins/builderla/estimate-pdf.php?id={$ot_id}"), $message);
+	$message = str_replace('[estimate_link]', site_url("estimates/{$ot_id}"), $message);
 
 	exit(json_encode([
 		'status' => 'SUCCESS',

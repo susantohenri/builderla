@@ -1,16 +1,13 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
+add_action('init', function () {
+	$url = explode('/', $_SERVER['REQUEST_URI']);
+	$page = $url[1];
+	if (!$page || 'estimates' != $page) return true;
 
-use Spipu\Html2Pdf\Html2Pdf;
+    $titulo_pdf = 'Estimate';
+	$ot_id = $url[2];
+    include plugin_dir_path(__FILE__) . 'pdf/estimate.php';
 
-include '../../../wp-load.php';
-
-$titulo_pdf = 'Estimate';
-$ot_id = $_GET['id'];
-include plugin_dir_path(__FILE__) . 'pdf/estimate.php';
-
-$orientation = 'potrait';
-$html2pdf = new Html2Pdf($orientation, 'A4', 'es');
-$html2pdf->writeHTML($html);
-$html2pdf->output($titulo_pdf . '_000' . $ot_id . '.pdf');
+    exit;
+});
