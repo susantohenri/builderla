@@ -43,6 +43,7 @@ add_action('init', function () {
 				'action' => 'send_signed_contract_email',
 				'recipient' => $recipient
 			]]);
+			file_get_contents(site_url());// triggering scheduler
 			mopar_pdf_show_message('success', 'Success: signed contract sent');
 		} else {
 			include plugin_dir_path(__FILE__) . 'sign-contract/sign-contract.php';
