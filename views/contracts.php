@@ -11,16 +11,11 @@ if (isset($_POST['action'])) {
         case 'send_unsigned_contract_email_body':
             $ot_id = $_POST['ot_id'];
 
-            wp_schedule_single_event(time(), 'mopar_async', [
-                [
-                    'action' => 'send_unsigned_contract_body',
-                    'recipient' => [
-                        'ot_id' => $ot_id,
-                        'email' => $_POST['recipient'],
-                        'email_body' => $_POST['email_body']
-                    ]
-                ]
-            ]);
+            Mopar::sendMail([
+                'ot_id' => $ot_id,
+                'email' => $_POST['recipient'],
+                'email_body' => $_POST['email_body']
+            ], 'send_unsigned_contract');
 
             global $wpdb;
             $wpdb->update('ot', ['estado' => 2], ['id' => $ot_id]);
