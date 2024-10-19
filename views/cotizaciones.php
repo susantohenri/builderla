@@ -479,6 +479,7 @@ if ($_POST) {
 		$('[name="approximate_start_date"],[name="approximate_completion_date"]')
 		.datepicker({
 			format: `MM/DD/YYYY`,
+			changeMonth: true
 		})
 
 		jQuery(`[name="construction_lender"]`).change(function () {

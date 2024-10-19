@@ -1,9 +1,8 @@
 jQuery(document).ready(() => {
-    jQuery('[name="signed_date"]').datepicker({
-        format: `MM/DD/YYYY`
-    })
     jQuery('[name="client_dob"]').datepicker({
-        format: `MM/DD/YYYY`
+        format: `MM/DD/YYYY`,
+        changeYear: true,
+        yearRange: `-100:+0`
     })
 
     // ------------- Signature
@@ -59,5 +58,12 @@ jQuery(document).ready(() => {
     jQuery(`[name="sign_contract"]`).submit(e => {
         jQuery(`[name="client_initial"]`).val(initial.toDataURL())
         return true
+    })
+
+    jQuery(`.page-2`).hide()
+    jQuery(`.btn-next`).click(e => {
+        if (`` === jQuery(`[name="client_dob"]`).val()) return false;
+        jQuery(`.page-1`).hide()
+        jQuery(`.page-2`).show()
     })
 })
