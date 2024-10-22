@@ -21,7 +21,7 @@ jQuery(document).ready(() => {
 
     const stored_signature = jQuery(`[name="client_signature"]`).val()
     const opt = 800 > window.innerWidth ? {} : { ratio: 1 }
-    signature.fromDataURL(stored_signature, opt)
+    // signature.fromDataURL(stored_signature, opt)
 
     jQuery(`[name="clear_signature"]`).click(e => {
         e.preventDefault()
@@ -48,7 +48,7 @@ jQuery(document).ready(() => {
     var initial = new SignaturePad(initial)
 
     const stored_initial = jQuery(`[name="client_initial"]`).val()
-    initial.fromDataURL(stored_initial, opt)
+    // initial.fromDataURL(stored_initial, opt)
 
     jQuery(`[name="clear_initial"]`).click(e => {
         e.preventDefault()
@@ -62,7 +62,7 @@ jQuery(document).ready(() => {
 
     jQuery(`.page-2`).hide()
     jQuery(`.btn-next`).click(e => {
-        if (`` === jQuery(`[name="client_dob"]`).val()) return false;
+        if (signature.isEmpty() || initial.isEmpty()) return false
         jQuery(`.page-1`).hide()
         jQuery(`.page-2`).show()
     })

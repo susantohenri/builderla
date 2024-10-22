@@ -15,14 +15,18 @@
         <div class="row">
             <div class="col-12">
                 <div class="form-group">
-                    <label>Sign Date</label>
-                    <input type="text" name="signed_date" class="form-control" value="<?= gmdate('m/d/Y', time()) ?>" required readonly autocomplete="off">
+                    <label>Signature</label>
+                    <canvas id="signature" style=""></canvas>
+                    <textarea name="client_signature" class="d-none"></textarea>
+                    <a name="clear_signature" class="btn btn-lg btn-warning mt-1 text-white float-right">Clear</a>
                 </div>
             </div>
             <div class="col-12">
                 <div class="form-group">
-                    <label>Date of Birth</label>
-                    <input type="text" name="client_dob" class="form-control" placeholder="MM/DD/YYYY" required autocomplete="off">
+                    <label>Initial</label>
+                    <canvas id="initial"></canvas>
+                    <textarea name="client_initial" class="d-none"></textarea>
+                    <a name="clear_initial" class="btn btn-lg btn-warning mt-1 text-white float-right">Clear</a>
                 </div>
             </div>
         </div>
@@ -38,18 +42,14 @@
         <div class="row">
             <div class="col-12">
                 <div class="form-group">
-                    <label>Signature</label>
-                    <canvas id="signature" style=""></canvas>
-                    <textarea name="client_signature" class="d-none"></textarea>
-                    <a name="clear_signature" class="btn btn-lg btn-warning mt-1 text-white float-right">Clear</a>
+                    <label>Sign Date</label>
+                    <input type="text" name="signed_date" class="form-control" value="<?= gmdate('m/d/Y', time()) ?>" required readonly autocomplete="off">
                 </div>
             </div>
             <div class="col-12">
                 <div class="form-group">
-                    <label>Initial</label>
-                    <canvas id="initial"></canvas>
-                    <textarea name="client_initial" class="d-none"></textarea>
-                    <a name="clear_initial" class="btn btn-lg btn-warning mt-1 text-white float-right">Clear</a>
+                    <label>Date of Birth</label>
+                    <input type="text" name="client_dob" class="form-control" placeholder="MM/DD/YYYY" required autocomplete="off">
                 </div>
             </div>
         </div>
