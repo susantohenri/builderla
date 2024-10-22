@@ -56,8 +56,8 @@
         </div>
         <div class="row">
             <div class="col-12 text-center">
+                <button class="btn btn-lg text-white btn-warning col-3 btn-go-back">Go Back</button>
                 <button class="btn btn-lg text-white btn-success col-3 mr-2" name="sign_contract">Send Contract</button>
-                <button class="btn btn-lg text-white btn-warning col-3" onclick="window.close()">Close</button>
             </div>
         </div>
     </div>

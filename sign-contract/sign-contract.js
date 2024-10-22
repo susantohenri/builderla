@@ -66,4 +66,10 @@ jQuery(document).ready(() => {
         jQuery(`.page-1`).hide()
         jQuery(`.page-2`).show()
     })
+
+    jQuery(`.btn-go-back`).click(e => {
+        e.preventDefault()
+        jQuery(`.page-1`).show()
+        jQuery(`.page-2`).hide()
+    })
 })
