@@ -127,7 +127,19 @@ CREATE TABLE `vehiculos` (
   KEY `cliente_id` (`cliente_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-
+DROP TABLE IF EXISTS `template`;
+CREATE TABLE `template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `titulo` varchar(255) NOT NULL,
+  `detalle` text NOT NULL,
+  `valor` int(11) NOT NULL,
+  `site_services` text NOT NULL,
+  `customer_to_provide` text NOT NULL,
+  `not_included` text NOT NULL,
+  `price_breakdown` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

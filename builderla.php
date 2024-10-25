@@ -51,6 +51,7 @@ function theme_options_panel(){
 	$position = 4;
 	add_menu_page($page_title, $menu_title, $capability, $menu_slug, $callback, $icon_url, $position);
 	add_submenu_page($menu_slug, 'Estimates', 'Estimates', 'use_builderla', 'mopar-cotizaciones', 'taller_cotizaciones_func');
+	add_submenu_page($menu_slug, 'Templates', 'Templates', 'use_builderla', 'mopar-templates', 'taller_templates_func');
 	add_submenu_page($menu_slug, 'Contracts', 'Contracts', 'use_builderla', 'mopar-contracts', 'taller_contracts_func');
 	add_submenu_page($menu_slug, 'Agreements', 'Agreements', 'use_builderla', 'mopar-agreement', 'taller_agreements_func');
 	remove_submenu_page($menu_slug, $menu_slug);
@@ -114,7 +115,12 @@ function taller_cotizaciones_func(){
 	$vehiculos = Mopar::getVehiculos();
 	$clientes = Mopar::getClientes();
     $ots = Mopar::getCotizaciones();
+    $templates = Mopar::getTemplates();
 	include('views/cotizaciones.php');	
+}
+
+function taller_templates_func(){
+	include('views/templates.php');	
 }
 
 function taller_contracts_func(){
@@ -836,8 +842,6 @@ function get_vehiculos_by_cliente_callback(){
 	exit(); 
 }
 
-
-
 function get_ot_callback(){
 	$ot_id = $_POST['ot_id'];
 	$ot = Mopar::getOneOt($ot_id);
@@ -854,6 +858,10 @@ function get_ot_callback(){
 
 	echo json_encode($json);
 	exit();  
+}
+
+function get_template_callback(){
+	exit(json_encode(Mopar::getOneTemplate($_POST['template_id'])));
 }
 
 function get_solicitud_callback(){
@@ -887,13 +895,6 @@ function mopar_taller_select2_clientes () {
         'permission_callback' => '__return_true',
         'callback' => function () {
 			return Mopar::getSelect2Properties();
-		}
-	]);
-	register_rest_route('mopar-taller/v1', '/select2-estimation-template', [
-        'methods' => 'GET',
-        'permission_callback' => '__return_true',
-        'callback' => function () {
-			return Mopar::getSelect2EstimationTemplate();
 		}
 	]);
 }
@@ -936,6 +937,7 @@ add_action('wp_ajax_proceed_solicitud','proceed_solicitud_callback');
 add_action('wp_ajax_proceed_solicitud_without_ingreso','proceed_solicitud_without_ingreso_callback');
 add_action('wp_ajax_get_vehiculos_by_cliente','get_vehiculos_by_cliente_callback');
 add_action('wp_ajax_get_ot','get_ot_callback');
+add_action('wp_ajax_get_template','get_template_callback');
 add_action('wp_ajax_get_solicitud','get_solicitud_callback');
 add_action('rest_api_init', 'mopar_taller_select2_clientes');
 add_action('wp_ajax_get_estimation_email_body','get_estimation_email_body_callback');
@@ -998,26 +1000,6 @@ class Mopar{
 			LIMIT 10
 		");
 		return ['results' => $vehiculos];
-	}
-
-	public static function getSelect2EstimationTemplate(){
-		global $wpdb;
-		$default_detalle = '{"item":[""],"precio":[""], "observaciones":[""]}';
-		$like = isset($_GET['q']) ? "ot.titulo LIKE '%{$_GET['q']}%'" : 'true';
-		$titulos = $wpdb->get_results("
-			SELECT
-				(ot.id) as id,
-				(ot.titulo) as text
-			FROM ot
-			WHERE ot.detalle <> '{$default_detalle}' AND {$like}
-			ORDER BY ot.id DESC
-			LIMIT 10
-		");
-		$titulos = array_merge([[
-			'id' => '',
-			'text' => 'NEW TEMPLATE'
-		]], $titulos);
-		return ['results' => $titulos];
 	}
 
 	public static function getOneCliente($cliente_id){
@@ -1303,6 +1285,15 @@ class Mopar{
     	return $ots;
 	}
 
+	public static function getTemplates(){
+		global $wpdb;
+		return $wpdb->get_results("
+			SELECT template.*
+			FROM template
+			ORDER BY id DESC
+		");
+	}
+
 	public static function getContracts(){
 		global $wpdb;
 		$ots = $wpdb->get_results("
@@ -1345,6 +1336,10 @@ class Mopar{
     	return $ot;
 	}
 
+	public static function getOneTemplate($template_id) {
+		global $wpdb;
+		return $wpdb->get_row("SELECT * FROM template WHERE id = {$template_id}");
+	}
 
 	public static function getOtByVehiculo($vehiculo_id){
 		global $wpdb;

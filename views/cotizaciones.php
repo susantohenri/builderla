@@ -43,10 +43,10 @@ if ($_POST) {
 				'detalle' => '{"item":[""],"precio":[""], "observaciones":[""]}',
 			];
 			if ('' != $_POST['template']) {
-				$template = $wpdb->get_row("SELECT titulo, detalle, valor FROM ot WHERE ot.id = {$_POST['template']}");
-				$ot_to_insert['titulo'] = $template->titulo;
-				$ot_to_insert['detalle'] = $template->detalle;
-				$ot_to_insert['valor'] = $template->valor;
+				$template = (array) $wpdb->get_row("SELECT * FROM template WHERE id = {$_POST['template']}");
+				foreach (array_keys($template) as $field) {
+					$ot_to_insert[$field] = $template[$field];
+				}
 			}
 			$create_ot = $wpdb->insert('ot', $ot_to_insert);
 			$create_solicitud = $wpdb->insert('solicitud', [
@@ -208,7 +208,10 @@ if ($_POST) {
 									<span class="input-group-text">Template</span>
 								</div>
 								<select name="template" class="form-control">
-									<option value="">NEW TEMPLATE</option>
+									<option value=""></option>
+									<?php foreach ($templates as $template): ?>
+										<option value="<?= $template->id ?>"><?= $template->titulo ?></option>
+									<?php endforeach ?>
 								</select>
 							</div>
 						</div>
@@ -470,10 +473,7 @@ if ($_POST) {
 			}
 		})
 		$(`[name="template"]`).css(`display`, `none`).select2({
-			theme: `bootstrap4`,
-			ajax: {
-				url: `../wp-json/mopar-taller/v1/select2-estimation-template`
-			}
+			theme: `bootstrap4`
 		})
 
 		$('[name="approximate_start_date"],[name="approximate_completion_date"]')
