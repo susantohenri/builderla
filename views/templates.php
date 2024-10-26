@@ -63,8 +63,8 @@ $templates = Mopar::getTemplates();
 						<td> <?= $template->id; ?> </td>
 						<td><?= $template->titulo; ?></td>
 						<td><?= $template->site_services; ?></td>
-						<td><?= str_replace("\n", '<br>', $template->customer_to_provide); ?></td>
-						<td><?= str_replace("\n", '<br>', $template->not_included); ?></td>
+						<td><?= '' != $template->customer_to_provide ? 'Yes' : 'No'; ?></td>
+						<td><?= '' != $template->not_included ? 'Yes' : 'No'; ?></td>
 						<td><?= 1 == $template->price_breakdown ? 'Yes' : 'No'; ?></td>
 						<td> $ <?= number_format($template->valor, 0, ',', '.') ?> </td>
 						<td class="text-center" style="white-space: nowrap;">
