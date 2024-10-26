@@ -62,7 +62,7 @@ $templates = Mopar::getTemplates();
 					<tr data-regid="<?= $template->id; ?>">
 						<td> <?= $template->id; ?> </td>
 						<td><?= $template->titulo; ?></td>
-						<td><?= $template->site_services; ?></td>
+						<td><?= '' != $template->site_services ? 'Yes' : 'No'; ?></td>
 						<td><?= '' != $template->customer_to_provide ? 'Yes' : 'No'; ?></td>
 						<td><?= '' != $template->not_included ? 'Yes' : 'No'; ?></td>
 						<td><?= 1 == $template->price_breakdown ? 'Yes' : 'No'; ?></td>
